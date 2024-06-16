@@ -1,6 +1,5 @@
 import React from 'react';
 import './VerifyEmail.css';
-import backGround from "../../images/logo-removebg-preview.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -45,7 +44,7 @@ export default function VerifyEmail() {
             <h1 className="text-light">
                 WELCOME IN OUR OWL NEST WEBSITE 😁
               </h1>
-              <img src={backGround} alt="error" width={'350px'} height={'350px'} />
+              <img  alt="error" width={'350px'} height={'350px'} />
             </div>
           </div>
         </div>

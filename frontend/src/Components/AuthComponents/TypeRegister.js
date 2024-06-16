@@ -1,5 +1,4 @@
 import React from 'react';
-import backGround from "../../images/logo-removebg-preview.png";
 import './TypeRegister.css';
 import { NavLink } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ export default function TypeRegister() {
                 <div className='checkCard'>
                     <h4 className='fw-bold mb-4'>Do you have a Company?</h4>
                     <div className='mb-5'>
-                        <img src={backGround} alt='error' width={'150px'} height={'150px'} />
+                        <img  alt='error' width={'150px'} height={'150px'} />
                     </div>
                     <div className='buttonGroup'>
                         <NavLink to={'/companyDetails'} className='btn button fw-bold text-light'>Create Your Nest Now</NavLink>
@@ -27,7 +26,7 @@ export default function TypeRegister() {
             <h1 className="text-light">
                 WELCOME IN OUR OWL NEST WEBSITE 😁
               </h1>
-              <img src={backGround} alt="error" width={'350px'} height={'350px'} />
+              <img  alt="error" width={'350px'} height={'350px'} />
             </div>
           </div>
         </div>

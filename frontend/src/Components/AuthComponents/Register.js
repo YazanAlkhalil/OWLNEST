@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./Register.css";
-import backGround from "../../images/logo-removebg-preview.png";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signupUser } from "../../features/Auth/SignUpSlice";
@@ -168,7 +167,6 @@ export default function Register() {
             <div>
               <h1 className="text-light">WELCOME IN OUR OWL NEST WEBSITE 😁</h1>
               <img
-                src={backGround}
                 alt="error"
                 width={"350px"}
                 height={"350px"}

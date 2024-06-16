@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./CompanyDetails.css";
-import backGround from "../../images/logo-removebg-preview.png";
 import uploadImg from "../../images/add_photo_alternate_outlined.png";
 
 export default function CompanyDetails() {
@@ -128,7 +127,7 @@ export default function CompanyDetails() {
               <h1 className="text-light">
                 WELCOME IN OUR OWL NEST WEBSITE 😁
               </h1>
-              <img src={backGround} alt="error" width={'350px'} height={'350px'} />
+              <img  alt="error" width={'350px'} height={'350px'} />
             </div>
           </div>
         </div>
