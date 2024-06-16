@@ -1,0 +1,38 @@
+.login .login-form{
+    padding: 100px 90px;
+}
+.login .login-form p{
+    color: rgba(0, 0, 0, 0.605);
+    font-weight: 600;
+}
+.login .login-form .forgetPass a{
+    /* text-decoration: none; */
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+}
+.login .login-form .form-group input{
+    width: 75%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgba(216, 216, 216, 0.608);
+    border: none !important;
+    font-weight: bold;
+}
+.login .login-form .button,
+.login .login-form button{
+    background:  #001F34;
+    width: 75%;
+    height: 60px;
+    border-radius: 20px !important;
+}
+.login .login-form .sign-up p{
+    color: black;
+}
+.login .loginBackGround{
+    height: 100vh;
+    padding: 30px;
+    background: rgb(63,86,251);
+    background: radial-gradient(circle, rgba(63,86,251,1) 0%, rgba(13,30,150,1) 18%, rgba(2,7,34,1) 82%, rgba(0,1,6,1) 100%);
+}

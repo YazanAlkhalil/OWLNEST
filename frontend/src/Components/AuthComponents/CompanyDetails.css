@@ -1,0 +1,79 @@
+.companyDetails .login-form{
+    padding: 40px 90px 0;
+}
+.companyDetails .login-form input{
+    width: 75%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgba(216, 216, 216, 0.608);
+    border: none !important;
+    font-weight: bold;
+}
+.companyDetails .login-form .file-upload {
+    width: 75%;
+    text-align: center;
+    border: 3px dashed rgba(216, 216, 216, 0.608);
+    background-color: rgba(216, 216, 216, 0.608);
+    margin-left: 60px;
+    border-radius: 20px;
+    /* padding: 1.5rem; */
+    position: relative;
+    cursor: pointer;
+  }
+  .companyDetails .login-form .file-upload input {
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .companyDetails .login-form select{
+    width: 30%;
+    height: 50px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: rgba(216, 216, 216, 0.608);
+    color: rgba(0, 0, 0, 0.516);
+    border: none !important;
+    font-weight: bold;
+}
+.companyDetails .login-form select option{
+    color: black;
+    font-weight: bold;
+}
+#select-box{
+    overflow-y:auto;
+  }
+#select-box  option{
+    overflow-y:scroll;
+  }
+.companyDetails .login-form .dropdown button{
+    background-color: rgba(216, 216, 216, 0.608) !important;
+    border: none;
+    color: rgba(0, 0, 0, 0.558);
+    font-weight: bold;
+    height: 50px;
+    border-radius: 20px;
+}
+.companyDetails .login-form .size input{
+    width: 40%;
+    margin-left: 20px;
+}
+.companyDetails .login-form .btn-light{
+    background:  #001F34;
+    width: 75%;
+    height: 60px;
+    border-radius: 20px !important;
+}
+.companyDetails .loginBackGround{
+    height: 100vh;
+    padding: 30px;
+    background: rgb(63,86,251);
+    background: radial-gradient(circle, rgba(63,86,251,1) 0%, rgba(13,30,150,1) 18%, rgba(2,7,34,1) 82%, rgba(0,1,6,1) 100%);
+}

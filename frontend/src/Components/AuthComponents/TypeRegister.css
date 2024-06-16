@@ -1,0 +1,29 @@
+.TypeRegister .container{
+    padding: 80px 30px;
+    width: 100%;
+}
+.TypeRegister .checkCard{
+    padding: 10px;
+    border-radius: 10px;
+    margin: auto;
+    width: 80%;
+    height: 400px;
+    background-color: #D9D9D9;
+}
+.TypeRegister .checkCard .button:first-child{
+    background-color: #DEA01E;
+    margin: 0 20px;
+    border-radius: 3px !important;
+}
+.TypeRegister .checkCard .button:last-child{
+    background-color: #001F34;
+    margin: 0 20px;
+    border-radius: 3px !important;
+}
+
+.TypeRegister .loginBackGround{
+    height: 100vh;
+    padding: 30px;
+    background: rgb(63,86,251);
+    background: radial-gradient(circle, rgba(63,86,251,1) 0%, rgba(13,30,150,1) 18%, rgba(2,7,34,1) 82%, rgba(0,1,6,1) 100%);
+}
