@@ -1,2 +1,2 @@
 # Owlnest
-a LMS (Learning Managment system) for comapnies internal training.
+a LMS (Learning Managment system) for companies internal training.
