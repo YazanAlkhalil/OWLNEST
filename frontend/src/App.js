@@ -1,6 +1,6 @@
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 // import RegisterPage from './Pages/Auth/RegisterPage';
-import Router from './Router';
+// import Router from './Router';
 import CreateCoursePage from './Pages/trainer/CreateCoursePage';
 import { Toaster } from 'react-hot-toast';
 import TrainerLayout from './Components/TrainerLayout';

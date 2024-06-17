@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./CompanyDetails.css";
 import uploadImg from "../../images/add_photo_alternate_outlined.png";
 
+
 export default function CompanyDetails() {
 
   const [compName,setCompName] = useState('');

@@ -27,7 +27,7 @@ export default function Login() {
           <div className="col-6">
             <div className='container'>
             <div className="login-form text-center">
-              <h2 className='fw-bold'>Login</h2>
+              <h2 className='fw-bold fs-2'>Login</h2>
               <p>How to i get started lorem ipsum dolor at?</p>
               <form onSubmit={handleSubmitClick}>
                 <div className="form-group mb-3">
@@ -64,10 +64,10 @@ export default function Login() {
           </div>
           <div className="col-6 loginBackGround text-center">
             <div>
-            <h1 className="text-light">
+            <h1 className="text-light fs-1">
                 WELCOME IN OUR OWL NEST WEBSITE 😁
               </h1>
-              <img  alt="error" width={'350px'} height={'350px'} />
+              {/* <img  alt="error" width={'350px'} height={'350px'} /> */}
             </div>
           </div>
         </div>

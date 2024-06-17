@@ -1,12 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  prefix: 'tw-',
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontFamily: {
       sans: ["Roboto", "sans-serif"],
     },
     extend: {
-      colors:{
+      colors: {
         primary: "#001F34",
         secondary: '#3F6188',
         background: '#DBF2FF',
@@ -17,4 +18,3 @@ module.exports = {
   },
   plugins: [],
 }
-
