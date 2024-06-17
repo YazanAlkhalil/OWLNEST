@@ -67,11 +67,12 @@ export default function Login() {
             <h1 className="text-light fs-1">
                 WELCOME IN OUR OWL NEST WEBSITE 😁
               </h1>
-              {/* <img  alt="error" width={'350px'} height={'350px'} /> */}
+              <img  alt="error" width={'350px'} height={'350px'} />
             </div>
           </div>
         </div>
       </div>
+      
    
    </>
   )
