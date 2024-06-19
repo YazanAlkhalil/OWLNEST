@@ -1,5 +1,6 @@
 from django.db import models
-from system.models import Company,Planes
+from system.models.Company import Company
+from system.models.Planes import Planes
 
 
 class Company_Planes(models.Model):

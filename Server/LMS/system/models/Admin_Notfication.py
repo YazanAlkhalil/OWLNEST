@@ -1,6 +1,5 @@
 from django.db import models
-from authentication.models import User
-from system.models import Admin_Contract
+from system.models.Admin_Contract import Admin_Contract
 
 
 class Admin_Notfication(models.Model):

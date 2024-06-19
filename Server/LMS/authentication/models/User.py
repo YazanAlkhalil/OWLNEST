@@ -3,7 +3,6 @@ from django.db import models
 
 
 class User(models.Model):
-    user_id = models.IntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
@@ -41,6 +40,6 @@ class User(models.Model):
     is_admin = models.BooleanField(default=False)
     is_owner = models.BooleanField(default=False)
     otp = models.CharField(max_length=6)
-    joining_date = models.DateField()
+    joining_date = models.DateField(auto_now=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

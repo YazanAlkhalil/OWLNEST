@@ -1,6 +1,7 @@
 from django.db import models
 from authentication.models import User
-from system.models import Admin,Company
+from system.models.Admin import Admin
+from system.models.Company import Company
 
 class Admin_Contract(models.Model):
     admin = models.ForeignKey(Admin, on_delete=models.CASCADE)

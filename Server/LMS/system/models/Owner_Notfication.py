@@ -1,6 +1,6 @@
 from django.db import models
 from authentication.models import User
-from system.models import Owner
+from system.models.Owner import Owner
 
 
 class Owner_Notfication(models.Model):

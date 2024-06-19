@@ -1,9 +1,9 @@
 from django.db import models
 from authentication.models import User
-from system.models import owner
+from system.models.Owner import Owner
 
 class Company(models.Model):
-    user = models.ForeignKey(owner,on_delete=models.CASCADE)
+    user = models.OneToOneField(Owner,on_delete=models.CASCADE)
     company_name = models.CharField(max_length=75)
     company_email = models.CharField(max_length=255)
     logo = models.CharField(max_length=255)
