@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { DndContext,closestCenter } from '@dnd-kit/core';
-import { arrayMove,SortableContext,verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import Unit from './Unit';
 import Lesson from './Lesson';
 import image from '../images/course__cs101_courses_datastructuresfromctopython__course-promo-image-1653540139 1.png'
@@ -9,12 +9,14 @@ import AdditionalInfo from './AdditionalInfo';
 import UploadVideo from './UploadVideo';
 import UploadPDF from './UploadPDF';
 import CreateQuiz from './CreateQuiz';
+import { BiArrowBack } from "react-icons/bi";
+
 function CourseEdit() {
-  const [isInfo,setIsInfo] = useState(false)
-  const [isUploadingVideo,setIsUploadingVideo] = useState(false)
-  const [isUploadingPDF,setIsUploadingPDF] = useState(false)
-  const [createQuiz,setCreateQuiz] = useState(false)
-  const [sortable,setSortable] = useState(false)
+  const [isInfo, setIsInfo] = useState(false)
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false)
+  const [isUploadingPDF, setIsUploadingPDF] = useState(false)
+  const [createQuiz, setCreateQuiz] = useState(false)
+  const [sortable, setSortable] = useState(false)
   const [content, setContent] = useState([
     {
       type: "unit",
@@ -50,67 +52,71 @@ function CourseEdit() {
       name: "quiz 2",
       id: "4",
     },
-    
-    
+
+
   ])
 
-  if(isInfo) 
-  return <AdditionalInfo close={()=>setIsInfo(false)}/>
+  if (isInfo)
+    return <AdditionalInfo close={() => setIsInfo(false)} />
 
-if(isUploadingVideo)
-  return <UploadVideo submit={()=>setIsUploadingVideo(false)}/>
-if(isUploadingPDF)
-  return <UploadPDF submit={()=>setIsUploadingPDF(false)}/>
-if(createQuiz)
-  return <CreateQuiz submit={()=>setCreateQuiz(false)}/>
-  
-  function handleDragEnd(e){
-    const {active,over} = e
-    if(active.id !== over.id) {
+  if (isUploadingVideo)
+    return <UploadVideo submit={() => setIsUploadingVideo(false)} />
+  if (isUploadingPDF)
+    return <UploadPDF submit={() => setIsUploadingPDF(false)} />
+  if (createQuiz)
+    return <CreateQuiz submit={() => setCreateQuiz(false)} />
+
+  function handleDragEnd(e) {
+    const { active, over } = e
+    if (active.id !== over.id) {
       setContent((items) => {
         const activeIndex = items.findIndex(item => item.id === active.id);
         const overIndex = items.findIndex(item => item.id === over.id);
         return arrayMove(items, activeIndex, overIndex);
       });
-  }}
+    }
+  }
   function addUnit(name) {
 
   }
   return (
-      <>
-      <div className='flex pb-10 justify-between '>
+    <>
+      <div className='flex justify-between '>
         <div className='flex'>
-          <img className='mr-2 rounded w-44' src={image}/>
-          <h1 >Course name</h1>
+          <img className='mr-4 rounded w-3/5' src={image} />
+          <div className='pr-40'>
+            <h1 className='text-xl font-bold'>Course name</h1>
+            <p className='mt-4 text-md font-light'>Course description goes here Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent aliquam aliquet erat eget placerat. Duis sodales aliquet justo fermentum tempor. Quisque ipsum urna, imperdiet et tristique in, eleifend non nulla. Mauris vel porta sapien. Nunc maximus sed leo eget varius. Proin vitae tempus sem, ut rutrum </p>
+          </div>
         </div>
         <div>
-          <button className='text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={()=> setIsInfo(true)}>
+          <button className='text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={() => setIsInfo(true)}>
             info
           </button>
         </div>
       </div>
       <div className='flex justify-end mb-4'>
-        <button className='mr-2 text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={()=>setSortable(!sortable)}>
+        <button className='mr-2 text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={() => setSortable(!sortable)}>
           reorder
         </button>
-      <FormDialog />
+        <FormDialog />
       </div>
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-    <div >
-    
-      <div >
-        <SortableContext items={content} strategy={verticalListSortingStrategy}>
-          {content.map((item) => {
-            if(item.type == 'unit')
-              return <Unit key={JSON.stringify(item)} createQuiz={()=> setCreateQuiz(true)} uploadVideo={()=> setIsUploadingVideo(true)} uploadPDF={()=>setIsUploadingPDF(true)}  sortable={sortable} item={item} />
-            if(item.type == 'lesson')
-              return <Lesson sortable={sortable} key={JSON.stringify(item)} item={item}/>
-          })}
-        </SortableContext>
-      </div>
-    </div>
+        <div >
+
+          <div >
+            <SortableContext items={content} strategy={verticalListSortingStrategy}>
+              {content.map((item) => {
+                if (item.type == 'unit')
+                  return <Unit key={JSON.stringify(item)} createQuiz={() => setCreateQuiz(true)} uploadVideo={() => setIsUploadingVideo(true)} uploadPDF={() => setIsUploadingPDF(true)} sortable={sortable} item={item} />
+                if (item.type == 'lesson')
+                  return <Lesson sortable={sortable} key={JSON.stringify(item)} item={item} />
+              })}
+            </SortableContext>
+          </div>
+        </div>
       </DndContext>
-      </>
+    </>
   )
 }
 

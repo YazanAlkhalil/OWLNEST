@@ -12,6 +12,7 @@ function CreateQuiz() {
     const addQuestion = (question) => {
         setQuestions([...questions, question]);
     };
+    console.log(questions);
     function updateQuestionData(index, updatedQuestionData) {
         const tempQuestionData = [...questions];
         tempQuestionData[index] = updatedQuestionData;

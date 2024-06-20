@@ -17,11 +17,10 @@ export default function FormDialog({ question, updateQuestionData }) {
     const handleClickOpen = () => {
         setOpen(true);
     };
-
+    
     const handleClose = () => {
         setOpen(false);
-    };
-   
+    };   
     function handleSubmit() {
         if (questionData.answers.length <= 1)
             return toast.error('there should be at least two answers')
@@ -52,7 +51,9 @@ export default function FormDialog({ question, updateQuestionData }) {
                     <AnswerList answers={questionData.answers} updateAnswers={(updateAnswers) => setQuestionData({ ...questionData, answers: updateAnswers })} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={()=>{
+                        setQuestionData(question)
+                        handleClose()}}>Cancel</Button>
                     <Button onClick={handleSubmit} type="submit">Save</Button>
                 </DialogActions>
             </Dialog>

@@ -6,7 +6,7 @@ function AdditionalInfo({close}) {
   useEffect(() => {
     const adjustHeight = () => {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight+ 2}px`;
     };
 
     adjustHeight(); 
