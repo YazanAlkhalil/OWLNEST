@@ -1,32 +1,31 @@
 import React from 'react';
 import './TypeRegister.css';
 import { NavLink } from 'react-router-dom';
+import logo from './../../images/logo.png';
+import backGround from './../../images/—Pngtree—e-learning education online illustration_6548963.png'
 
 export default function TypeRegister() {
   return (
     <>
     <div className='TypeRegister'>
-        <div className="row">
-          <div className="col-6 text-center">
-            <div className='container'>
-                <div className='checkCard'>
-                    <h4 className='fw-bold mb-4'>Do you have a Company?</h4>
-                    <div className='mb-5'>
-                        <img  alt='error' width={'150px'} height={'150px'} />
+        <div className="flex flex-wrap ">
+          <div className="w-1/2 text-center">
+            <div className='container mx-auto sm:px-4'>
+                <div className='checkCard mx-auto'>
+                    <h4 className='font-semibold text-xl mb-4'>Do you have a Company?</h4>
+                    <div className='mb-9'>
+                        <img src={logo} className='mx-auto'  alt='error' width={'150px'} height={'150px'} />
                     </div>
-                    <div className='buttonGroup'>
-                        <NavLink to={'/companyDetails'} className='btn button fw-bold text-light'>Create Your Nest Now</NavLink>
-                        <NavLink className='btn button fw-bold text-light'>Maybe Later</NavLink>
+                    <div className='buttonGroup flex justify-center gap-9'>
+                        <NavLink to={'/companyDetails'} className='inline-block font-semibold p-5 align-middle  select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline button  text-gray-100'>Create Your Nest Now</NavLink>
+                        <NavLink to={'/trainee'} className='inline-block font-semibold p-5 align-middle  select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline button  text-gray-100'>Maybe Later</NavLink>
                     </div>
                 </div>
             </div>
           </div>
-          <div className="col-6 loginBackGround text-center">
+          <div className="w-1/2 loginBackGround">
             <div>
-            <h1 className="text-light">
-                WELCOME IN OUR OWL NEST WEBSITE 😁
-              </h1>
-              <img  alt="error" width={'350px'} height={'350px'} />
+              <img src={backGround} className='mx-auto'  alt="error" width={'500px'} height={'500px'} />
             </div>
           </div>
         </div>

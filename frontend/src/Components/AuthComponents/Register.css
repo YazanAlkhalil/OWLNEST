@@ -1,13 +1,12 @@
 .signUp .login-form{
-    padding: 50px 90px;   
+    padding: 35px 90px 0;   
 }
-.signUp .login-form .form-group input{
+.signUp .login-form  input{
     width: 75%;
     height: 50px;
     padding: 10px 20px;
     border-radius: 20px;
     background-color: rgba(216, 216, 216, 0.608);
-    border: none !important;
     font-weight: bold;
 }
 .signUp .login-form select{
@@ -17,7 +16,6 @@
     border-radius: 20px;
     background-color: rgba(216, 216, 216, 0.608);
     color: rgba(0, 0, 0, 0.516);
-    border: none !important;
     font-weight: bold;
 }
 .signUp .login-form select option{
@@ -38,6 +36,8 @@
     overflow-y:scroll;
   }
 .signUp .loginBackGround{
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
     min-height: 100vh;
     padding: 30px;
     background: rgb(63,86,251);
