@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import image from '../images/40npx.png'
 import { IoIosNotifications } from "react-icons/io";
-
+import { NavLink } from 'react-router-dom';
 
 
 function NavBar({highlight}) {
@@ -26,9 +26,9 @@ function NavBar({highlight}) {
     <div className='flex justify-evenly items-center py-2 '>
       <div className='flex items-center flex-grow justify-evenly'>
 
-        <a className={highlight == "trainee" ? "text-accent": ""} href="#">Trainee</a>
-        <a className={highlight == "trainer" ? "text-accent": ""} href="#">Instructor</a>
-        <a className={highlight == "admin" ? "text-accent": ""} href="#">Admin</a>
+        <NavLink className={highlight == "trainee" ? "text-accent": ""} to="/trainee">Trainee</NavLink>
+        <NavLink className={highlight == "trainer" ? "text-accent": ""} to="/trainer">Instructor</NavLink>
+        <NavLink className={highlight == "admin" ? "text-accent": ""} to="/admin">Admin</NavLink>
       </div>
       <div className='flex items-center flex-grow justify-end '>
 

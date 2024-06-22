@@ -9,14 +9,12 @@ const AnswerList = ({ answers, updateAnswers }) => {
       updateAnswers([...answers, {id:uuidv4(), text: '', isCorrect: false, feedback: '' }]);
     }
   };
-  console.log(answers,'answers');
   const updateAnswer = (index, updatedAnswer) => {
     const updatedAnswers = [...answers];
     updatedAnswers[index] = updatedAnswer;
     updateAnswers(updatedAnswers);
   };
   const deleteAnswer = (id)=>{
-    console.log(id,"delete id");
     if(answers.length > 2){
       const updatedAnswers = [...answers];
       const index = updatedAnswers.findIndex((a) => a.id === id);
@@ -27,7 +25,6 @@ const AnswerList = ({ answers, updateAnswers }) => {
       toast.error('Answers should at least be 2')
     }
   }
-  console.log(answers,'sdfa');
   return (
     <div className='mt-10'>
       {answers.map((answer, index) => (

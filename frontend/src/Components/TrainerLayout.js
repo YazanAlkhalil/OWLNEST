@@ -4,14 +4,14 @@ import Sidebar from "./Sidebar";
 
 const TrainerLayout = () => {
   return (
-    <div className="flex flex-1 ">
-      <Sidebar  links={[
-        { name: "courses", url: "/trainee/courses" },
-        { name: "inprogress", url: "/trainee/inprogress" },
+    <div className="grid grid-cols-6 h-screen">
+      <Sidebar   links={[
+        { name: "courses", url: "/trainer/courses" },
+        { name: "inprogress", url: "/trainer/inprogress" },
       ]} />
-      <div className="h-screen overflow-auto flex flex-col grow-[24]">
+      <div className="h-screen col-span-5 overflow-auto flex flex-col grow-[24]">
         <Navbar highlight='trainer' />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 overflow-auto">
           <Outlet />
         </main>
       </div>

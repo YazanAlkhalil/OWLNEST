@@ -5,6 +5,9 @@
 
 @layer components {
   .btn-inner {
-    @apply  border border-solid border-secondary p-3 hover:bg-secondary hover:text-white rounded text-secondary;
+    @apply border border-solid border-secondary p-3 hover:bg-secondary hover:text-white rounded text-secondary;
+  }
+  .active {
+    @apply text-accent;
   }
 }

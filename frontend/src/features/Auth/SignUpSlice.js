@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
 export const signupUser = createAsyncThunk(
     "users/signupUser",
     async (data, thunkAPI) => {
@@ -28,6 +29,7 @@ export const signupUser = createAsyncThunk(
         //     return thunkAPI.rejectWithValue(e.response.data);
         // }
         console.log(data);
+        
     }
 );
 

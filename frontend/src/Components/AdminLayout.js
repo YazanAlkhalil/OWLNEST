@@ -4,15 +4,15 @@ import Sidebar from "./Sidebar";
 
 const AdminLayout = () => {
   return (
-    <div className="flex flex-1 ">
+    <div className="grid grid-cols-6">
       <Sidebar  links={[
-        { name: "home", url: "/trainee/home" },
-        { name: "courses", url: "/trainee/courses" },
-        { name: "users", url: "/trainee/inprogress" },
+        { name: "home", url: "/admin/dashboard" },
+        { name: "courses", url: "/admin/courses" },
+        { name: "users", url: "/admin/users" },
       ]} />
-      <div className="h-screen flex flex-col grow-[24]">
+      <div className="h-screen col-span-5 flex flex-col grow-[24]">
         <Navbar highlight='admin'/>
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 overflow-auto">
           <Outlet />
         </main>
       </div>
