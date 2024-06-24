@@ -1,6 +1,6 @@
 from django.db import models
 from authentication.models import User
-from system.models.Owner import Owner
+from system.models.owner import Owner
 
 class Company(models.Model):
     user = models.OneToOneField(Owner,on_delete=models.CASCADE)
