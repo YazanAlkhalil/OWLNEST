@@ -4,6 +4,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from 'react-redux';
 import { clickPreviousButton } from '../../features/ClickCourse';
 import Content from '../Content';
+import { useNavigate } from 'react-router-dom';
 
 const lessons = [
   {
@@ -41,10 +42,9 @@ const lessons2 = [
 ]
 
 export default function TraineeCourseDisplay() {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const onGoBackClick = ()=>{
-    dispatch(clickPreviousButton());
-    window.history.back();
+    navigate('/trainee/courses');
   }
   return (
     <div>

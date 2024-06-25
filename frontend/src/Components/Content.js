@@ -19,7 +19,7 @@ export default function Content({ unit, lessons }) {
           <div
             key={les.id}
             className="flex justify-between bg-gray-300 px-6 py-3 mb-4 hover:cursor-pointer"
-            onClick={()=> navigate('/trainee/courses/content/lesson')}
+            onClick={()=> navigate('/trainee/courses/:id/content/lesson')}
             >
             <h1 className="text-md font-bold">{les.title}</h1>
             <div className="text-xl pt-1">{getIcon(les.type)}</div>

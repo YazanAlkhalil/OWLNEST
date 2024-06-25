@@ -5,9 +5,7 @@ import { clickCourse } from '../features/ClickCourse';
 
 export default function TraineeCourse({image,name}) {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const handleClickCourse = () => {
-      dispatch(clickCourse());
       navigate('id');
     }
   return (
