@@ -1,16 +1,10 @@
 import React from "react";
-import backGround from './../images/multimedia-courses-scope-and-career 1.png';
-import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { clickCompany } from "../features/ClickCompany";
+import { useNavigate } from "react-router-dom";
 import logo from './../images/logo.png';
 
 export default function Company() {
-    const value = useSelector(state => state.clickCompany.value);
-    const dispatch = useDispatch();
     const navigate = useNavigate()
     function handleCompanyClick() {
-        dispatch(clickCompany(false));
         navigate('/trainee',{replace: true});
         
     }

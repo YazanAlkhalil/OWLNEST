@@ -2,17 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import image from "../images/40npx.png";
 import { IoIosNotifications } from "react-icons/io";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import logo from "./../images/logo.png";
 import { CiSettings } from "react-icons/ci";
 import { FaExchangeAlt } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
-import { clickChnageCompany, clickCompany } from "../features/ClickCompany";
 import Badge from '@mui/material/Badge';
 
 function NavBar({ highlight }) {
-  const navProp = useSelector((state) => state.clickCompany.value);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [dropdown, setDropdown] = useState(false);
   const overlayRef = useRef(null);
@@ -25,7 +20,6 @@ function NavBar({ highlight }) {
     }
   };
   const handleChangeCompanyClick = () => {
-    dispatch(clickChnageCompany());
     navigate('/company',{replace: true});
   }
   useEffect(() => {
@@ -37,16 +31,12 @@ function NavBar({ highlight }) {
 
   return (
     <div
-      className={
-        navProp
-          ? "flex justify-evenly items-center py-2 "
-          : "flex justify-evenly items-center bg-slate-500 p-2"
+      className={"flex justify-evenly items-center py-2 "
       }>
       <div
         className={
-          navProp ? "flex items-center flex-grow justify-evenly" : "ml-7"
-        }>
-        {navProp ? (
+           "flex items-center flex-grow justify-evenly"
+        }> 
           <>
             <NavLink
               className={highlight === "trainee" ? "text-accent" : ""}
@@ -64,18 +54,11 @@ function NavBar({ highlight }) {
               Admin
             </NavLink>
           </>
-        ) : (
-          <img src={logo} alt="error" className="w-[100px] h-[100px]" />
-        )}
       </div>
       <div className="flex items-center flex-grow justify-end ">
-        {navProp ? (
           <Badge badgeContent={4} color="error">
           <IoIosNotifications className="size-8 hover:cursor-pointer" />
           </Badge>
-        ) : (
-          <></>
-        )}
         <div className="relative flex items-center px-8">
           <h3 className="pr-4">username</h3>
           <img

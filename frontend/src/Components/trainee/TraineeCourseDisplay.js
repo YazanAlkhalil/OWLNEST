@@ -1,8 +1,6 @@
 import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from 'react-redux';
-import { clickPreviousButton } from '../../features/ClickCourse';
 import Content from '../Content';
 import { useNavigate } from 'react-router-dom';
 
