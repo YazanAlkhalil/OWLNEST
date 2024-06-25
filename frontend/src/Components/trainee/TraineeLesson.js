@@ -3,10 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@mui/material";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 export default function TraineeLesson() {
+  const navigate = useNavigate();
   const onGoBackClick = () => {
-    window.history.back();
+    navigate('/trainee/courses/:id/content')
   };
   return (
     <div>
