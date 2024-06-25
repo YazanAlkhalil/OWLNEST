@@ -18,7 +18,7 @@ export default function TypeRegister() {
                     </div>
                     <div className='buttonGroup flex justify-center gap-9'>
                         <NavLink to={'/companyDetails'} className='inline-block font-semibold p-5 align-middle  select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline button  text-gray-100'>Create Your Nest Now</NavLink>
-                        <NavLink to={'/trainee'} className='inline-block font-semibold p-5 align-middle  select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline button  text-gray-100'>Maybe Later</NavLink>
+                        <NavLink to={'/company'} className='inline-block font-semibold p-5 align-middle  select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline button  text-gray-100'>Maybe Later</NavLink>
                     </div>
                 </div>
             </div>

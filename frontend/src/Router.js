@@ -1,14 +1,30 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./Pages/Auth/LoginPage";
 import RegisterPage from "./Pages/Auth/RegisterPage";
 import VerifyEmail from "./Components/AuthComponents/VerifyEmail";
 import TypeRegister from "./Components/AuthComponents/TypeRegister";
 import CompanyDetails from "./Components/AuthComponents/CompanyDetails";
-import TrainerLayout from './Components/TrainerLayout';
-import TraineeLayout from './Components/TraineeLayout'
-import AdminLayout from './Components/AdminLayout';
-import CreateCoursePage from './Pages/trainer/CreateCoursePage';
+import TrainerLayout from "./Components/TrainerLayout";
+import TraineeLayout from "./Components/TraineeLayout";
+import AdminLayout from "./Components/AdminLayout";
+import CreateCoursePage from "./Pages/trainer/CreateCoursePage";
+import TrainerCoursesPage from "./Pages/trainer/TrainerCoursesPage";
+import AdminDashboard from "./Pages/admin/AdminDashboard";
+import AdminCourseDetails from "./Pages/admin/AdminCourseDetails";
+import AdminCoursesPage from "./Pages/admin/AdminCoursesPage";
+import AdminUsers from "./Pages/admin/AdminUsers";
+import NotFoundPage from "./Pages/NotFoundPage";
+import CompanyPage from "./Pages/CompanyPage";
+import TranieeDashboard from "./Components/trainee/TranieeDashboard";
+import TraineeCourses from "./Components/trainee/TraineeCourses";
+import TraineeFavorites from "./Components/trainee/TraineeFavorites";
+import TraineeCertificate from "./Components/trainee/TraineeCertificate";
+import TraineeCourseDisplay from "./Components/trainee/TraineeCourseDisplay";
+import TraineeLesson from "./Components/trainee/TraineeLesson";
+import TraineeProgress from "./Components/trainee/TraineeProgress";
+import TraineeDiscussion from "./Components/trainee/TraineeDiscussion";
+import TraineeInfor from "./Components/trainee/TraineeInfor";
 
 export default function Router() {
   return (
@@ -18,13 +34,45 @@ export default function Router() {
       <Route path="/verify" element={<VerifyEmail />} />
       <Route path="/checkCompany" element={<TypeRegister />} />
       <Route path="/companyDetails" element={<CompanyDetails />} />
-      <Route path="/trainee" element={<TraineeLayout />}></Route>
+      <Route path="/company" element={<CompanyPage />} />
 
-      <Route path="/trainer" element={<TrainerLayout />}>
-        <Route index path="/trainer/" element={<CreateCoursePage />} />
+      <Route path="/trainee" element={<TraineeLayout />}>
+        <Route path="/trainee/homePage" element={<TranieeDashboard />} />
+        <Route path="/trainee/courses" element={<TraineeCourses />} />
+        <Route path="/trainee/courses/:id" element={<TraineeCourseDisplay />} />
+        <Route path="/trainee/courses/content/lesson" element={<TraineeLesson />} />
+        <Route path="/trainee/courses/progress" element={<TraineeProgress />} />
+        <Route path="/trainee/courses/discussion" element={<TraineeDiscussion />} />
+        <Route path="/trainee/courses/Info" element={<TraineeInfor />} />
+        <Route path="/trainee/favorites" element={<TraineeFavorites />} />
+        <Route path="/trainee/certifications" element={<TraineeCertificate />} />
+        <Route
+          path="/trainee"
+          element={<Navigate to="/trainee/homePage" replace />}
+        />
       </Route>
 
-      <Route path="/admin" element={<AdminLayout />}></Route>
+      <Route path="/trainer" element={<TrainerLayout />}>
+        <Route path="/trainer/courses/:id" element={<CreateCoursePage />} />
+        <Route path="/trainer/courses" element={<TrainerCoursesPage />} />
+        <Route
+          path="/trainer"
+          element={<Navigate to="/trainer/courses" replace />}
+        />
+      </Route>
+
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/courses/:id" element={<AdminCourseDetails />} />
+        <Route path="/admin/courses" element={<AdminCoursesPage />} />
+        <Route path="/admin/users" element={<AdminUsers />} />
+        {/* <Route path='/admin/users/:id' element={<AdminCoursesPage />} /> */}
+        <Route
+          path="/admin"
+          element={<Navigate to="/admin/dashboard" replace />}
+        />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
