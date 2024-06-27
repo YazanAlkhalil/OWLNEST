@@ -1,6 +1,6 @@
 from django.db import models
 from authentication.models import User
-from system.models.trainer import Trainer
+from system.models.Trainer import Trainer
 from system.models.Company import Company
 
 class Trainer_Contract(models.Model):
