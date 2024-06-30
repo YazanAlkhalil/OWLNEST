@@ -1,6 +1,5 @@
-from django.db import models
-from authentication.models import User
-from system.models.admin import Admin
+from django.db import models 
+from system.models.Admin import Admin
 from system.models.Company import Company
 
 class Admin_Contract(models.Model):
