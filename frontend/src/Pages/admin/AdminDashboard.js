@@ -1,6 +1,7 @@
 import React from 'react'
 import Card from '../../Components/Card'
 import ChartExample from '../../Components/Chart'
+import { NavLink } from 'react-router-dom'
 
 
 
@@ -12,7 +13,7 @@ function AdminDashboard() {
             <span className='text-xl '>Owner: yazan Alkhalil</span>
             <div>
                 <span className='text-lg mr-5'>Balance: 2345$</span>
-                <button className='bg-accent text-white p-2 rounded hover:bg-[#dea01edd]'>Buy Courses</button>
+                <NavLink to={'/admin/buyCourse'} className='bg-accent text-white p-2 rounded hover:bg-[#dea01edd]'>Buy Courses</NavLink>
             </div>
         </div>
         <div className='flex justify-evenly flex-grow my-8'>

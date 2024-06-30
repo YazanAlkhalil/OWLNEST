@@ -42,7 +42,7 @@ const certificateArray = [
 export default function TraineeCertificate() {
   return (
     <>
-      <div className="flex flex-wrap justify-center gap-4  p-5">
+      <div className="flex flex-wrap gap-4">
         {certificateArray.map((cer)=>{
           return(
             <div key={cer.id} className="bg-white shadow-md rounded p-4">

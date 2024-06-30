@@ -47,7 +47,7 @@ export default function TraineeFavorites() {
     console.log('hi')
   }
   return (
-    <div className="flex flex-wrap gap-3 p-5">
+    <div className="flex flex-wrap gap-3">
       {favourits.map((fav)=>{
         return (
           <div
