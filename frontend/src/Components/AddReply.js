@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import React, { useState } from 'react'
 
-export default function AddComment() {
+export default function AddReply() {
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true)
@@ -11,8 +11,8 @@ export default function AddComment() {
     }
   return (
     <>
-      <button className='text-xl border border-solid border-secondary font-semibold px-8 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={handleClickOpen}>
-        Comment
+      <button className='text-xl font-semibold text-white bg-gray-400 px-6 py-2' onClick={handleClickOpen}>
+        Reply
       </button>
       <Dialog
         open={open}
@@ -31,15 +31,15 @@ export default function AddComment() {
         <DialogTitle>New Comment</DialogTitle>
         <DialogContent>
           <DialogContentText>
-           Enter Your Comment
+           Enter Your Reply
           </DialogContentText>
           <TextField
             autoFocus
             required
             margin="dense"
-            id="Comment"
-            name="Comment"
-            label="Comment"
+            id="Reply"
+            name="Reply"
+            label="Reply"
             type="text"
             fullWidth
             variant="standard"
