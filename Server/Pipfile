@@ -10,6 +10,7 @@ mysqlclient = "*"
 django-extensions = "*"
 pydotplus = "*"
 graphviz = "*"
+pillow = "*"
 
 [dev-packages]
 

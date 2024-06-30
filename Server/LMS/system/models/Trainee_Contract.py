@@ -1,5 +1,4 @@
 from django.db import models
-from authentication.models import User
 from system.models.Trainee import Trainee
 from system.models.Company import Company
 

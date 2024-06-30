@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'system',
-        'django_extensions', 
+    'django_extensions', 
 
 ]
 
@@ -122,6 +122,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+# get the path for the main project (LMS) dir
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(os.path.join(BASE_DIR, 'static'), 'static')]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(os.path.join(BASE_DIR, 'static'), 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

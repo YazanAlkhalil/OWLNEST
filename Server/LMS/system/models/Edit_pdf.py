@@ -3,14 +3,13 @@ from system.models.Pdf import Pdf
 
 class EditPdf(models.Model):
   pdf = models.ForeignKey(Pdf, on_delete=models.CASCADE)
-  file_path = models.FilePathField()
-  additional_resources = models.TextField()
+  file_path = models.FileField()
   EDITION_STATES = [
-    ('E', 'Editing'),
-    ('R', 'Ready'),
-    ('P', 'Published')
+    ('PR', 'InProgress'),
+    ('PE', 'Pending'),
+    ('PU', 'Published')
   ]
-  state = models.CharField(max_length=1, choices=EDITION_STATES)
+  state = models.CharField(max_length=2, choices=EDITION_STATES)
   edition_date = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
