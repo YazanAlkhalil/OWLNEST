@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "db40c72ba94f244f3242fbf75144f5bbc9663b78de6276cc06cc84612c478530"
+            "sha256": "8b361e31ed89b418d6cda147dde37db70dc6b790749bad356fd58200b95eff86"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -30,7 +30,17 @@
                 "sha256:ff1b61005004e476e0aeea47c7f79b85864c70124030e95146315396f1e7951f"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.10'",
             "version": "==5.0.6"
+        },
+        "django-cors-headers": {
+            "hashes": [
+                "sha256:5c6e3b7fe870876a1efdfeb4f433782c3524078fa0dc9e0195f6706ce7a242f6",
+                "sha256:92cf4633e22af67a230a1456cb1b7a02bb213d6536d2dcb2a4a24092ea9cebc2"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==4.4.0"
         },
         "django-extensions": {
             "hashes": [
@@ -38,6 +48,7 @@
                 "sha256:9600b7562f79a92cbf1fde6403c04fee314608fefbb595502e34383ae8203401"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.6'",
             "version": "==3.2.3"
         },
         "djangorestframework": {
@@ -46,6 +57,7 @@
                 "sha256:36fe88cd2d6c6bec23dca9804bab2ba5517a8bb9d8f47ebc68981b56840107ad"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==3.15.2"
         },
         "graphviz": {
@@ -54,6 +66,7 @@
                 "sha256:81f848f2904515d8cd359cc611faba817598d2feaac4027b266aa3eda7b3dde5"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==0.20.3"
         },
         "mysqlclient": {
@@ -69,6 +82,7 @@
                 "sha256:e1ebe3f41d152d7cb7c265349fdb7f1eca86ccb0ca24a90036cde48e00ceb2ab"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==2.2.4"
         },
         "pydotplus": {
@@ -77,6 +91,15 @@
             ],
             "index": "pypi",
             "version": "==2.0.2"
+        },
+        "pyjwt": {
+            "hashes": [
+                "sha256:57e28d156e3d5c10088e0c68abb90bfac3df82b40a71bd0daa20c65ccd5c23de",
+                "sha256:59127c392cc44c2da5bb3192169a91f429924e17aff6534d70fdc02ab3e04320"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==2.8.0"
         },
         "pyparsing": {
             "hashes": [

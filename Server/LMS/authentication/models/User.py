@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(models.Model):
+class User(AbstractUser):
     username = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    email = models.CharField(max_length=255,unique=True)
     password = models.CharField(max_length=255)
     phone = models.CharField(max_length=10)
     birthday = models.DateField()
@@ -40,6 +41,7 @@ class User(models.Model):
     is_admin = models.BooleanField(default=False)
     is_owner = models.BooleanField(default=False)
     otp = models.CharField(max_length=6)
+    otp_verified = models.BooleanField(default=False)
     joining_date = models.DateField(auto_now=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
