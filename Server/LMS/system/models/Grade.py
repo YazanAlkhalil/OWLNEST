@@ -7,3 +7,6 @@ class Grade(models.Model):
       test = models.ForeignKey(Test,on_delete=models.CASCADE)
       score = models.DecimalField(max_digits=3,decimal_places=2)
       taken_at = models.DateField(auto_now_add=True)
+
+      def __str__(self) -> str:
+            return f"{self.enrollment.trainee_contract.trainee.user.username}  || {self.test.content}"

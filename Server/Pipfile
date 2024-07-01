@@ -12,6 +12,7 @@ pydotplus = "*"
 graphviz = "*"
 django-cors-headers = "*"
 pyjwt = "*"
+pillow = "*"
 
 [dev-packages]
 
