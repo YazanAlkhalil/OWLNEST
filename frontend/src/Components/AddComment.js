@@ -11,7 +11,7 @@ export default function AddComment() {
     }
   return (
     <>
-      <button className='text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={handleClickOpen}>
+      <button className='text-xl border border-solid border-secondary font-semibold px-8 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={handleClickOpen}>
         Comment
       </button>
       <Dialog

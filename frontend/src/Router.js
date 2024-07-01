@@ -21,11 +21,14 @@ import TraineeCourses from "./Components/trainee/TraineeCourses";
 import TraineeFavorites from "./Components/trainee/TraineeFavorites";
 import TraineeCertificate from "./Components/trainee/TraineeCertificate";
 import TraineeCourseDisplay from "./Components/trainee/TraineeCourseDisplay";
-import TraineeLesson from "./Components/trainee/TraineeLesson";
 import TraineeProgress from "./Components/trainee/TraineeProgress";
 import TraineeDiscussion from "./Components/trainee/TraineeDiscussion";
 import TraineeInfor from "./Components/trainee/TraineeInfor";
 import CourseLayout from "./Components/trainee/CourseLayout";
+import Plane from "./Components/admin/Plane";
+import TraineeVideoLesson from "./Components/trainee/TraineeLesson";
+import TraineeQuiz from "./Components/TraineeQuiz";
+import TraineePdf from "./Components/trainee/TraineePdf";
 
 export default function Router() {
   return (
@@ -53,11 +56,14 @@ export default function Router() {
       <Route path="/trainee/courses/:id" element={<CourseLayout />}>
         <Route path="/trainee/courses/:id" element={<Navigate to="/trainee/courses/:id/content" replace />} />
         <Route path="/trainee/courses/:id/content" element={<TraineeCourseDisplay />} />
-        <Route path="/trainee/courses/:id/content/lesson" element={<TraineeLesson />} />
+        <Route path="/trainee/courses/:id/content/lesson" element={<TraineeVideoLesson />} />
         <Route path="/trainee/courses/:id/progress" element={<TraineeProgress />} />
         <Route path="/trainee/courses/:id/discussion" element={<TraineeDiscussion />} />
         <Route path="/trainee/courses/:id/Info" element={<TraineeInfor />} />
       </Route>
+
+        <Route path="/trainee/courses/:id/content/quiz" element={<TraineeQuiz />} />
+        <Route path="/trainee/courses/:id/content/Text" element={<TraineePdf />} />
 
 
 
@@ -73,6 +79,7 @@ export default function Router() {
 
       <Route path="/admin" element={<AdminLayout />}>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/buyCourse" element={<Plane />} />
         <Route path="/admin/courses/:id" element={<AdminCourseDetails />} />
         <Route path="/admin/courses" element={<AdminCoursesPage />} />
         <Route path="/admin/users" element={<AdminUsers />} />

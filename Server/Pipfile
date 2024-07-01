@@ -10,8 +10,6 @@ mysqlclient = "*"
 django-extensions = "*"
 pydotplus = "*"
 graphviz = "*"
-pyjwt = "*"
-django-cors-headers = "*"
 
 [dev-packages]
 

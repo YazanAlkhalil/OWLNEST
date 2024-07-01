@@ -34,9 +34,10 @@ from system.models.Finished_Unit import Finished_Unit
 from system.models.Grade import Grade
 from system.models.Reply import Reply
 from system.models.Review import Review 
-from system.models.Trainer_Course import Trainer_Course
+from system.models.Trainer_Contract_Course import Trainer_Contract_Course
 from system.models.Trainee_skills import Trainee_Skills
 from system.models.Skill import Skill
+
 # Register your models here.
 admin.site.register(Admin)
 admin.site.register(Admin_Contract)
@@ -75,5 +76,5 @@ admin.site.register(Grade)
 admin.site.register(Reply)
 admin.site.register(Review)
 admin.site.register(Skill)
-admin.site.register(Trainer_Course)
+admin.site.register(Trainer_Contract_Course)
 admin.site.register(Trainee_Skills)

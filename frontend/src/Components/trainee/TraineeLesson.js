@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-export default function TraineeLesson() {
+export default function TraineeVideoLesson() {
   const navigate = useNavigate();
   const onGoBackClick = () => {
     navigate('/trainee/courses/:id/content')

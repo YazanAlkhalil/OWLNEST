@@ -1,5 +1,4 @@
 from django.db import models
-from authentication.models import User
 from system.models.Trainer_Contract import Trainer_Contract
 
 class Trainer_Notfication(models.Model):
