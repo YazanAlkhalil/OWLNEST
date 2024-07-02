@@ -32,13 +32,13 @@ class LoginView(APIView):
 
         response = Response()
 
-        response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True)
+        #response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True)
         response.data = {
-            'token' : accessToken
+            'accessToken' : accessToken,
+            'refreshToken' : refreshToken
         }
 
         return response
-
 
 class UserView(APIView):
     def get(self, request):
@@ -55,21 +55,31 @@ class UserView(APIView):
 
 class RefreshApiView(APIView):
     def post(self,request):
-        refreshToken = request.COOKIES.get('refreshToken')
+        refreshToken = request.data.get('refreshToken')
         id = decodeRefreshToken(refreshToken)
-        access_Token = createAccessToken(id)
+        accessToken = createAccessToken(id)
         return Response({
-            'token':access_Token
+            'accessToken':accessToken
         })
 
 
 class LogoutView(APIView):
-
     def post(self,request):
         response = Response()
         response.delete_cookie('jwt')
         response.data = {
             'message':'success'
         }
-
         return response
+
+class ForgetPassword(APIView):
+    def post(self,request):
+        email = request.data['email']
+        password = request.data['password']
+        user = User.objects.filter(email=email).first()
+        if user:
+            user.set_password(password)
+            user.save()
+            return Response({'message':'success'})
+        else:
+            return Response({'message':'user not found'})
