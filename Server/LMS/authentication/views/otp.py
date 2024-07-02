@@ -23,8 +23,8 @@ class OTPVerificationView(APIView):
         user.otp_expires_at = datetime.datetime.now() + datetime.timedelta(minutes=5)
         user.save()
 
-        subject = "Your One-Time Password (OTP)"
-        message = f"Your OTP is: {otp}"
+        subject = "Account Verification"
+        message = f"Welcome to owlnest. Congratulations on creating your account Only one step remains to activate your account \n Your OTP is: {otp}"
         from_email = settings.EMAIL_HOST_USER
         recipient_list = [user.email]
 
