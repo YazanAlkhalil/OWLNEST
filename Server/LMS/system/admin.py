@@ -24,7 +24,7 @@ from system.models.Answer import Answer
 from system.models.Edit_unit import EditUnit
 from system.models.Edit_pdf import EditPdf
 from system.models.Edit_Video import EditVideo
-
+from system.models.Additional_Resources import Additional_Resources
 
 from system.models.Comment import Comment
 from system.models.Enrollment import Enrollment
@@ -65,7 +65,7 @@ admin.site.register(Answer)
 admin.site.register(EditUnit)
 admin.site.register(EditPdf)
 admin.site.register(EditVideo)
-
+admin.site.register(Additional_Resources)
 
 admin.site.register(Comment)
 admin.site.register(Enrollment)

@@ -8,7 +8,7 @@ class Content(models.Model):
   order = models.IntegerField(default=0)
   
   def __str__(self):
-    return self.title
+    return f"{self.title}||{self.unit.title}||{self.unit.course.name}"
   
   class Meta:
     ordering = ['title']
