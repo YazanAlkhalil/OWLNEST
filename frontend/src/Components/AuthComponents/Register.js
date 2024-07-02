@@ -5,6 +5,28 @@ import { useDispatch } from "react-redux";
 import { signupUser } from "../../features/Auth/SignUpSlice";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
 
+const countries = [
+  ["DZ", "Algeria"],
+  ["BH", "Bahrain"],
+  ["EG", "Egypt"],
+  ["IQ", "Iraq"],
+  ["JO", "Jordan"],
+  ["KW", "Kuwait"],
+  ["LB", "Lebanon"],
+  ["LY", "Libya"],
+  ["MR", "Mauritania"],
+  ["MA", "Morocco"],
+  ["OM", "Oman"],
+  ["PS", "Palestine"],
+  ["QA", "Qatar"],
+  ["SA", "Saudi Arabia"],
+  ["SD", "Sudan"],
+  ["SY", "Syria"],
+  ["TN", "Tunisia"],
+  ["AE", "United Arab Emirates"],
+  ["YE", "Yemen"],
+];
+
 export default function Register() {
   const navigate = useNavigate();
   // states
@@ -12,10 +34,10 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [confPass, setConfPass] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phone, setPhoneNumber] = useState("");
   const [date, setDate] = useState("");
-  const [gender, setGender] = useState("");
-  const [country, setCountry] = useState("");
+  const [gender, setGender] = useState("M");
+  const [country, setCountry] = useState("SY");
   const [errors1, setErrors1] = useState({});
   const [errors2, setErrors2] = useState({});
 
@@ -50,33 +72,31 @@ export default function Register() {
     return Object.keys(errors).length === 0;
   };
 
-
-
   const validate2 = () => {
     const errors = {};
-    if (!phoneNumber) {
+    if (!phone) {
       errors.phoneNumber = "Phone Number is required";
     }
 
     if (!date) {
       errors.date = "Date is required";
     }
-    if(!gender){
-      errors.gender = "Gender is required"
+    if (!gender) {
+      errors.gender = "Gender is required";
     }
-    if(!country){
-      errors.country = "Country is required"
+    if (!country) {
+      errors.country = "Country is required";
     }
     setErrors2(errors);
 
     return Object.keys(errors).length === 0;
-    }
-  
+  };
+
   // configure another form
   const [firstPart, setFirstPart] = useState(false);
   function onNextClick() {
-    if(validate1()){
-      setFirstPart(true);   
+    if (validate1()) {
+      setFirstPart(true);
     }
   }
 
@@ -89,17 +109,16 @@ export default function Register() {
       username: username,
       password: password,
       email: email,
-      confPass: confPass,
-      phoneNumber: phoneNumber,
-      date: date,
+      phone: phone,
+      birthday: date,
       gender: gender,
       country: country,
     };
     // console.log(data);
     if (validate2()) {
-      console.log('he')
+      console.log("he");
       dispatch(signupUser(data));
-      navigate('/verify',{replace: true});
+      navigate("/verify", { replace: true });
     }
   }
 
@@ -128,7 +147,9 @@ export default function Register() {
                           } rounded focus:outline-none`}
                         />
                         {errors1.username && (
-                          <div className="text-red-500 text-sm   font-semibold">{errors1.username}</div>
+                          <div className="text-red-500 text-sm   font-semibold">
+                            {errors1.username}
+                          </div>
                         )}
                       </div>
                       <div className="mb-4 mb-3">
@@ -143,7 +164,9 @@ export default function Register() {
                           } rounded focus:outline-none`}
                         />
                         {errors1.email && (
-                          <div className="text-red-500 text-sm  font-semibold">{errors1.email}</div>
+                          <div className="text-red-500 text-sm  font-semibold">
+                            {errors1.email}
+                          </div>
                         )}
                       </div>
                       <div className="mb-4 mb-3">
@@ -160,7 +183,9 @@ export default function Register() {
                           } rounded focus:outline-none`}
                         />
                         {errors1.password && (
-                          <div className="text-red-500 text-sm  font-semibold">{errors1.password}</div>
+                          <div className="text-red-500 text-sm  font-semibold">
+                            {errors1.password}
+                          </div>
                         )}
                       </div>
                       <div className="mb-4 mb-3">
@@ -177,7 +202,9 @@ export default function Register() {
                           } rounded focus:outline-none`}
                         />
                         {errors1.confPass && (
-                          <div className="text-red-500 text-sm  font-semibold">{errors1.confPass}</div>
+                          <div className="text-red-500 text-sm  font-semibold">
+                            {errors1.confPass}
+                          </div>
                         )}
                       </div>
                       <button
@@ -195,7 +222,7 @@ export default function Register() {
                           type="number"
                           id="phone"
                           placeholder="Phone Number"
-                          value={phoneNumber}
+                          value={phone}
                           onChange={(e) => setPhoneNumber(e.target.value)}
                           className={`w-full px-3 py-2 border ${
                             errors2.phoneNumber
@@ -220,7 +247,9 @@ export default function Register() {
                           } rounded focus:outline-none`}
                         />
                         {errors2.date && (
-                          <div className="text-red-500 text-sm  font-semibold">{errors2.date}</div>
+                          <div className="text-red-500 text-sm  font-semibold">
+                            {errors2.date}
+                          </div>
                         )}
                       </div>
                       <div className="mb-4 mb-3">
@@ -229,39 +258,42 @@ export default function Register() {
                           value={gender}
                           onChange={(e) => setGender(e.target.value)}
                           className={`w-full px-3 py-2 border ${
-                            errors2.gender ? "border-red-500" : "border-gray-300"
+                            errors2.gender
+                              ? "border-red-500"
+                              : "border-gray-300"
                           } rounded focus:outline-none`}>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
+                          <option value="M">Male</option>
+                          <option value="F">Female</option>
                         </select>
                         {errors2.gender && (
-                          <div className="text-red-500 text-sm  font-semibold">{errors2.gender}</div>
+                          <div className="text-red-500 text-sm  font-semibold">
+                            {errors2.gender}
+                          </div>
                         )}
                       </div>
                       <div className="mb-4 mb-3">
                         <div className="wrapper">
                           <select
-                            name="country"
-                            id="select-box"
-                            value={country}
-                            onChange={(e) => setCountry(e.target.value)}
-                            className={`w-full px-3 py-2 border ${
-                              errors2.country
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            } rounded focus:outline-none`}>
-                            <option value="USA">USA</option>
-                            <option value="Three">Three</option>
-                            <option value="Four">Four</option>
-                            <option value="Five">Five</option>
-                            <option value="Six">Six</option>
-                            <option value="Seven">Seven</option>
-                            <option value="Eight">Eight</option>
-                            <option value="Nine">Nine</option>
-                            <option value="Ten">Ten</option>
+                          name="country"
+                          id="select-box"
+                          value={country}
+                          onChange={(e) => setCountry(e.target.value)}
+                          className={`w-full px-3 py-2 border ${
+                            errors2.country
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          } rounded focus:outline-none`}
+                          >
+                            {countries.map(([code, name]) => (
+                              <option key={code} value={code}>
+                                {name}
+                              </option>
+                            ))}
                           </select>
                           {errors2.country && (
-                            <div className="text-red-500 text-sm  font-semibold">{errors2.country}</div>
+                            <div className="text-red-500 text-sm  font-semibold">
+                              {errors2.country}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -275,7 +307,9 @@ export default function Register() {
                   )}
                 </form>
                 <div className="sign-up mt-3">
-                  <p className="font-semibold mb-3">- Already have an account? -</p>
+                  <p className="font-semibold mb-3">
+                    - Already have an account? -
+                  </p>
                   <NavLink
                     to={"/"}
                     className="inline-block pt-5 font-semibold text-white align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 bg-gray-100 text-gray-800 hover:bg-gray-200 button fw-bold text-gray-100">

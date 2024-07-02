@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./VerifyEmail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { NavLink, useNavigate } from "react-router-dom";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
 import OtpInput from "react-otp-input";
+import { useSelector } from "react-redux";
+import { signupSelector } from "../../features/Auth/SignUpSlice";
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const { data } = useSelector(signupSelector);
 
   function onGoBackClick() {
     navigate("/signUP", { replace: true });
   }
+  useEffect(()=>{
+    console.log(data);
+  }
+  ,[data]);
 
   return (
     <>
