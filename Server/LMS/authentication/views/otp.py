@@ -7,6 +7,7 @@ from authentication.serializers.userSerializer import UserSerializer
 from authentication.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+import datetime
 
 class OTPVerificationView(APIView):
     def post(self, request):
@@ -16,8 +17,10 @@ class OTPVerificationView(APIView):
         if user is None:
             raise AuthenticationFailed('user not found')
 
-        otp = str(random.randint(100000, 999999))  
+        otp = str(random.randint(100000, 999999))
+        user.otp_verified = False
         user.otp = otp
+        user.otp_expires_at = datetime.datetime.now() + datetime.timedelta(minutes=5)
         user.save()
 
         subject = "Your One-Time Password (OTP)"

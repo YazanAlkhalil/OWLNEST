@@ -27,11 +27,8 @@ class LoginView(APIView):
         
         if not user.check_password(password):
             raise AuthenticationFailed('incorrect password')
-        
-
         accessToken = createAccessToken(user.id)
         refreshToken = createRefreshToken(user.id)
-
 
         response = Response()
 
@@ -69,7 +66,6 @@ class RefreshApiView(APIView):
 class LogoutView(APIView):
 
     def post(self,request):
-
         response = Response()
         response.delete_cookie('jwt')
         response.data = {
