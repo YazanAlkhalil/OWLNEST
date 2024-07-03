@@ -83,3 +83,14 @@ class ForgetPassword(APIView):
             return Response({'message':'success'})
         else:
             return Response({'message':'user not found'})
+        
+
+class DeleteUserView(APIView):
+    def delete(self, request):
+        pk = request.data['id']
+        user = User.objects.filter(pk=pk).first()
+        if user:
+            user.delete()
+            return Response({'message': 'User deleted successfully'})
+        else:
+            return Response({'message': 'User not found'}, status=404)
