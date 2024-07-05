@@ -3,10 +3,12 @@ from authentication.models import User
 from system.models.Owner import Owner
 
 class Company(models.Model):
-    user = models.OneToOneField(Owner,on_delete=models.CASCADE)
+    owner = models.OneToOneField(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=75)
     email = models.CharField(max_length=255)
-    logo = models.CharField(max_length=255)
+    def logo_image_path(instance, filename):
+        return f'course_{instance.id}/{filename}'
+    logo = models.ImageField(upload_to=logo_image_path, null=True, blank=True)
     COUNTRY_CHOICES = [
         ('DZ', 'Algeria'),
         ('BH', 'Bahrain'),
