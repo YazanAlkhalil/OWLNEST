@@ -116,9 +116,9 @@ export default function Register() {
     };
     // console.log(data);
     if (validate2()) {
-      console.log("he");
+      // console.log("he");
       dispatch(signupUser(data));
-      navigate("/verify", { replace: true });
+      navigate("/verify", { replace: true },{ state: { from: 'signup' } });
     }
   }
 

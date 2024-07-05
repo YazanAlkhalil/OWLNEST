@@ -25,6 +25,8 @@
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "postcss": "^8.4.38",
     "postcss-cli": "^11.0.0",
     "pspdfkit": "^2024.3.2",

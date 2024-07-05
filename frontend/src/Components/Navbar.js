@@ -6,9 +6,13 @@ import { CiSettings } from "react-icons/ci";
 import { FaExchangeAlt } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
 import Badge from '@mui/material/Badge';
+import { useDispatch } from "react-redux";
+import { logout } from "../features/Auth/LoginSlice";
+
 
 function NavBar({ highlight }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [dropdown, setDropdown] = useState(false);
   const overlayRef = useRef(null);
   const toggleOverlay = () => {
@@ -19,6 +23,10 @@ function NavBar({ highlight }) {
       setDropdown(false);
     }
   };
+  const handleLogoutButton = () => {
+      dispatch(logout());
+      navigate('/');
+  }
   const handleChangeCompanyClick = () => {
     navigate('/company',{replace: true});
   }
@@ -69,7 +77,7 @@ function NavBar({ highlight }) {
           <div ref={overlayRef} className={`${dropdown ? "block" :"hidden"} bg-white shadow-lg border-solid border border-slate-100 rounded w-48  absolute z-50 top-12 right-14`}>
           <div className='hover:bg-slate-200 px-4 py-2 hover:cursor-pointer rounded'><CiSettings className='inline size-5 mr-2'/>settings</div>
           <div className='hover:bg-slate-200 px-4 py-2 hover:cursor-pointer rounded' onClick={handleChangeCompanyClick}><FaExchangeAlt className='inline size-5 mr-2'/>change company</div>
-          <div className='hover:bg-slate-200 px-4 py-2 hover:cursor-pointer rounded'><LuLogOut className='inline size-5 mr-2'/>logout</div>
+          <div className='hover:bg-slate-200 px-4 py-2 hover:cursor-pointer rounded' onClick={handleLogoutButton}><LuLogOut className='inline size-5 mr-2'/>logout</div>
         </div>
         </div>
       </div>
