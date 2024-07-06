@@ -64,7 +64,8 @@ class RefreshApiView(APIView):
 class LogoutView(APIView):
     def post(self,request):
         response = Response()
-        response.delete_cookie('jwt')
+        response.delete_cookie('accessToken')
+        response.delete_cookie('refreshToken')
         response.data = {
             'message':'success'
         }
