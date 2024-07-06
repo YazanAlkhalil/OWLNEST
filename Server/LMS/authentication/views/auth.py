@@ -25,6 +25,9 @@ class LoginView(APIView):
         if user is None:
             raise AuthenticationFailed('user not found')
         
+        if user.otp_verified is False:
+            raise AuthenticationFailed('user not verified')
+        
         if not user.check_password(password):
             raise AuthenticationFailed('incorrect password')
         accessToken = createAccessToken(user.id)
@@ -32,11 +35,8 @@ class LoginView(APIView):
 
         response = Response()
 
-        #response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True)
-        response.data = {
-            'accessToken' : accessToken,
-            'refreshToken' : refreshToken
-        }
+        response.set_cookie(key='accessToken',value=accessToken ,httponly=True)
+        response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True)
 
         return response
 
@@ -55,11 +55,9 @@ class UserView(APIView):
 
 class RefreshApiView(APIView):
     def post(self,request):
-        refreshToken = request.data.get('refreshToken')
-        id = decodeRefreshToken(refreshToken)
-        accessToken = createAccessToken(id)
+        refreshToken = request.COOKIES.get('refreshToken')
         return Response({
-            'accessToken':accessToken
+            'accessToken':refreshToken
         })
 
 

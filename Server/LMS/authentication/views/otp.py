@@ -49,3 +49,15 @@ class VerifyOTPView(APIView):
         user.save()
 
         return Response({'message': 'OTP verified successfully'})
+    
+
+class SetTrue(APIView):
+    def post(self,request):
+        id = request.data['id']
+
+        user = User.objects.filter(id=id).first()
+
+        user.otp_verified = True
+        user.save()
+
+        return Response({'message': 'OTP verified successfully'})
