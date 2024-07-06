@@ -2,24 +2,77 @@ import React, { useEffect, useState } from "react";
 import "./VerifyEmail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
 import OtpInput from "react-otp-input";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signupSelector } from "../../features/Auth/SignUpSlice";
+import { verifyOTP } from "../../features/Auth/VerifySlice";
+import { resendOtp } from "../../features/Auth/ResendOtpSlice";
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const { data } = useSelector(signupSelector);
+  const dispatch = useDispatch();
+  const [email,setEmail] = useState();
+  const location = useLocation();
+  const { myData,from } = location.state || {};
 
   function onGoBackClick() {
     navigate("/signUP", { replace: true });
   }
+  const [time, setTime] = useState(300); // 5 minutes = 300 seconds
+  const [enable, setEnable] = useState(false);
+
+  useEffect(() => {
+    if (time > 0) {
+      const timerId = setInterval(() => {
+        setTime(prevTime => prevTime - 1);
+      }, 1000);
+
+      return () => clearInterval(timerId);
+    } else {
+      setEnable(true);
+    }
+  }, [time]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
   useEffect(()=>{
     console.log(data);
+    setEmail(data.email)
   }
   ,[data]);
+  useEffect(()=>{
+    console.log(myData,from);
+  }
+  ,[]);
+  const handleConfirmClick = () => {
+    const data1 = {
+      email: data.email || myData,
+      otp: otp,
+    };
+    dispatch(verifyOTP(data1)).then(() => {
+      if (from === 'signup') {
+        navigate('/login');
+      } else if (from === 'forgetPass') {
+        navigate('/newPassword',{ state: { Data: myData } });
+      }
+    });
+  }
+  const handleResendClick = () => {
+    const data = {
+      email : email || myData
+    };
+    console.log(data);
+    dispatch(resendOtp(data))
+  }
+
 
   return (
     <>
@@ -44,14 +97,15 @@ export default function VerifyEmail() {
                     />
                   </div>
                   <NavLink
-                    to={"/checkCompany"}
+                    onClick={handleConfirmClick}
+                    to={"/"}
                     className="inline-block align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 text-gray-100 fw-bold button">
                     CONFIRM
                   </NavLink>
                 </form>
                 <div className="resendDiv pt-5 mt-5 flex ">
-                  <p className="font-semibold">00:56</p>
-                  <button className="inline-block ml-3 mt-3 align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline text-gray-100 font-semibold">
+                  <p className="font-semibold">{formatTime(time)}</p>
+                  <button onClick={handleResendClick} disabled={!enable} className="inline-block ml-3 mt-3 align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline text-gray-100 font-semibold">
                     RESEND
                   </button>
                 </div>
