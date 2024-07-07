@@ -11,16 +11,17 @@ from system.models.Owner import Owner
 from system.serializers.Company import OwnerSerializer
 from system.models.Company import Company
 from system.serializers.Company import CompanySerializer
+from system.models.Wallet import Wallet
+from system.serializers.Wallet import WalletSerializer
 
 from authentication.authentication import decodeAccessToken
 
 class CreateCompanyView(APIView):
     def post(self,request):
-        auth = get_authorization_header(request).split()
+        accessToken = request.COOKIES.get('accessToken')
 
-        if auth and len(auth) ==2:
-            token = auth[1].decode('utf-8')
-            id = decodeAccessToken(token)
+        if accessToken:
+            id = decodeAccessToken(accessToken)
             user = User.objects.filter(pk=id).first()
 
             id = user.id
@@ -32,6 +33,12 @@ class CreateCompanyView(APIView):
                 'user': user
             }
             owner = Owner.objects.create(**owner_data)
+            data = request.data
+            wallet_data = {
+                'owner':owner
+            }
+            wallet = Wallet.objects.create(**wallet_data)
+
             company_data = request.data
             company_data.pop('user', None) 
             company_data['owner'] = owner

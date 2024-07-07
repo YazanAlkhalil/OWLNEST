@@ -13,6 +13,11 @@ from system.models.Trainee_Notfication import Trainee_Notfication
 from system.models.Company import Company
 from system.models.Planes import Planes
 from system.models.Company_Planes import Company_Planes
+from system.models.Wallet import Wallet
+from system.models.Deposit import Deposit
+from system.models.Withdraw import Withdraw
+
+
 from system.models.Course import Course
 from system.models.Unit import Unit
 from system.models.Content import Content
