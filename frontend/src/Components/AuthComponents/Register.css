@@ -1,0 +1,45 @@
+.signUp .login-form{
+    padding: 35px 90px 0;   
+}
+.signUp .login-form  input{
+    width: 75%;
+    height: 50px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: rgba(216, 216, 216, 0.608);
+    font-weight: bold;
+}
+.signUp .login-form select{
+    width: 75%;
+    height: 50px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: rgba(216, 216, 216, 0.608);
+    color: rgba(0, 0, 0, 0.516);
+    font-weight: bold;
+}
+.signUp .login-form select option{
+    color: black;
+    font-weight: bold;
+}
+.signUp .login-form .button,
+.signUp .login-form button{
+    background:  #001F34;
+    width: 75%;
+    height: 60px;
+    border-radius: 20px !important;
+}
+#select-box{
+    overflow-y:auto;
+  }
+#select-box  option{
+    overflow-y:scroll;
+  }
+.signUp .loginBackGround{
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    min-height: 100vh;
+    padding: 30px;
+    background: rgb(63,86,251);
+    background: radial-gradient(circle, rgba(63,86,251,1) 0%, rgba(13,30,150,1) 18%, rgba(2,7,34,1) 82%, rgba(0,1,6,1) 100%);
+}
