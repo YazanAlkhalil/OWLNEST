@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../features/Auth/LoginSlice";
 
 
+
 function NavBar({ highlight }) {
   const navigate = useNavigate();
   const dispatch = useDispatch()
