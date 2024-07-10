@@ -1,7 +1,13 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import Cookies from 'js-cookie';
+// import {jwtDecode} from 'jwt-decode';
+
+
+// const isTokenExpired = (token) => {
+//     const decoded = jwtDecode(token);
+//     return decoded.exp * 1000 < Date.now();
+// };
 
 export const loginUser = createAsyncThunk(
     "login",
@@ -36,8 +42,6 @@ export const logout = createAsyncThunk(
             });
             let res = await response.data;
             if (response.status === 200) {
-                Cookies.remove('accessToken');
-                Cookies.remove('refreshToken');
                 console.log(res);
             } else {
                 return thunkAPI.rejectWithValue(res);
@@ -49,6 +53,8 @@ export const logout = createAsyncThunk(
         
     }
 );
+
+
 
 export const LoginSlice = createSlice({
     name: "login",

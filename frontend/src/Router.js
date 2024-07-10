@@ -31,6 +31,7 @@ import TraineeQuiz from "./Components/TraineeQuiz";
 import TraineePdf from "./Components/trainee/TraineePdf";
 import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
 import NewPassword from "./Components/AuthComponents/NewPassword";
+import PrivateRoute from "./Components/AuthComponents/PrivateRoute";
 
 export default function Router() {
   return (
@@ -39,6 +40,10 @@ export default function Router() {
       <Route path="/signUp" element={<RegisterPage />} />
       <Route path="/verify" element={<VerifyEmail />} />
       <Route path="/checkCompany" element={<TypeRegister />} />
+       <Route path="/checkCompany" element={<PrivateRoute component={<TypeRegister /> } />} />
+      {/* <PrivateRoute exact path="/">
+      
+        </PrivateRoute> */}
       <Route path="/companyDetails" element={<CompanyDetails />} />
       <Route path="/company" element={<CompanyPage />} />
       <Route path="/forgetPassEmail" element={<FoegetPassEmail />} />
