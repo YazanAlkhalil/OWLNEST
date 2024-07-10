@@ -25,55 +25,64 @@ class LoginView(APIView):
         if user is None:
             raise AuthenticationFailed('user not found')
         
+        if user.otp_verified is False:
+            raise AuthenticationFailed('user not verified')
+        
         if not user.check_password(password):
             raise AuthenticationFailed('incorrect password')
-        
-
         accessToken = createAccessToken(user.id)
         refreshToken = createRefreshToken(user.id)
 
-
         response = Response()
 
+        response.set_cookie(key='accessToken',value=accessToken ,httponly=True)
         response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True)
-        response.data = {
-            'token' : accessToken
-        }
 
         return response
 
-
 class UserView(APIView):
     def get(self, request):
-        auth = get_authorization_header(request).split()
-
-        if auth and len(auth) ==2:
-            token = auth[1].decode('utf-8')
-            id = decodeAccessToken(token)
-            user = User.objects.filter(pk=id).first()
-
-            return Response(UserSerializer(user).data)
-        
-        raise AuthenticationFailed('anauthenticated')
+        if request.user:
+            return Response(UserSerializer(request.user).data)
+        raise AuthenticationFailed('unauthenticated')
 
 class RefreshApiView(APIView):
     def post(self,request):
         refreshToken = request.COOKIES.get('refreshToken')
-        id = decodeRefreshToken(refreshToken)
-        access_Token = createAccessToken(id)
         return Response({
-            'token':access_Token
+            'accessToken':refreshToken
         })
 
 
 class LogoutView(APIView):
-
     def post(self,request):
-
         response = Response()
-        response.delete_cookie('jwt')
+        response.delete_cookie('accessToken')
+        response.delete_cookie('refreshToken')
         response.data = {
             'message':'success'
         }
-
         return response
+
+class ForgetPassword(APIView):
+    def post(self,request):
+        email = request.data['email']
+        password = request.data['password']
+        user = User.objects.filter(email=email).first()
+        if user:
+            user.set_password(password)
+            user.save()
+            return Response({'message':'success'})
+        else:
+            return Response({'message':'user not found'})
+        
+
+class DeleteUserView(APIView):
+    def delete(self, request):
+        pk = request.data['id']
+        user = User.objects.filter(pk=pk).first()
+        if user:
+            user.delete()
+            return Response({'message': 'User deleted successfully'})
+        else:
+            return Response({'message': 'User not found'}, status=404)

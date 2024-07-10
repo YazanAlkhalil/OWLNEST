@@ -3,7 +3,7 @@ from authentication.models import User
 from system.models.Owner import Owner
 
 class Company(models.Model):
-    user = models.OneToOneField(Owner,on_delete=models.CASCADE)
+    owner = models.OneToOneField(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=75)
     email = models.CharField(max_length=255)
     logo = models.CharField(max_length=255)

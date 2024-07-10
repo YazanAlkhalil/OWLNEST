@@ -9,21 +9,21 @@ from system.models.Enrollment import Enrollment
 from system.models.Content import Content
 #serializers 
 from system.serializers.MarkContentSerializer import MarkContentSerializer
-
+from rest_framework.permissions import IsAuthenticated
 #django
 from django.shortcuts import get_object_or_404
-
+ 
 class MarkContentView(CreateAPIView):
       serializer_class = MarkContentSerializer
+      permission_classes = [IsAuthenticated]
       def post(self, request, *args, **kwargs):
-     
           enrollment =  get_object_or_404(Enrollment,trainee_contract__trainee__user = request.user)
-          content = get_object_or_404(Content,content = request.data["content"])
+          content = get_object_or_404(Content,id = request.data["content"])
           if enrollment.course != content.unit.course :
                return Response({"message":"you can't mark content if you are not enroll in this course"},status.HTTP_400_BAD_REQUEST)
           data = {
                'enrollment':enrollment,
-               'content':content,
+               'content':content.id,
                'xp': 100
           }
           serialized_data = MarkContentSerializer(data = data)

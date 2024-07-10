@@ -15,8 +15,7 @@ def calculate_progress(enrollment):
          enrollment.progress = (total_finished / total_contents) * 100
       else:
           enrollment.progress = 0.0
-          enrollment.save()
-
+      enrollment.save() 
 
 @receiver(post_save, sender=Finished_Content)
 def update_progress_on_finished_content(sender, instance, created, **kwargs):

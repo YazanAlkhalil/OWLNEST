@@ -21,5 +21,6 @@ urlpatterns = [
     path('api/',include('authentication.urls')),
     path('api/', include('system.urls.Course')),
     path('api/', include('system.urls.urls')),
-    path('api/', include('rest_framework.urls'))
+    path('api/', include('rest_framework.urls')),
+    path('api/', include('system.urls.Company')),
 ]

@@ -1,23 +1,27 @@
 import jwt,datetime
 from rest_framework import exceptions
-from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib.auth.models import User
+from rest_framework.authentication import BaseAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+from django.conf import settings 
+from authentication.models import User
 
+from rest_framework.authentication import BaseAuthentication
 def createAccessToken(id):
     return jwt.encode({
         'user_id': id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
         'ist': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     }, 'access_secret', algorithm='HS256')
 
 def decodeAccessToken(token):
-    try:
-        payload = jwt.decode(token, 'access_secret', algorithms='HS256' )
-
+    try: 
+        payload = jwt.decode(token,'access_secret',algorithms=['HS256'])
+        print(payload)
         return payload['user_id']
 
-    except:
+    except Exception as e:
+        print(e)
         raise exceptions.AuthenticationFailed('unauthenticated')
 
 def createRefreshToken(id):
@@ -37,12 +41,25 @@ def decodeRefreshToken(token):
         raise exceptions.AuthenticationFailed('unauthenticated')
     
 
-def send_otp_to_user(user):
-    otp = generate_otp()  # generate a random OTP here
-    subject = "Your One-Time Password (OTP)"
-    message = f"Your OTP is: {otp}"
-    from_email = settings.EMAIL_HOST_USER
-    recipient_list = [user.email]
 
-    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-    # store the OTP in the user's session or database for later verification
+class JWTAuthenticationBackEnd(BaseAuthentication):
+      def authenticate(self, request):
+          token = request.COOKIES.get('accessToken')   
+          if token:
+              try: 
+                  payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+                  user_id = payload['user_id']
+                  try:
+                      user = User.objects.get(id=user_id) 
+                      request.user = user   
+                  except User.DoesNotExist:
+                      request.user = None   
+
+              except jwt.ExpiredSignatureError:
+                  request.user = None   
+              except jwt.InvalidTokenError:
+                  request.user = None  
+          else:
+              request.user = None    
+
+          return (request.user,None)
