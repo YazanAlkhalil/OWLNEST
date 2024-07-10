@@ -42,16 +42,12 @@ class LoginView(APIView):
 
 class UserView(APIView):
     def get(self, request):
-        auth = get_authorization_header(request).split()
-
-        if auth and len(auth) ==2:
-            token = auth[1].decode('utf-8')
-            id = decodeAccessToken(token)
+        accessToken = request.COOKIES.get('accessToken')
+        if accessToken:
+            id = decodeAccessToken(accessToken)
             user = User.objects.filter(pk=id).first()
-
             return Response(UserSerializer(user).data)
-        
-        raise AuthenticationFailed('anauthenticated')
+        raise AuthenticationFailed('unauthenticated')
 
 class RefreshApiView(APIView):
     def post(self,request):
