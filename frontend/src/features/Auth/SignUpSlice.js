@@ -4,39 +4,31 @@ import axios from "axios";
 
 
 export const signupUser = createAsyncThunk(
-    "signUp",
+    "users/signupUser",
     async (data, thunkAPI) => {
-        try {
-            let link = "http://127.0.0.1:8000/api/register/";
-            let otpUrl = "http://127.0.0.1:8000/api/send_otp/";
-            const response = await axios.post(link, data, {
-                headers: { "Content-Type": "application/json" }
-            });
-            let res = await response.data;
-            if (response.status === 200) {
-                console.log(res);
-                let email = {
-                    email: data.email
-                }
-                console.log(email);
-                const otpResponse = await axios.post(otpUrl, email, {
-                    headers: { "Content-Type": "application/json" }
-                });
-                
-                if (otpResponse.status === 200) {
-                    console.log(otpResponse.data);
-                    return data;
-                } else {
-                    return thunkAPI.rejectWithValue(otpResponse.data);
-                }
-            } else {
-                return thunkAPI.rejectWithValue(res);
-            }
-        } catch (e) {
-            console.log("Error", e.response.data);
-            return thunkAPI.rejectWithValue(e.response.data);
-        }
-        // console.log(data);
+        // try {
+        //     let link = "http://localhost:8080/api/v1/auth/register";
+        //     const params = {
+        //         email: email,
+        //         firstname: firstname,
+        //         lastname: lastname,
+        //         password: password
+        //     };
+        //     const response = await axios.post(link, params, {
+        //         headers: { "Content-Type": "application/json" }
+        //     });
+        //     let data = await response.data;
+        //     if (response.status === 200) {
+        //         localStorage.setItem("token", data.token);
+        //         return data;
+        //     } else {
+        //         return thunkAPI.rejectWithValue(data);
+        //     }
+        // } catch (e) {
+        //     console.log("Error", e.response.data);
+        //     return thunkAPI.rejectWithValue(e.response.data);
+        // }
+        console.log(data);
         
     }
 );
@@ -44,7 +36,7 @@ export const signupUser = createAsyncThunk(
 export const SignUpSlice = createSlice({
     name: "signup",
     initialState: {
-        data: "",
+        token: "",
         isFetching: false,
         isSuccess: false,
         isError: false,
@@ -52,16 +44,17 @@ export const SignUpSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(signupUser.fulfilled, (state, action) => {
-                state.data = action.payload;
+            .addCase(signupUser.fulfilled, (state, { payload }) => {
+                // console.log(payload);
+                // state.token = payload.token;
                 state.isFetching = false;
                 state.isSuccess = true;
                 return state;
             })
-            .addCase(signupUser.rejected, (state, action) => {
+            .addCase(signupUser.rejected, (state, { payload }) => {
                 state.isFetching = false;
                 state.isError = true;
-                state.errorMessage = action.payload.message
+                state.errorMessage = payload.message
             })
             .addCase(signupUser.pending, (state) => {
                 state.isFetching = true;
@@ -69,5 +62,6 @@ export const SignUpSlice = createSlice({
     }
 });
 
+// export const { clearState } = SignupSlice.actions;
+
 export const signupSelector = (state) => state.signup;
-export default SignUpSlice.reducer;
