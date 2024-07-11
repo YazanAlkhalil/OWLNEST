@@ -3,7 +3,7 @@ from rest_framework import serializers
 from ..models.Course import Course
 from ..models.Additional_Resources import Additional_Resources
 from ..models.Trainer_Contract import Trainer_Contract
-# serializers
+# serializers``
 from ..serializers.Additional_resources import Additional_Resources_Serializer
 
 '''

@@ -6,7 +6,6 @@ export default function Company() {
     const navigate = useNavigate()
     function handleCompanyClick() {
         navigate('/trainee',{replace: true});
-        
     }
   return (
     <>
