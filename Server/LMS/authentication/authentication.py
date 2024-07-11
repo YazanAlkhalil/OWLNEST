@@ -10,7 +10,7 @@ from rest_framework.authentication import BaseAuthentication
 def createAccessToken(id):
     return jwt.encode({
         'user_id': id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=2),
         'ist': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     }, 'access_secret', algorithm='HS256')
 
@@ -43,23 +43,43 @@ def decodeRefreshToken(token):
 
 
 class JWTAuthenticationBackEnd(BaseAuthentication):
-      def authenticate(self, request):
-          token = request.COOKIES.get('accessToken')   
-          if token:
-              try: 
-                  payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-                  user_id = payload['user_id']
-                  try:
-                      user = User.objects.get(id=user_id) 
-                      request.user = user   
-                  except User.DoesNotExist:
-                      request.user = None   
+    def authenticate(self, request):
+        token = request.COOKIES.get('accessToken')   
+        if token:
+            try: 
+                payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+                user_id = payload['user_id']
+                try:
+                    user = User.objects.get(id=user_id) 
+                    request.user = user   
+                except User.DoesNotExist:
+                    request.user = None   
 
-              except jwt.ExpiredSignatureError:
-                  request.user = None   
-              except jwt.InvalidTokenError:
-                  request.user = None  
-          else:
-              request.user = None    
+            except jwt.ExpiredSignatureError:
+                request.user = None   
+            except jwt.InvalidTokenError:
+                request.user = None  
+        else:
+            request.user = None    
 
-          return (request.user,None)
+        return (request.user,None)
+    
+
+class JWTAuthenticationBackEnd(BaseAuthentication):
+    def authenticate(self, request):
+        token = request.COOKIES.get('accessToken')
+        if not token:
+            return None
+        
+        try:
+            payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
+            user_id = payload['user_id']
+            try:
+                user = User.objects.get(id=user_id)
+                return (user, None)
+            except User.DoesNotExist:
+                return None
+        except jwt.ExpiredSignatureError:
+            return None
+        except jwt.InvalidTokenError:
+            return None

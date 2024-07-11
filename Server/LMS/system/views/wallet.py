@@ -15,15 +15,11 @@ from system.models.Wallet import Wallet
 from system.serializers.Wallet import WalletSerializer
 from authentication.authentication import decodeAccessToken
 
-class DepositView(APIView):
+"""class DepositView(APIView):
     def post(self,request):
-        accessToken = request.COOKIES.get('accessToken')
-
-        if accessToken:
-            id = decodeAccessToken(accessToken)
-            user = User.objects.filter(pk=id).first()
-
-            id = user.id
+        if request.user.is_authenticated:
+            id = request.user.id
+            user = request.user
             if user is None:
                 return Response({'message': 'user not found'}, status=404)
             
@@ -44,5 +40,5 @@ class DepositView(APIView):
             wallet.balance += amount  
             wallet.save()
 
-            return Response(DepositeSerilaizer(deposit).data, status=status.HTTP_201_CREATED)
+            return Response(DepositeSerilaizer(deposit).data, status=status.HTTP_201_CREATED)"""
 

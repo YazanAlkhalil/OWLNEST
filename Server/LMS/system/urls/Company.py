@@ -1,5 +1,6 @@
 from django.urls import path
 from system.views.CreateCompany import CreateCompanyView,DeleteOwnerView,DeleteCompanyView
+from system.views.AddUser import AddUser
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -15,6 +16,10 @@ urlpatterns = [
     path('delete_company/', 
         DeleteCompanyView.as_view(), 
         name='delete_company'),
+
+        path('add_user/', 
+        AddUser.as_view(), 
+        name='add_user'),
 ]
 # adding the urls for the static files (course image)
 if settings.DEBUG:
