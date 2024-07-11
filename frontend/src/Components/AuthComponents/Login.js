@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import './Login.css';
+<<<<<<< HEAD
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import backGround from '../../images/—Pngtree—e-learning education online illustration_6548963.png';
+import { loginUser } from '../../features/Auth/LoginSlice';
+
+=======
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../features/Auth/LoginSlice';
 import backGround from '../../images/—Pngtree—e-learning education online illustration_6548963.png';
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
 
 export default function Login() {
 
@@ -11,6 +19,10 @@ export default function Login() {
   const [password , setPassword] = useState('');
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
+<<<<<<< HEAD
+  const navigate = useNavigate();
+=======
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
 
   const validate = () => {
     const errors = {};
@@ -36,6 +48,20 @@ export default function Login() {
   };
 
 
+<<<<<<< HEAD
+  const handleSubmitClick = async (e) => {
+    e.preventDefault();
+    if (validate()) {
+        const data = { email, password };
+        const resultAction = await dispatch(loginUser(data));
+        if (loginUser.fulfilled.match(resultAction)) {
+            navigate('/checkCompany');
+        } else {
+            console.log('Login failed:', resultAction.payload);
+        }
+    }
+};
+=======
   function handleSubmitClick(e){
     e.preventDefault();
     const data = {
@@ -47,6 +73,7 @@ export default function Login() {
     }
     // console.log(data);
   }
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
 
   return (
    <>
@@ -83,7 +110,11 @@ export default function Login() {
                   {errors.password && <div className="font-semibold text-sm text-red-500">{errors.password}</div>}
                 </div>
                 <div className='forgetPass mt-3 mb-2'>
+<<<<<<< HEAD
+                    <NavLink to={'/forgetPassEmail'} className='underline'>Forget Password</NavLink>
+=======
                     <a href='#' className='underline'>Forget Password</a>
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
                 </div>
                 <button type="submit" className='inline-block align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline bg-gray-100 text-gray-800 hover:bg-gray-600 fw-bold '>Login Now</button>
               </form>

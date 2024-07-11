@@ -1,0 +1,21 @@
+.login .pad{
+    padding: 140px 90px;
+}
+input{
+    width: 75%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgba(216, 216, 216, 0.608);
+    /* border: none !important; */
+    font-weight: bold;
+}
+
+.login .loginBackGround{
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    min-height: 100vh;
+    padding: 30px;
+    background: rgb(63,86,251);
+    background: radial-gradient(circle, rgba(63,86,251,1) 0%, rgba(13,30,150,1) 18%, rgba(2,7,34,1) 82%, rgba(0,1,6,1) 100%);
+}

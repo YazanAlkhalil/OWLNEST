@@ -3,12 +3,51 @@ import "./CompanyDetails.css";
 import uploadImg from "../../images/add_photo_alternate_outlined.png";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+import { useDispatch } from "react-redux";
+import { newCompany } from "../../features/Auth/CompanySlice";
+import UseFetch from "./UseFetch";
+
+
+const countries = [
+  ["DZ", "Algeria"],
+  ["BH", "Bahrain"],
+  ["EG", "Egypt"],
+  ["IQ", "Iraq"],
+  ["JO", "Jordan"],
+  ["KW", "Kuwait"],
+  ["LB", "Lebanon"],
+  ["LY", "Libya"],
+  ["MR", "Mauritania"],
+  ["MA", "Morocco"],
+  ["OM", "Oman"],
+  ["PS", "Palestine"],
+  ["QA", "Qatar"],
+  ["SA", "Saudi Arabia"],
+  ["SD", "Sudan"],
+  ["SY", "Syria"],
+  ["TN", "Tunisia"],
+  ["AE", "United Arab Emirates"],
+  ["YE", "Yemen"],
+];
+
+
+
+export default function CompanyDetails() {
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  const { fetchData, resData, loading, error } = UseFetch();
+  const [compName, setCompName] = useState("");
+  const [compEmail, setCompEmail] = useState("");
+  const [logo,setLogo] = useState('');
+=======
 
 export default function CompanyDetails() {
   const navigate = useNavigate();
   const [compName, setCompName] = useState("");
   const [compEmail, setCompEmail] = useState("");
   // const [logo,setLogo] = useState('');
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
   const [country, setCountry] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [location, setLocation] = useState("");
@@ -16,6 +55,13 @@ export default function CompanyDetails() {
   const [desc, setDesc] = useState("");
   const [errors, setErrors] = useState({});
 
+<<<<<<< HEAD
+  function handleLogo(e) {
+    console.log(e.target.files);
+    setLogo(URL.createObjectURL(e.target.files[0]));
+}
+=======
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -43,8 +89,30 @@ export default function CompanyDetails() {
 
   const handleCreateNestClick = (e) => {
     e.preventDefault();
+<<<<<<< HEAD
+    
+
+    const data = {
+      name : compName,
+      email: compEmail,
+      logo : logo,
+      country: country,
+      location: location,
+      size: size,
+      description: desc,
+      phone : phoneNumber
+    }
+    console.log(data);
+    if (validateForm()) {
+      // console.log(fetchData);
+      // dispatch(newCompany(data));
+     fetchData({url: "http://127.0.0.1:8000/api/create_company/",reqData: data,params: {}})
+    //  fetchData({url: "http://127.0.0.1:8000/api/user/",reqData: {},params: {}})
+
+=======
     if (validateForm()) {
       navigate('/trainee',{replace: true});
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
     }
   };
 
@@ -88,7 +156,11 @@ export default function CompanyDetails() {
                     <div className="file-upload">
                       <img src={uploadImg} alt="upload" className="mx-auto" />
                       <h6 className="fw-bold">Click box to upload LOGO</h6>
+<<<<<<< HEAD
+                      <input type="file" multiple accept="image/*" onChange={handleLogo} />
+=======
                       <input type="file" multiple accept="image/*" />
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
                     </div>
                   </div>
                   <div className="mb-4 size flex justify-center">
@@ -98,6 +170,14 @@ export default function CompanyDetails() {
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
                       className={` ${getInputClass("country")}`}
+<<<<<<< HEAD
+                      >
+                      {countries.map(([code, name]) => (
+                              <option key={code} value={code}>
+                                {name}
+                              </option>
+                      ))}
+=======
                 >
                       <option value="USA">USA</option>
                       <option value="Three">Three</option>
@@ -108,6 +188,7 @@ export default function CompanyDetails() {
                       <option value="Eight">Eight</option>
                       <option value="Nine">Nine</option>
                       <option value="Ten">Ten</option>
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
                     </select>
                     <input
                       type="text"
@@ -137,11 +218,18 @@ export default function CompanyDetails() {
                       value={size}
                       onChange={(e) => setSize(e.target.value)}
                       className={` ${getInputClass("size")}`}
+<<<<<<< HEAD
+                    >
+                      <option value="L">Large</option>
+                      <option value="M">Medium</option>
+                      <option value="S">Small</option>
+=======
                 >
                       <option value="100">100</option>
                       <option value="200">200</option>
                       <option value="300">300</option>
                       <option value="400">400</option>
+>>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
                     </select>
                     <input
                       type="number"
