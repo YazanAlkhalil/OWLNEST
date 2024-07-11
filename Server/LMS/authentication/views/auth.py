@@ -37,24 +37,36 @@ class LoginView(APIView):
 
         response.set_cookie(key='accessToken',value=accessToken ,httponly=True)
         response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True)
+        request.session['refresh_token_used'] = False
 
         return response
 
 class UserView(APIView):
     def get(self, request):
-        accessToken = request.COOKIES.get('accessToken')
-        if accessToken:
-            id = decodeAccessToken(accessToken)
-            user = User.objects.filter(pk=id).first()
-            return Response(UserSerializer(user).data)
+        if request.user:
+            return Response(UserSerializer(request.user).data)
         raise AuthenticationFailed('unauthenticated')
 
 class RefreshApiView(APIView):
     def post(self,request):
         refreshToken = request.COOKIES.get('refreshToken')
-        return Response({
-            'accessToken':refreshToken
+        userId = decodeRefreshToken(refreshToken)
+        if userId is None:
+            raise AuthenticationFailed('Invalid refresh token')
+        
+        if request.session.get('refresh_token_used', False):  
+            response = Response({'error': 'Refresh token has already been used'})
+            response.status_code = 403
+            return response
+        
+        request.session['refresh_token_used'] = True 
+        accessToken = createAccessToken(userId)
+        response = Response({
+            'accessToken': accessToken
         })
+        response.delete_cookie('refreshToken')
+        response.set_cookie(key='accessToken',value=accessToken ,httponly=True)
+        return response
 
 
 class LogoutView(APIView):

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    
+    <title>Certificate of Completion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .certificate-container {
+            border: 5px solid #9c1a1a;
+            padding: 50px;
+            margin: auto;
+            width: 80%;
+            text-align: center;
+        }
+        .certificate-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .certificate-body {
+            margin-top: 30px;
+            font-size: 1.5em;
+        }
+        .certificate-body p {
+            margin: 10px 0; /* Adjust margin for better spacing */
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate-container">
+        <div class="certificate-title">Certificate of Completion</div>
+        <div class="certificate-body">
+            <p>This certifies that</p>
+            <p><strong>{{ username }}</strong></p>
+            <p>has completed the course</p>
+            <p><strong>{{ course_name }}</strong></p>
+        </div>
+        </div>
+
+    </div>
+</body>
+</html>

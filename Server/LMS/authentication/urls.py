@@ -1,6 +1,6 @@
 from django.urls import path
-from authentication.views.auth import RegisterView,LoginView,UserView,LogoutView,RefreshApiView,ForgetPassword,DeleteUserView
-from authentication.views.otp import OTPVerificationView,VerifyOTPView,SetTrue
+from authentication.views.auth import RegisterView,LoginView,UserView,LogoutView,RefreshApiView
+from authentication.views.otp import OTPVerificationView,VerifyOTPView
 
 urlpatterns = [
     path('register/',RegisterView.as_view()),
@@ -10,7 +10,4 @@ urlpatterns = [
     path('logout/',LogoutView.as_view()),
     path('send_otp/',OTPVerificationView.as_view()),
     path('verify_otp/', VerifyOTPView.as_view()),
-    path('forget_password/', ForgetPassword.as_view()),
-    path('delete/', DeleteUserView.as_view()),
-    path('set/', SetTrue.as_view()),
 ]

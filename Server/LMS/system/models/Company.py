@@ -6,9 +6,7 @@ class Company(models.Model):
     owner = models.OneToOneField(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=75)
     email = models.CharField(max_length=255)
-    def logo_image_path(instance, filename):
-        return f'course_{instance.id}/{filename}'
-    logo = models.ImageField(upload_to=logo_image_path, null=True, blank=True)
+    logo = models.CharField(max_length=255)
     COUNTRY_CHOICES = [
         ('DZ', 'Algeria'),
         ('BH', 'Bahrain'),
@@ -41,3 +39,6 @@ class Company(models.Model):
     size = models.CharField(max_length=1,choices=SIZE_CHOICES,default='S')
     description = models.CharField(max_length=255)
     created_day = models.DateField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.name

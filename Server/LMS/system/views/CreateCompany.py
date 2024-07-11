@@ -2,8 +2,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.authentication import get_authorization_header
 from authentication.serializers.userSerializer import UserSerializer
 from authentication.models import User
 
@@ -14,17 +12,12 @@ from system.serializers.Company import CompanySerializer
 from system.models.Wallet import Wallet
 from system.serializers.Wallet import WalletSerializer
 
-from authentication.authentication import decodeAccessToken
 
 class CreateCompanyView(APIView):
     def post(self,request):
-        accessToken = request.COOKIES.get('accessToken')
-
-        if accessToken:
-            id = decodeAccessToken(accessToken)
-            user = User.objects.filter(pk=id).first()
-
-            id = user.id
+        if request.user.is_authenticated:
+            id = request.user.id
+            user = request.user
             if user is None:
                 return Response({'message': 'user not found'}, status=404)
             

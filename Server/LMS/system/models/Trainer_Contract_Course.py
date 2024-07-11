@@ -8,3 +8,7 @@ class Trainer_Contract_Course(models.Model):
       start_date = models.DateField(auto_now_add=True)
       def __str__(self):
             return f'trainers for {self.course} course'
+      
+      class Meta:
+            unique_together = ['trainer_contract','course']
+      

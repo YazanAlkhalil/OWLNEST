@@ -13,8 +13,8 @@ from system.models.Trainee_Notfication import Trainee_Notfication
 from system.models.Company import Company
 from system.models.Planes import Planes
 from system.models.Company_Planes import Company_Planes
-from system.models.Wallet import Wallet
 from system.models.Deposit import Deposit
+from system.models.Wallet import Wallet
 from system.models.Withdraw import Withdraw
 
 
@@ -29,7 +29,7 @@ from system.models.Answer import Answer
 from system.models.Edit_unit import EditUnit
 from system.models.Edit_pdf import EditPdf
 from system.models.Edit_Video import EditVideo
-
+from system.models.Additional_Resources import Additional_Resources
 
 from system.models.Comment import Comment
 from system.models.Enrollment import Enrollment
@@ -70,7 +70,7 @@ admin.site.register(Answer)
 admin.site.register(EditUnit)
 admin.site.register(EditPdf)
 admin.site.register(EditVideo)
-
+admin.site.register(Additional_Resources)
 
 admin.site.register(Comment)
 admin.site.register(Enrollment)
@@ -83,3 +83,17 @@ admin.site.register(Review)
 admin.site.register(Skill)
 admin.site.register(Trainer_Contract_Course)
 admin.site.register(Trainee_Skills)
+
+
+class WalletAdmin(admin.ModelAdmin):
+    list_display = ['id', 'owner', 'balance']
+
+class DepositAdmin(admin.ModelAdmin):
+    list_display = ['id', 'wallet', 'amount', 'deposited_at']
+
+class WithdrawAdmin(admin.ModelAdmin):
+    list_display = ['id', 'wallet', 'amount', 'withdrawn_at']
+
+admin.site.register(Wallet, WalletAdmin)
+admin.site.register(Deposit, DepositAdmin)
+admin.site.register(Withdraw, WithdrawAdmin)
