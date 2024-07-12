@@ -6,11 +6,9 @@ from system.views.MarkContentAsCompleted import MarkContentView
 #DRF
  
 urlpatterns = [
-  path('course/<id>/report',CourseReportView.as_view()),
-  path('course/<int:id>/comments',ListCreateCommentView.as_view()),
-  path('mark-content-completed' , MarkContentView.as_view()),
+    path('course/<id>/report',CourseReportView.as_view()),
+    path('course/<int:id>/comments',ListCreateCommentView.as_view()),
+    path('mark-content-completed' , MarkContentView.as_view()),
 
 
 ]
-
- 
