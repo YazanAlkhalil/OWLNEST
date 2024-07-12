@@ -35,9 +35,10 @@ class LoginView(APIView):
 
         response = Response()
 
-        response.set_cookie(key='accessToken',value=accessToken ,httponly=True)
-        response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True)
+        response.set_cookie(key='accessToken',value=accessToken ,httponly=True,samesite='None',secure=True)
+        response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True,samesite='None',secure=True)
         request.session['refresh_token_used'] = False
+        print(response)
 
         return response
 
