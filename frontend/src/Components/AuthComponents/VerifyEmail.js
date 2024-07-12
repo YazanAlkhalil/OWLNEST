@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import "./VerifyEmail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,32 +9,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { signupSelector } from "../../features/Auth/SignUpSlice";
 import { verifyOTP } from "../../features/Auth/VerifySlice";
 import { resendOtp } from "../../features/Auth/ResendOtpSlice";
-=======
-import React, { useState } from "react";
-import "./VerifyEmail.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, useNavigate } from "react-router-dom";
-import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
-import OtpInput from "react-otp-input";
->>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
-<<<<<<< HEAD
   const { data } = useSelector(signupSelector);
   const dispatch = useDispatch();
   const [email,setEmail] = useState();
   const location = useLocation();
   const { myData,from } = location.state || {};
-=======
->>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
 
   function onGoBackClick() {
     navigate("/signUP", { replace: true });
   }
-<<<<<<< HEAD
   const [time, setTime] = useState(300); // 5 minutes = 300 seconds
   const [enable, setEnable] = useState(false);
 
@@ -87,8 +73,6 @@ export default function VerifyEmail() {
     dispatch(resendOtp(data))
   }
 
-=======
->>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
 
   return (
     <>
@@ -113,24 +97,15 @@ export default function VerifyEmail() {
                     />
                   </div>
                   <NavLink
-<<<<<<< HEAD
                     onClick={handleConfirmClick}
                     to={"/"}
-=======
-                    to={"/checkCompany"}
->>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
                     className="inline-block align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 text-gray-100 fw-bold button">
                     CONFIRM
                   </NavLink>
                 </form>
                 <div className="resendDiv pt-5 mt-5 flex ">
-<<<<<<< HEAD
                   <p className="font-semibold">{formatTime(time)}</p>
                   <button onClick={handleResendClick} disabled={!enable} className="inline-block ml-3 mt-3 align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline text-gray-100 font-semibold">
-=======
-                  <p className="font-semibold">00:56</p>
-                  <button className="inline-block ml-3 mt-3 align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline text-gray-100 font-semibold">
->>>>>>> 8dea41e2c9a71d9687848d0401f6b25010f1af73
                     RESEND
                   </button>
                 </div>
