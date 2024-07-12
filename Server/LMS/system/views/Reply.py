@@ -1,8 +1,8 @@
 #DRF
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 #serializers
-from system.serializers.CommentSerializer import CommentSerializer
+from system.serializers.ReplySerializer import ReplySerializer
 #models
 from system.models.Comment import Comment 
 
@@ -13,19 +13,18 @@ from django.shortcuts import get_object_or_404
 
 
 
-class ListCreateCommentView(ListCreateAPIView):
-      serializer_class = CommentSerializer
-      queryset = Comment.objects.all() 
- 
+class CreateReplyView(CreateAPIView):
+      serializer_class = ReplySerializer 
 
-      def post(self, request, *args, **kwargs):
-            course = get_object_or_404(Course,id = kwargs['id'])
+      def post(self, request, *args, **kwargs): 
+            comment = get_object_or_404(Comment,id = request.data["comment"])
+            
             data = {
-                  "course":course,
+                  "comment":comment,
                   "user":request.user,
                   "content":request.data["text"]
             }
-            serialized_comment = CommentSerializer(data = data)
+            serialized_comment = ReplySerializer(data = data)
             serialized_comment.is_valid(raise_exception=True)
             serialized_comment.save()
             return Response(serialized_comment.data)

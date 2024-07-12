@@ -5,8 +5,8 @@ class Reply(models.Model):
       user = models.ForeignKey(User,on_delete=models.CASCADE)
       comment = models.ForeignKey(Comment,on_delete=models.CASCADE, default=None )
       content = models.TextField(max_length = 1024)
-      likes = models.IntegerField(null= True ,blank = True)
-      dislikes = models.IntegerField(null=True,blank=True)
+      likes = models.ManyToManyField(User,related_name='reply_likes',blank =True)
+      dislikes = models.ManyToManyField(User,related_name='reply_dislikes',blank =True)
       created_at = models.DateTimeField(auto_now_add=True)
       def __str__(self) -> str:
             return f"{self.user.username} || {self.content}"  

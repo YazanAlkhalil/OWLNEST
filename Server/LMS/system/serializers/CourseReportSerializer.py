@@ -2,8 +2,7 @@
 from rest_framework import serializers
 #system models 
 from system.models.Course import Course
-from system.models.Enrollment import Enrollment
-from system.models.Content import Content
+from system.models.Enrollment import Enrollment 
 from system.models.Finished_Content import Finished_Content
 from system.models.Grade import Grade
 #django 
