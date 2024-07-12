@@ -8,52 +8,66 @@ export default function UseFetch() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-        const fetchData = async ({url,reqData,params}) => {
+    const fetchData = async ({url, reqData, params}) => {
         try {
-            console.log("h");
+            console.log("s");
             const response = await axios.post(url, reqData, {
                 withCredentials: true,
-                params:params
             });
-            if(response.status === 401){
-               try{
-                console.log("h");
-                const response = await axios.post("http://127.0.0.1:8000/api/refresh/",{
-                    withCredentials: true,
-                    headers: { "Content-Type": "application/json" }
-                });
-                if(response.status === 403){
-                    console.log("h");
-                    navigate("/",{replace : true})
-                }else if(response.status === 201){
-                    console.log("h");
-                    const response = await axios.post(url, reqData, {
-                        withCredentials: true,
-                        headers: { "Content-Type": "application/json" },
-                        params:params
-                    });
-                    let res = response.data;
-                    setResData(res);
+            // console.log("adsf");
+            // const response = await fetch(url,{
+            //     method:"POST",
+            //     credentials:'include'
+            // })
+            // console.log("h");
+            // const s = await response.json()
+            // console.log(s);
+            let res = response.data;
+            setResData(res);
+        } catch (error) {
+            console.log(error.response,'asdf');
+            if (error.response) {
+                if (error.response.status === 401) {
+                    try {
+                        const refreshResponse = await axios.post("http://127.0.0.1:8000/api/refresh/", {}, {
+                            withCredentials: true,
+                            headers: { "Content-Type": "application/json" }
+                        });
+                        if (refreshResponse.status === 201) {
+                            const retryResponse = await axios.post(url, reqData, {
+                                withCredentials: true,
+                                headers: { "Content-Type": "application/json" },
+                                params: params
+                            });
+                            let res = retryResponse.data;
+                            setResData(res);
+                        } else {
+                            console.log("Unexpected response from refresh endpoint");
+                            navigate('/', {replace: true});
+                        }
+                    } catch (refreshError) {
+                        if (refreshError.response && refreshError.response.status === 403) {
+                            console.log("Refresh token expired");
+                            navigate("/", {replace: true});
+                        } else {
+                            console.log("Error refreshing token:", refreshError);
+                            navigate('/', {replace: true});
+                        }
+                    }
+                } else {
+                    console.log("Error status:", error.response.status);
+                    setError(error);
                 }
-               }catch(e){
-                console.log(e);
-                navigate('/',{replace: true})
-               }
-            }else if(response.status === 201){
-                console.log("h");
-                let res = await response.data;
-                setResData(res);
-            }else if(response.status === 200){
-                console.log("h");
-                let res = await response.data;
-                setResData(res);
+            } else if (error.request) {
+                console.log("No response received:", error.request);
+                setError(error);
+            } else {
+                console.log('Error', error.message);
+                setError(error);
             }
-        }catch(e){
-            console.log(e);
-            setError(e);
-        }finally{
-            setLoading(false)
+        } finally {
+            setLoading(false);
         }
-    }
+    };
     return { fetchData, resData, loading, error };
 }
