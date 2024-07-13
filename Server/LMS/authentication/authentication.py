@@ -42,9 +42,14 @@ def decodeRefreshToken(token):
     
 
 
+
 class JWTAuthenticationBackEnd(BaseAuthentication):
     def authenticate(self, request):
         token = request.COOKIES.get('accessToken')
+        print('------------------s')
+        print('------------------s')
+        print(token)
+        print('------------------s')
         if not token:
             return None
         

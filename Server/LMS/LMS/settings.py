@@ -25,9 +25,23 @@ SECRET_KEY = '4l9hav+59d&4d+9nrz8f_0xd)gh6-b*t8^xj9cx+@4ie+i&@ig'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ALLOWED_HOSTS =['localhost','127.0.0.1']
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTP_ONLY = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000"
+]
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
 
 
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CORS_ALLOWED_ORIGINS = [
+  "http://localhost:3000",  
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +58,7 @@ INSTALLED_APPS = [
     'django_extensions', 
 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -94,13 +109,13 @@ DATABASES = {
     #     'HOST': 'localhost', 
     #     'PORT': '3306',
     # }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'project1',
-    #     'USER' : 'root',
-    #     'PASSWORD' : 'rootroot',
-    #     'PORT' : 3306,
-    #     'HOST' : '127.0.0.1',
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'LMS',
+        'USER' : 'root',
+        'PASSWORD' : '',
+        'PORT' : 3306,
+        'HOST' : '127.0.0.1',
 
     # }
     # 'default': {
