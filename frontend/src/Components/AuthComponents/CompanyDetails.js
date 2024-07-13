@@ -93,8 +93,7 @@ export default function CompanyDetails() {
     if (validateForm()) {
       // console.log(fetchData);
       // dispatch(newCompany(data));
-     fetchData({url: "http://127.0.0.1:8000/api/create_company/",reqData: data,params: {}})
-    //  fetchData({url: "http://127.0.0.1:8000/api/user/",reqData: {},params: {}})
+     fetchData({method: 'post',url: "http://127.0.0.1:8000/api/create_company/",reqData: data,params: {}})
 
     }
   };

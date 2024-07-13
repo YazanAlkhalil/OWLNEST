@@ -71,3 +71,5 @@ export default function UseFetch() {
     };
     return { fetchData, resData, loading, error };
 }
+
+
