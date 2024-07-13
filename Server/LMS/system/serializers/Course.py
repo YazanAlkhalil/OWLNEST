@@ -5,19 +5,16 @@ from ..models.Additional_Resources import Additional_Resources
 from ..models.Trainer_Contract import Trainer_Contract
 # serializers
 from ..serializers.Additional_resources import Additional_Resources_Serializer
-
-'''
-    TODO:
-    in the detail request type add the course units and contents
-'''
+from ..serializers.Unit import Unit_Serializer
 
 class Course_Serializer(serializers.ModelSerializer):
     additional_resources = Additional_Resources_Serializer(many=True, required=False)
     trainers = serializers.PrimaryKeyRelatedField(queryset=Trainer_Contract.objects.all(), many=True)
+    units = Unit_Serializer(many=True, read_only=True, source='unit_set')
     # sepcify the model for the serializer and the required fields
     class Meta:
         model = Course
-        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'expected_time', 'additional_resources', 'trainers']
+        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'expected_time', 'additional_resources', 'trainers', 'units']
     # when the view_type is list send only the specified fields not all of them
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -36,7 +33,8 @@ class Course_Serializer(serializers.ModelSerializer):
                 'image': representation['image'],
                 'pref_description': representation['pref_description'],
                 'expected_time': representation['expected_time'],
-                'trainers': representation['trainers']
+                'trainers': representation['trainers'],
+                'units': representation['units']
             }
         return representation
     # when create a new course add the trainers for this course
@@ -50,10 +48,11 @@ class Course_Serializer(serializers.ModelSerializer):
     def update(self, validated_data):
         if validated_data['additional_resources']:
             additional_resources_data = validated_data.pop('additional_resources', [])
-            course = Course.objects.create(**validated_data)
+            instance = super().update(instance, validated_data)
             for additional_resource in additional_resources_data:
                 resource = Additional_Resources.objects.get_or_create(**additional_resource)
-                course.additional_resources = resource
-            return course
+                instance.additional_resources = resource
+            return instance
         else:
-            pass
+            instance = super().update(instance, validated_data)
+        return instance
