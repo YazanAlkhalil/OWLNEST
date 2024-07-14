@@ -15,10 +15,10 @@ class Course(models.Model):
     pref_description = models.TextField()
     description = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to=course_image_path, null=True, blank=True)
-    expected_time = models.CharField(max_length=16)
-    publish_date = models.DateField(auto_now_add=True)
-    additional_resources = models.ManyToManyField(Additional_Resources)
-    trainers = models.ManyToManyField(Trainer_Contract, through='system.Trainer_Contract_Course')
+    expected_time = models.CharField(max_length=16, null=True, blank=True)
+    publish_date = models.DateField(auto_now_add=True, null=True, blank=True)
+    additional_resources = models.ManyToManyField(Additional_Resources, null=True, blank=True)
+    trainers = models.ManyToManyField(Trainer_Contract, through='system.Trainer_Contract_Course', null=True, blank=True)
     # when call an instance show just its name
     def __str__(self):
         return self.name

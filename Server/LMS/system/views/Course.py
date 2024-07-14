@@ -5,6 +5,9 @@ from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 # models
 from ..models.Course import Course
 from ..models.Company import Company
+from ..models.Admin_Contract import Admin_Contract
+from ..models.Trainee_Contract import Trainee_Contract
+from ..models.Trainee_Contract import Trainee_Contract
 # serialzers
 from ..serializers.Course import Course_Serializer
 # permissions
@@ -37,15 +40,24 @@ class CompanyCourseList(generics.ListAPIView):
         user = self.request.user
         # get the admin courses
         if user.is_admin:
-            admin_contract = user.admin.admin_contract
-            return Course.objects.filter(Company=company_id, admin_contract=admin_contract)
+            try:
+                admin_contract = Admin_Contract.objects.get(admin=user.admin)
+            except Admin_Contract.DoesNotExist:
+                raise serializers.ValidationError("Admin contract does not exist for this user")
+            return Course.objects.filter(id=company_id, admin_contract=admin_contract)
         # get the trainer courses
         elif user.is_trainer:
-            trainer_contract = user.trainer.trainer_contract
-            return Course.objects.filter(Company=company_id, trainer_contract=trainer_contract)
+            try:
+                trainer_contract = Trainee_Contract.objects.get(admin=user.trainer)
+            except Trainee_Contract.DoesNotExist:
+                raise serializers.ValidationError("Tranier contract does not exist for this user")
+            return Course.objects.filter(id=company_id, trainer_contract=trainer_contract)
         # get the trainee courses
         elif user.is_trainee:
-            trainee_contract = user.trainee.trainee_contract
+            try:
+                trainee_contract = Trainee_Contract.objects.get(admin=user.trainee)
+            except Trainee_Contract.DoesNotExist:
+                raise serializers.ValidationError("Trainee contract does not exist for this user")
             return Course.objects.filter(enrollment__trainee_contract=trainee_contract, company=company_id)
     # when listing the courses set the view_type as list, otherwise set it as detail
     def get_serializer_context(self):
@@ -76,7 +88,10 @@ class CompanyCourseCreate(generics.CreateAPIView):
         except Company.DoesNotExist:
             raise serializers.ValidationError("Company does not exist")
         if user.is_admin:
-            admin_contract = user.admin.admin_contract
+            try:
+                admin_contract = Admin_Contract.objects.get(admin=user.admin)
+            except Admin_Contract.DoesNotExist:
+                raise serializers.ValidationError("Admin contract does not exist for this user")
             serializer.save(company=company, admin_contract=admin_contract)
         else:
             raise serializer.ValidationError("Only admins can create courses")
@@ -88,7 +103,9 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
     # set the serializer class
     serializer_class = Course_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
+    # set the lookup field to match the URL keyword argument
+    lookup_url_kwarg = 'course_id'
     # Document the view
     @swagger_auto_schema(
         operation_description="Retrieve a specific course from a specific company",
@@ -102,14 +119,24 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
         course_id = self.kwargs['course_id']
         # retrive the course if the admin is whom created it
         if user.is_admin:
-            return Course.objects.filter(id=course_id, company=company_id)
+            try:
+                admin_contract = Admin_Contract.objects.get(admin=user.admin)
+            except Admin_Contract.DoesNotExist:
+                raise serializers.ValidationError("Admin contract does not exist for this user")
+            return Course.objects.filter(id=course_id, admin_contract=admin_contract, company=company_id)
         # retrive the course if the trainer is whom created it
         elif user.is_trainer:
-            trainer_contract = user.trainer.trainer_contract
+            try:
+                trainer_contract = Trainee_Contract.objects.get(admin=user.trainer)
+            except Trainee_Contract.DoesNotExist:
+                raise serializers.ValidationError("Tranier contract does not exist for this user")            
             return Course.objects.filter(id=course_id, company=company_id, trainer_contract=trainer_contract)
         # retrive the course if the trainee has already enrolled in it 
         elif user.is_trainee:
-            trainee_contract = user.trainee.trainee_contract
+            try:
+                trainee_contract = Trainee_Contract.objects.get(admin=user.trainee)
+            except Trainee_Contract.DoesNotExist:
+                raise serializers.ValidationError("Trainee contract does not exist for this user")            
             return Course.objects.filter(id=course_id, enrollment__trainee_contract=trainee_contract, company=company_id)
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -124,6 +151,8 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
     serializer_class = Course_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
+    # set the lookup field to match the URL keyword argument
+    lookup_url_kwarg = 'course_id'
     # Document the view
     @swagger_auto_schema(
         operation_description="update a specifice course from a specific company",
@@ -138,11 +167,17 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
         course_id = self.kwargs['course_id']
         # admin can edit only hiw courses
         if user.is_admin:
-            admin_contract = user.admin.admin_contract
+            try:
+                admin_contract = Admin_Contract.objects.get(admin=user.admin)
+            except Admin_Contract.DoesNotExist:
+                raise serializers.ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
         # trainer can edit only hiw courses
         elif user.is_trainer:
-            trainer_contract = user.trainer.trainer_contract
+            try:
+                trainer_contract = Trainee_Contract.objects.get(admin=user.trainer)
+            except Trainee_Contract.DoesNotExist:
+                raise serializers.ValidationError("Tranier contract does not exist for this user")            
             return Course.objects.filter(id=course_id, company=company_id, trainer_contract=trainer_contract)
         else:
             raise PermissionDenied("You do not have permission to edit courses")
@@ -157,6 +192,8 @@ class CompanyCourseDelete(generics.DestroyAPIView):
     serializer_class = Course_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseAdmin]
+    # set the lookup field to match the URL keyword argument
+    lookup_url_kwarg = 'course_id'
     @swagger_auto_schema(
         operation_description="Delete a specific course for a specific company",
         responses={204: 'No Content'}
@@ -169,7 +206,10 @@ class CompanyCourseDelete(generics.DestroyAPIView):
         course_id = self.kwargs['course_id']
         # only admin can delete just the courses which he has created
         if user.is_admin:
-            admin_contract = user.admin.admin_contract
+            try:
+                admin_contract = Admin_Contract.objects.get(admin=user.admin)
+            except Admin_Contract.DoesNotExist:
+                raise serializers.ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
         else:
             raise PermissionDenied("You do not have permission to delete courses")
@@ -187,21 +227,32 @@ class CompanyCourseRetriveInfo(generics.RetrieveAPIView):
     serializer_class = Course_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated]
+    # set the lookup field to match the URL keyword argument
+    lookup_url_kwarg = 'course_id'
     def get_queryset(self):    
         user = self.request.user
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
         # get the admin courses
         if user.is_admin:
-            admin_contract = user.admin.admin_contract
+            try:
+                admin_contract = Admin_Contract.objects.get(admin=user.admin)
+            except Admin_Contract.DoesNotExist:
+                raise serializers.ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
         # get the trainer courses
         elif user.is_trainer:
-            trainer_contract = user.trainer.trainer_contract
+            try:
+                trainer_contract = Trainee_Contract.objects.get(admin=user.trainer)
+            except Trainee_Contract.DoesNotExist:
+                raise serializers.ValidationError("Tranier contract does not exist for this user")            
             return Course.objects.filter(id=course_id, company=company_id, trainer_contract=trainer_contract)
         # get the trainee courses
         elif user.is_trainee:
-            trainee_contract = user.trainee.trainee_contract
+            try:
+                trainee_contract = Trainee_Contract.objects.get(admin=user.trainee)
+            except Trainee_Contract.DoesNotExist:
+                raise serializers.ValidationError("Trainee contract does not exist for this user")            
             return Course.objects.filter(id=course_id, enrollment__trainee_contract=trainee_contract, company=company_id)
         else:
             raise PermissionDenied("You do not have permission to view this course")

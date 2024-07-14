@@ -13,6 +13,7 @@ from system.models.Trainee_Notfication import Trainee_Notfication
 from system.models.Company import Company
 from system.models.Planes import Planes
 from system.models.Company_Planes import Company_Planes
+from system.models.Courses_In_Plane import Courses_In_Plane
 from system.models.Deposit import Deposit
 from system.models.Wallet import Wallet
 from system.models.Withdraw import Withdraw
@@ -58,6 +59,7 @@ admin.site.register(Trainee_Notfication)
 admin.site.register(Company)
 admin.site.register(Company_Planes)
 admin.site.register(Planes)
+admin.site.register(Courses_In_Plane)
 
 admin.site.register(Course)
 admin.site.register(Unit)
