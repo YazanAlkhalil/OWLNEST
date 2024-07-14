@@ -7,6 +7,13 @@ from ..models.Course import Course
 from ..models.Company import Company
 # serialzers
 from ..serializers.Course import Course_Serializer
+# permissions
+from ..permissions.IsAdmin import IsAdmin
+from ..permissions.IsCourseAdmin import IsCourseAdmin
+from ..permissions.IsCourseAdminOrTrainer import IsCourseAdminOrTrainer
+# swagger
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # GET : api/admin/company/:company-id/courses
 # GET : api/trainer/company/:company-id/courses
@@ -16,6 +23,13 @@ class CompanyCourseList(generics.ListAPIView):
     serializer_class = Course_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated]
+    # Document the view
+    @swagger_auto_schema(
+        operation_description="Retrieve a list of courses for a specific company",
+        responses={200: Course_Serializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
     # retrive the courses passed on the company id
     def get_queryset(self):
         company_id = self.kwargs['company_id']
@@ -44,7 +58,15 @@ class CompanyCourseCreate(generics.CreateAPIView):
     # set the serializer class
     serializer_class = Course_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdmin]
+    # Document the view
+    @swagger_auto_schema(
+        operation_description="Create a new course for a specific company",
+        request_body=Course_Serializer,
+        responses={201: Course_Serializer}
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
     # save the created company info
     def perform_create(self, serializer):
         user = self.request.user
@@ -67,6 +89,13 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
     serializer_class = Course_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated]
+    # Document the view
+    @swagger_auto_schema(
+        operation_description="Retrieve a specific course from a specific company",
+        responses={200: Course_Serializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
     def get_queryset(self):    
         user = self.request.user
         company_id = self.kwargs['company_id']
@@ -94,7 +123,15 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
     # set the serializer class
     serializer_class = Course_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
+    # Document the view
+    @swagger_auto_schema(
+        operation_description="update a specifice course from a specific company",
+        request_body=Course_Serializer,
+        responses={200: Course_Serializer}
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
     def get_queryset(self):
         user = self.request.user
         company_id = self.kwargs['company_id']
@@ -114,12 +151,18 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
         context['view_type'] = 'detail'
         return context
 
-# DELETE: api/company/:company-id/courses/course-id
+# DELETE: api/admin/company/:company-id/courses/course-id
 class CompanyCourseDelete(generics.DestroyAPIView):
     # set the serializer class
     serializer_class = Course_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsCourseAdmin]
+    @swagger_auto_schema(
+        operation_description="Delete a specific course for a specific company",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
     def get_queryset(self):
         user = self.request.user
         company_id = self.kwargs['company_id']
