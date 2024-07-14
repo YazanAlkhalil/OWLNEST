@@ -33,14 +33,14 @@ class ResetPasswordEmailREquestSerializer(serializers.Serializer):
     class Meta:
         fields = ['email']
 
-class SetNewPasswordSerializer(serializers.Serializer0):
-    password = serializers.CharFieled(
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(
         min_length=6, write_only=True
     )
-    uidb64 = serializers.CharFieled(
+    uidb64 = serializers.CharField(
         min_length=1, write_only=True
     )
-    token = serializers.CharFieled(
+    token = serializers.CharField(
         min_length=1, write_only=True
     )
 
@@ -60,7 +60,7 @@ class SetNewPasswordSerializer(serializers.Serializer0):
 
             user.set_password(password)
             user.save()
-            
+
 
         except Exception as e:
             raise AuthenticationFailed('the reset link id invalid ' ,401)
