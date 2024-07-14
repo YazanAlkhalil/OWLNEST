@@ -49,7 +49,16 @@ class CreateCompanyView(APIView):
                 wallet.delete()
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'user not found'}, status=401)
-    
+
+
+class EditCompanyView(APIView):
+    def post(self,request):
+        if request.user.is_authenticated:
+            id = request.user.id
+            User = request.user
+            if User is None:
+                return Response({'message': 'user not found'}, status=404)
+            company = Company.objects.get(id=id)
 
 class DeleteOwnerView(APIView):
     def delete(self, request):
