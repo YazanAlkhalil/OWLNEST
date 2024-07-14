@@ -14,12 +14,25 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from authentication.authentication import createAccessToken,createRefreshToken,decodeAccessToken,decodeRefreshToken
 
 class RegisterView(APIView):
-    def post(self,request):
-        serializer = UserSerializer(data = request.data)
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            raise ValidationError('Email is required for registration.')
+
+        # Check if a user with the provided email already exists
+        existing_user = User.objects.filter(email=email).first()
+
+        # If the user exists and is not verified, delete the user
+        if existing_user and not existing_user.otp_verified:
+            existing_user.delete()
+
+        # Proceed with the registration process
+        serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -89,19 +102,6 @@ class LogoutView(APIView):
         }
         return response
 
-class ForgetPassword(APIView):
-    def post(self,request):
-        email = request.data['email']
-        password = request.data['password']
-        if not re.match(r'^[^@]+@gmail\.com$', email):
-            return Response({'message': 'Invalid email. Only Gmail addresses are allowed.'}, status=400)
-        user = User.objects.filter(email=email).first()
-        if user:
-            user.set_password(password)
-            user.save()
-            return Response({'message':'success'})
-        else:
-            return Response({'message':'user not found'})
 
 class DeleteUserView(APIView):
     def delete(self, request):
