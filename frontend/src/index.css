@@ -11,4 +11,7 @@
   .active {
     @apply text-accent;
   }
+  .btn {
+    @apply rounded py-2 px-4 hover:cursor-pointer
+  }
 }
