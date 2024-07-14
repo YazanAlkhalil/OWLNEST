@@ -109,6 +109,23 @@ DATABASES = {
     #     'HOST': 'localhost', 
     #     'PORT': '3306',
     # }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'project1',
+    #     'USER' : 'root',
+    #     'PASSWORD' : 'rootroot',
+    #     'PORT' : 3306,
+    #     'HOST' : '127.0.0.1',
+
+    # }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'lms',
+    #     'USER': 'root',
+    #     'PASSWORD': 'moustafa@123',
+    #     'HOST': 'localhost', 
+    #     'PORT': '3306',
+    # }
 }
 
 
@@ -168,11 +185,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authentication.User'
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = [
-  "http://localhost:3000",  
-]
 CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTP_ONLY = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000"
+]
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
 
 #REST_FRAMEWORK
 REST_FRAMEWORK = {
