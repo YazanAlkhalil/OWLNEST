@@ -21,7 +21,6 @@ urlpatterns = [
     # path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name="password_reset_confirm"),
     # path('reset_password_complete/',auth_views.PasswordResetCompleteView.as_view(),name="password_reset_complete"),
     path('request_reset_email/',RequestPasswordResetEmail.as_view(),name='request_reset_email' ),
-    path('password_reset/<uidb46>/<token>/',PasswordTokenCheckAPI.as_view(),name='password_reset_confirm'),
+    path('password_reset/<uidb64>/<token>/',PasswordTokenCheckAPI.as_view(),name='password_reset_confirm'),
     path('password_reset_complete/',SetNewPasswordAPIView.as_view(),name='password_reset_complete'),
-
 ]

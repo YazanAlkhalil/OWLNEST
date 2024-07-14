@@ -125,10 +125,10 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
         
         if User.objects.filter(email=email).exists():
             user = User.objects.get(email=email)
-            uidb46 = urlsafe_base64_encode(smart_bytes(user.id))
+            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
             current_site = get_current_site(request = request).domain
-            relativeLink = reverse('password_reset_confirm',kwargs= {'uidb46':uidb46 , 'token':token})
+            relativeLink = reverse('password_reset_confirm',kwargs= {'uidb64':uidb64 , 'token':token})
             absurl = 'http://localhost:3000/newPassword'+relativeLink
             email_body = 'Hi' + user.username + 'use link below to reset your password \n'
             #data = {'email_body' : email_body , 'to_email':user.email , 'email_subject':'reset your password'}
@@ -156,10 +156,10 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
         
 
 class SetNewPasswordAPIView(generics.GenericAPIView):
-    serialaizer_class = SetNewPasswordSerializer
+    serializer_class = SetNewPasswordSerializer
     def patch(self,request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_excpetion = True)
+        serializer.is_valid(raise_exception = True)
         return Response({
             'success':True,
             'message':'password reset success',
