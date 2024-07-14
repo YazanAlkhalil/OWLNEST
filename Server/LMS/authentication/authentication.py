@@ -42,32 +42,14 @@ def decodeRefreshToken(token):
     
 
 
-class JWTAuthenticationBackEnd(BaseAuthentication):
-    def authenticate(self, request):
-        token = request.COOKIES.get('accessToken')   
-        if token:
-            try: 
-                payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
-                user_id = payload['user_id']
-                try:
-                    user = User.objects.get(id=user_id) 
-                    request.user = user   
-                except User.DoesNotExist:
-                    request.user = None   
-
-            except jwt.ExpiredSignatureError:
-                request.user = None   
-            except jwt.InvalidTokenError:
-                request.user = None  
-        else:
-            request.user = None    
-
-        return (request.user,None)
-    
 
 class JWTAuthenticationBackEnd(BaseAuthentication):
     def authenticate(self, request):
         token = request.COOKIES.get('accessToken')
+        print('------------------s')
+        print('------------------s')
+        print(token)
+        print('------------------s')
         if not token:
             return None
         
