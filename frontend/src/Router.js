@@ -29,13 +29,13 @@ import Plane from "./Components/admin/Plane";
 import TraineeVideoLesson from "./Components/trainee/TraineeLesson";
 import TraineeQuiz from "./Components/TraineeQuiz";
 import TraineePdf from "./Components/trainee/TraineePdf";
-import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
-import NewPassword from "./Components/AuthComponents/NewPassword";
+import LandingPage from "./Pages/LandingPage";
 
 export default function Router() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/signUp" element={<RegisterPage />} />
       <Route path="/verify" element={<VerifyEmail />} />
       <Route path="/checkCompany" element={<TypeRegister />} />

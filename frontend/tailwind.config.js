@@ -11,7 +11,8 @@ module.exports = {
         secondary: '#3F6188',
         background: '#DBF2FF',
         accent: '#DEA01E',
-        hover: '#182354'
+        hover: '#182354',
+        accentHover: '#dea01edd'
       }
     },
   },
