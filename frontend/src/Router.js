@@ -30,6 +30,8 @@ import TraineeVideoLesson from "./Components/trainee/TraineeLesson";
 import TraineeQuiz from "./Components/TraineeQuiz";
 import TraineePdf from "./Components/trainee/TraineePdf";
 import LandingPage from "./Pages/LandingPage";
+import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
+import NewPassword from "./Components/AuthComponents/NewPassword";
 
 export default function Router() {
   return (
