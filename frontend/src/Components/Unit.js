@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import { FaRegFilePdf } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
 import { PiExam } from "react-icons/pi";
 function Unit({ item,sortable,uploadVideo,uploadPDF,createQuiz }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -28,39 +29,57 @@ function Unit({ item,sortable,uploadVideo,uploadPDF,createQuiz }) {
     transition,
     transform: CSS.Transform.toString(transform),
   };
-  if(!sortable){
+
+
+
+
+  if (!sortable) {
     return (
-      <div
-      className="relative bg-gray-300 mb-2 py-2 px-4 rounded flex justify-between items-center"
-    >
-      <span className="text-xl">{item.name} </span>
-      <button
-        onClick={toggleOverlay}
-        className="hover:bg-slate-100 bg-white rounded p-2 text-black"
-      >
-        add lesson
-      </button>
-      <div
-        ref={overlayRef}
-        className={`${isOverlayVisible ? "block" : "hidden"} z-10 bg-slate-200  absolute top-12 right-12`}
-      >
-        <div onClick={uploadVideo} className="flex items-center gap-2 hover:bg-slate-300 hover:cursor-pointer py-2 px-3">
-          <FaPlay />
-          Video
+      <div className="relative mb-2 py-2 px-2 h-12 pl-1 rounded flex justify-between items-center">
+        <div>
+          
+        <span className="text-2xl">{item.title} </span>
         </div>
-        <div onClick={uploadPDF} className="flex items-center gap-2 hover:bg-slate-300 hover:cursor-pointer py-2 px-3">
-          <FaRegFilePdf />
-          PDF
+        <div className="flex items-center">
+
+        <button
+          onClick={toggleOverlay}
+          className="btn-inner h-18 p-2 "
+        >
+          add lesson
+        </button>
+        <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-white rounded-full bg-red-300 hover:bg-red-500' />
         </div>
-        <div onClick={createQuiz} className="flex items-center gap-2 hover:bg-slate-300 hover:cursor-pointer py-2 px-3">
-          <PiExam />
-          Quiz
+        <div
+          ref={overlayRef}
+          className={`${isOverlayVisible ? "block" : "hidden"
+            } rounded z-10 bg-white shadow-xl border border-slate-50  absolute top-12 right-28`}
+        >
+          <div
+            onClick={uploadVideo}
+            className="flex items-center gap-3 hover:bg-slate-200 hover:cursor-pointer text-xl py-3 px-5"
+          >
+            <FaPlay />
+            Video
+          </div>
+          <div
+            onClick={uploadPDF}
+            className="flex items-center gap-3 hover:bg-slate-200 hover:cursor-pointer text-xl py-3 px-5"
+          >
+            <FaRegFilePdf />
+            PDF
+          </div>
+          <div
+            onClick={createQuiz}
+            className="flex items-center gap-3 hover:bg-slate-200 hover:cursor-pointer text-xl py-3 px-5"
+          >
+            <PiExam />
+            Quiz
+          </div>
         </div>
       </div>
-    </div>
-    )
+    );
   }
-
 
 
 
@@ -70,11 +89,9 @@ function Unit({ item,sortable,uploadVideo,uploadPDF,createQuiz }) {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className="relative h-14 bg-gray-300 mb-2 py-2 px-4 rounded flex justify-between items-center"
+      className="relative mb-2 pl-1 py-2 h-12 px-4 rounded flex justify-between items-center"
     >
-      <span className="text-xl">{item.name} </span>
-      
-      
+      <span className="text-2xl">{item.title} </span>
     </div>
   );
 }
