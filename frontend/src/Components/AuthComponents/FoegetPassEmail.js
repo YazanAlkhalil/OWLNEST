@@ -4,11 +4,11 @@ import './ForgetPassEmail.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { resendOtp } from '../../features/Auth/ResendOtpSlice';
+import { requestEmail } from '../../features/Auth/RequestEmail';
 
 export default function FoegetPassEmail() {
     const [email,setEmail] = useState();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault(); 
@@ -18,9 +18,7 @@ export default function FoegetPassEmail() {
         };
 
         console.log(data);
-        dispatch(resendOtp(data));
-
-        navigate('/verify', { state: { myData: email ,from: 'forgetPass' } });
+        dispatch(requestEmail(data));
     };
   return (
     <>

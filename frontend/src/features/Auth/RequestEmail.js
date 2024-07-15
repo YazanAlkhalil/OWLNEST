@@ -3,12 +3,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-export const forgetPass = createAsyncThunk(
-    "forgetPassword",
+export const requestEmail = createAsyncThunk(
+    "requestEmail",
     async (data, thunkAPI) => {
         try {
-            let newPassword = "http://127.0.0.1:8000/api/password_reset_complete/";
-            const response = await axios.patch(newPassword, data, {
+            let requestEmail = "http://127.0.0.1:8000/api/request_reset_email/";
+            const response = await axios.post(requestEmail, data, {
                 headers: { "Content-Type": "application/json" }
             });
             let res = await response.data;
@@ -26,10 +26,9 @@ export const forgetPass = createAsyncThunk(
     }
 );
 
-export const ForgetPasswordSlice = createSlice({
-    name: "forgetPassword",
+export const RequestEmailSlice = createSlice({
+    name: "requestEmail",
     initialState: {
-        data: "",
         isFetching: false,
         isSuccess: false,
         isError: false,
@@ -37,22 +36,21 @@ export const ForgetPasswordSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(forgetPass.fulfilled, (state, action) => {
-                state.data = action.payload;
+            .addCase(requestEmail.fulfilled, (state, action) => {
                 state.isFetching = false;
                 state.isSuccess = true;
                 return state;
             })
-            .addCase(forgetPass.rejected, (state, action) => {
+            .addCase(requestEmail.rejected, (state, action) => {
                 state.isFetching = false;
                 state.isError = true;
                 state.errorMessage = action.payload.message
             })
-            .addCase(forgetPass.pending, (state) => {
+            .addCase(requestEmail.pending, (state) => {
                 state.isFetching = true;
             })
     }
 });
 
-export const forgtePassSelector = (state) => state.resend;
-export default ForgetPasswordSlice.reducer;
+export const requestEmailSelector = (state) => state.requestEmail;
+export default RequestEmailSlice.reducer;

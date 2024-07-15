@@ -48,7 +48,7 @@ export default function CompanyDetails() {
 
   function handleLogo(e) {
     console.log(e.target.files);
-    setLogo(URL.createObjectURL(e.target.files[0]));
+    setLogo(e.target.files[0]);
 }
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,11 +78,13 @@ export default function CompanyDetails() {
   const handleCreateNestClick = (e) => {
     e.preventDefault();
     
+    const formData = new FormData();
+    formData.append('image', logo);
 
     const data = {
       name : compName,
       email: compEmail,
-      logo : logo,
+      logo : formData,
       country: country,
       location: location,
       size: size,

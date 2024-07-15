@@ -19,13 +19,7 @@ class CompanySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(_('Email must be a Gmail address'))
         return value
     
-    def validate_logo(self, value):
-        if not value.image:
-            raise serializers.ValidationError(_('Logo must be an image file'))
-        img = Image.open(value)
-        if not img.format:
-            raise serializers.ValidationError(_('Logo must be an image file'))
-        return value
+    
 
     class Meta:
         model = Company

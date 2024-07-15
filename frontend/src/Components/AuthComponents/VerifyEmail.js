@@ -98,7 +98,7 @@ export default function VerifyEmail() {
                   </div>
                   <NavLink
                     onClick={handleConfirmClick}
-                    to={"/"}
+                    to={"/login"}
                     className="inline-block align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 text-gray-100 fw-bold button">
                     CONFIRM
                   </NavLink>
