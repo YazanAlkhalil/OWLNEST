@@ -97,10 +97,10 @@ WSGI_APPLICATION = 'LMS.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
     #     'NAME': 'lms',
@@ -111,13 +111,13 @@ DATABASES = {
     # }
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'project1',
+    #     'NAME': 'LMS',
     #     'USER' : 'root',
-    #     'PASSWORD' : 'rootroot',
+    #     'PASSWORD' : '',
     #     'PORT' : 3306,
     #     'HOST' : '127.0.0.1',
 
-    }
+    # }
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
     #     'NAME': 'lms',
