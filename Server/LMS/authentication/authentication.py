@@ -29,12 +29,12 @@ def createRefreshToken(id):
         'user_id': id,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
         'ist': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
-    }, 'refresh_secret', algorithm='HS256')
+    }, 'access_secret', algorithm='HS256')
 
 
 def decodeRefreshToken(token):
     try:
-        payload = jwt.decode(token, 'refresh_secret', algorithms='HS256' )
+        payload = jwt.decode(token, 'access_secret', algorithms='HS256' )
         return payload['user_id']
 
     except:

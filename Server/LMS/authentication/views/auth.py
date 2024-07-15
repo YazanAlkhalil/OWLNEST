@@ -24,14 +24,11 @@ class RegisterView(APIView):
         if not email:
             raise ValidationError('Email is required for registration.')
 
-        # Check if a user with the provided email already exists
         existing_user = User.objects.filter(email=email).first()
 
-        # If the user exists and is not verified, delete the user
         if existing_user and not existing_user.otp_verified:
             existing_user.delete()
 
-        # Proceed with the registration process
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -66,8 +63,10 @@ class LoginView(APIView):
 
 class UserView(APIView):
     def get(self, request):
-        if request.user:
-            return Response(UserSerializer(request.user).data)
+        if request.user.is_authenticated:
+            id = request.user.id
+            user = request.user
+            return Response(UserSerializer(user).data)
         raise AuthenticationFailed('unauthenticated')
 
 class RefreshApiView(APIView):
@@ -78,17 +77,11 @@ class RefreshApiView(APIView):
             raise AuthenticationFailed('Invalid refresh token')
         
         if request.session.get('refresh_token_used', False):  
-            response = Response({'error': 'Refresh token has already been used'})
-            response.status_code = 403
-            return response
-        
+            return Response({'error': 'Refresh token has already been used'},status= 403)
         request.session['refresh_token_used'] = True 
-        accessToken = createAccessToken(userId)
-        response = Response({
-            'accessToken': accessToken
-        })
+        response = Response()
         response.delete_cookie('refreshToken')
-        response.set_cookie(key='accessToken',value=accessToken ,httponly=True)
+        response.set_cookie(key='accessToken', value=refreshToken, httponly=True)
         return response
 
 
