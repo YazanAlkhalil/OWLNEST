@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import backGround from '../../images/—Pngtree—e-learning education online illustration_6548963.png';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { forgetPass } from '../../features/Auth/ForgetPasswordSlice';
 
@@ -8,21 +8,20 @@ export default function NewPassword() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [password,setPassword] = useState();
-    const location = useLocation();
-  const { Data } = location.state || {};
-  useEffect(()=>{
-    console.log(Data);
-  }
-  ,[]);
+    const { uuid, token } = useParams();
+    
+
   const handleSubmit = (e)=>{
-    e.preventDefault(); 
+    e.preventDefault();
+     
     const data = {
-      email : Data,
-      password : password
+      password : password,
+      uidb64 : uuid,
+      token : token
     };
     console.log(data);
     dispatch(forgetPass(data));
-    navigate('/');
+    navigate('/login');
   }
   return (
     <>

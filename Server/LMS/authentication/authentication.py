@@ -10,7 +10,7 @@ from rest_framework.authentication import BaseAuthentication
 def createAccessToken(id):
     return jwt.encode({
         'user_id': id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=2),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
         'ist': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     }, 'access_secret', algorithm='HS256')
 
