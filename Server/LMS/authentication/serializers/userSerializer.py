@@ -26,7 +26,6 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
-    
 
 class ResetPasswordEmailREquestSerializer(serializers.Serializer):
     email = serializers.EmailField(min_length=4)

@@ -36,12 +36,19 @@ class AddUser(APIView):
                 return Response({'message': 'company_id not found'}, status=404)
             company = Company.objects.get(id=company_id)
 
-            if Admin_Contract.objects.filter(admin=user.id, company=company.id).exists():
-                user_role = 'admin'
-            if Company.objects.filter(id=company_id, owner=user.id).exists():
-                user_role = 'owner'
+            if Admin.objects.filter(user=user).exists():
+                if Admin_Contract.objects.filter(admin=user.id, company=company.id).exists():
+                    user_role = 'admin'
+                else:
+                    user_role = "null"
+            if Owner.objects.filter(user=user).exists():
+                owner = Owner.objects.get(user=user)
+                if Company.objects.filter(id=company_id, owner=owner.id).exists():
+                    user_role = 'owner'
+                else:
+                    user_role = "null"
             
-            else:
+            if user_role is "null":
                 return Response(
                     {'message': 'You are not authorized to perform this action1'},
                     status=status.HTTP_403_FORBIDDEN
@@ -64,7 +71,7 @@ class AddUser(APIView):
                         )
                 if Trainer.objects.filter(user=new_user).exists():
                     trainer = Trainer.objects.get(user=new_user)
-                    if Trainer_Contract.objects.filter(trainer= trainer ,company=company):
+                    if Trainer_Contract.objects.filter(company=company,trainer= trainer):
                         return Response(
                             {'message': 'this user is already exist '},
                             status=status.HTTP_403_FORBIDDEN
@@ -100,19 +107,27 @@ class AddUser(APIView):
                     admin_data = {
                         'user':user.id
                     }
-                    serializer = AdminSerializer(data = admin_data)
-                    if serializer.is_valid():
-                        serializer.save()
-                        user.is_admin = True
-                        user.save()
-                        admin = serializer.instance
+                    if Admin.objects.filter(user=new_user).exists():
+                        admin = Admin.objects.get(user=new_user)
                         admin_contract_data = {
                             'admin':admin,
                             'company':company
                         }
                         Admin_Contract.objects.create(**admin_contract_data)
-                    else :
-                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        serializer = AdminSerializer(data = admin_data)
+                        if serializer.is_valid():
+                            serializer.save()
+                            user.is_admin = True
+                            user.save()
+                            admin = serializer.instance
+                            admin_contract_data = {
+                                'admin':admin,
+                                'company':company
+                            }
+                            Admin_Contract.objects.create(**admin_contract_data)
+                        else :
+                            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
                 elif role == 'Trainer':
@@ -120,46 +135,55 @@ class AddUser(APIView):
                     trainer_data = {
                         'user':user.id
                     }
-                    serializer = TrainerSerializer(data = trainer_data)
-                    if serializer.is_valid():
-                        serializer.save()
-                        user.is_trainer = True
-                        user.save()
-                        trainer = serializer.instance
+                    if Trainer.objects.filter(user=new_user).exists():
+                        trainer = Trainer.objects.get(user=new_user)
                         trainer_contract_data = {
                             'trainer':trainer,
                             'company':company
                         }
                         Trainer_Contract.objects.create(**trainer_contract_data)
                     else :
-                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        serializer = TrainerSerializer(data = trainer_data)
+                        if serializer.is_valid():
+                            serializer.save()
+                            user.is_trainer = True
+                            user.save()
+                            trainer = serializer.instance
+                            trainer_contract_data = {
+                                'trainer':trainer,
+                                'company':company
+                            }
+                            Trainer_Contract.objects.create(**trainer_contract_data)
+
+                        else:
+                            return Response({'message':'errorororor'}, status=status.HTTP_400_BAD_REQUEST)
 
                 elif role == 'Trainee':
                     user = new_user
                     trainee_data = {
                         'user':user.id
                     }
-                    serializer = TraineeSerializer(data = trainee_data)
-                    if serializer.is_valid():
-                        serializer.save()
-                        user.is_trainer = True
-                        user.save()
-                        trainee = serializer.instance
+                    if Trainee.objects.filter(user=new_user).exists():
+                        trainee = Trainee.objects.get(user=new_user)
                         trainee_contract_data = {
                             'trainee':trainee,
                             'company':company
                         }
                         Trainee_Contract.objects.create(**trainee_contract_data)
-                    else :
-                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                    # trainee = Trainee.objects.create(**trainee_data)
-                    # user.save()
-                    # new_user.is_trainee = True
-                    # trainee_contract_data = {
-                    #     'trainee':trainee,
-                    #     'company':company
-                    # }
-                    # Trainee_Contract.objects.create(**trainee_contract_data)
+                    else:
+                        serializer = TraineeSerializer(data = trainee_data)
+                        if serializer.is_valid():
+                            serializer.save()
+                            user.is_trainer = True
+                            user.save()
+                            trainee = serializer.instance
+                            trainee_contract_data = {
+                                'trainee':trainee,
+                                'company':company
+                            }
+                            Trainee_Contract.objects.create(**trainee_contract_data)
+                        else :
+                            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
                 return Response({'message': 'User added successfully'}, status=201)
 

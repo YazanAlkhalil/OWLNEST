@@ -14,12 +14,22 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from authentication.authentication import createAccessToken,createRefreshToken,decodeAccessToken,decodeRefreshToken
 
 class RegisterView(APIView):
-    def post(self,request):
-        serializer = UserSerializer(data = request.data)
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            raise ValidationError('Email is required for registration.')
+
+        existing_user = User.objects.filter(email=email).first()
+
+        if existing_user and not existing_user.otp_verified:
+            existing_user.delete()
+
+        serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -53,8 +63,10 @@ class LoginView(APIView):
 
 class UserView(APIView):
     def get(self, request):
-        if request.user:
-            return Response(UserSerializer(request.user).data)
+        if request.user.is_authenticated:
+            id = request.user.id
+            user = request.user
+            return Response(UserSerializer(user).data)
         raise AuthenticationFailed('unauthenticated')
 
 class RefreshApiView(APIView):
@@ -65,17 +77,11 @@ class RefreshApiView(APIView):
             raise AuthenticationFailed('Invalid refresh token')
         
         if request.session.get('refresh_token_used', False):  
-            response = Response({'error': 'Refresh token has already been used'})
-            response.status_code = 403
-            return response
-        
+            return Response({'error': 'Refresh token has already been used'},status= 403)
         request.session['refresh_token_used'] = True 
-        accessToken = createAccessToken(userId)
-        response = Response({
-            'accessToken': accessToken
-        })
+        response = Response()
         response.delete_cookie('refreshToken')
-        response.set_cookie(key='accessToken',value=accessToken ,httponly=True)
+        response.set_cookie(key='accessToken', value=refreshToken, httponly=True)
         return response
 
 
@@ -89,19 +95,6 @@ class LogoutView(APIView):
         }
         return response
 
-class ForgetPassword(APIView):
-    def post(self,request):
-        email = request.data['email']
-        password = request.data['password']
-        if not re.match(r'^[^@]+@gmail\.com$', email):
-            return Response({'message': 'Invalid email. Only Gmail addresses are allowed.'}, status=400)
-        user = User.objects.filter(email=email).first()
-        if user:
-            user.set_password(password)
-            user.save()
-            return Response({'message':'success'})
-        else:
-            return Response({'message':'user not found'})
 
 class DeleteUserView(APIView):
     def delete(self, request):
