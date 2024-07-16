@@ -6,6 +6,7 @@ class Trainer_Contract_Course(models.Model):
       course = models.ForeignKey(Course, on_delete=models.CASCADE)
       trainer_contract = models.ForeignKey(Trainer_Contract, on_delete=models.CASCADE)
       start_date = models.DateField(auto_now_add=True)
+      is_leader = models.BooleanField(default=False)
       def __str__(self):
             return f'trainers for {self.course} course'
       
