@@ -20,29 +20,45 @@ class CreateCompanyView(APIView):
             user = request.user
             if user is None:
                 return Response({'message': 'user not found'}, status=404)
-            
-            data = request.data
+
             owner_data = {
                 'user': user
-            }
+                }
             owner = Owner.objects.create(**owner_data)
             data = request.data
             wallet_data = {
                 'owner':owner
             }
             wallet = Wallet.objects.create(**wallet_data)
-
+            
             company_data = request.data
             company_data.pop('user', None) 
-            company_data['owner'] = owner
-            company = Company.objects.create(**company_data)
+            company_data['owner'] = owner.id
+            
+            serializer = CompanySerializer(data = company_data)
 
-            user.is_owner = True
-            user.save()
+            if serializer.is_valid(): 
+                serializer.save()
 
-            return Response(CompanySerializer(company).data, status=status.HTTP_201_CREATED)
+                user.is_owner = True
+                user.save()
+
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                owner.delete()
+                wallet.delete()
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'user not found'}, status=401)
-    
+
+
+class EditCompanyView(APIView):
+    def post(self,request):
+        if request.user.is_authenticated:
+            id = request.user.id
+            User = request.user
+            if User is None:
+                return Response({'message': 'user not found'}, status=404)
+            company = Company.objects.get(id=id)
 
 class DeleteOwnerView(APIView):
     def delete(self, request):

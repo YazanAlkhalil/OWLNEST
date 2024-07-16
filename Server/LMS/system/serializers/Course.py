@@ -9,12 +9,20 @@ from ..serializers.Unit import Unit_Serializer
 
 class Course_Serializer(serializers.ModelSerializer):
     additional_resources = Additional_Resources_Serializer(many=True, required=False)
-    trainers = serializers.PrimaryKeyRelatedField(queryset=Trainer_Contract.objects.all(), many=True)
+    trainers = serializers.PrimaryKeyRelatedField(queryset=Trainer_Contract.objects.all(), many=True, required=False)
     units = Unit_Serializer(many=True, read_only=True, source='unit_set')
     # sepcify the model for the serializer and the required fields
     class Meta:
         model = Course
         fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'expected_time', 'additional_resources', 'trainers', 'units']
+        extra_kwargs = {
+            'company': {
+                'required': False
+            },
+            'admin_contract':{
+                'required': False
+            }
+        }
     # when the view_type is list send only the specified fields not all of them
     def to_representation(self, instance):
         representation = super().to_representation(instance)

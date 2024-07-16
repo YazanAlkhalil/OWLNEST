@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'authentication',
     'system',
     'django_extensions', 
-
+    'drf_yasg'
 ]
 
 
@@ -168,11 +168,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authentication.User'
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = [
-  "http://localhost:3000",  
-]
 CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTP_ONLY = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000"
+]
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
 
 #REST_FRAMEWORK
 REST_FRAMEWORK = {

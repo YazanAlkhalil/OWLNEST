@@ -30,6 +30,8 @@ import TraineeVideoLesson from "./Components/trainee/TraineeLesson";
 import TraineeQuiz from "./Components/TraineeQuiz";
 import TraineePdf from "./Components/trainee/TraineePdf";
 import LandingPage from "./Pages/LandingPage";
+import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
+import NewPassword from "./Components/AuthComponents/NewPassword";
 
 export default function Router() {
   return (
@@ -41,6 +43,8 @@ export default function Router() {
       <Route path="/checkCompany" element={<TypeRegister />} />
       <Route path="/companyDetails" element={<CompanyDetails />} />
       <Route path="/company" element={<CompanyPage />} />
+      <Route path="/forgetPassEmail" element={<FoegetPassEmail />} />
+      <Route path="/newPassword" element={<NewPassword />} />
 
       <Route path="/trainee" element={<TraineeLayout />}>
         <Route path="/trainee/homePage" element={<TranieeDashboard />} />
