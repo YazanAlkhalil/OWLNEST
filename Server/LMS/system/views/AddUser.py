@@ -48,7 +48,7 @@ class AddUser(APIView):
                 else:
                     user_role = "null"
             
-            if user_role is "null":
+            if user_role == "null":
                 return Response(
                     {'message': 'You are not authorized to perform this action1'},
                     status=status.HTTP_403_FORBIDDEN
