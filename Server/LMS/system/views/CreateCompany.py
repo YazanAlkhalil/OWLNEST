@@ -119,7 +119,8 @@ class CompaniesView(APIView):
                     companies.append({
                         'id': company.id,
                         'name': company.name,
-                        'logo': company.logo.url
+                        'logo': company.logo.url,
+                        'owner':True
                     })
 
             if Admin.objects.filter(user=user).exists():
