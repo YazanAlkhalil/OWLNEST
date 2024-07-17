@@ -141,9 +141,9 @@ function LandingPage() {
                             <div className='flex items-center mt-auto'>
                                 <img className='w-12 h-12 rounded-full mr-4' src={girl} />
                                 <div >
-                                    <h7 className='text-xl font-semibold'>
+                                    <h6 className='text-xl font-semibold'>
                                         Angela Karamoy
-                                    </h7>
+                                    </h6>
                                     <p className='text-gray-500'>
                                         CEO at Eduka
                                     </p>

@@ -1,6 +1,6 @@
 """LMS URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The urlpatterns list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
 Examples:
 Function views
@@ -18,7 +18,8 @@ from django.urls import path,include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+from LMS import settings
+from django.conf.urls.static import static
 schema_view = get_schema_view(
     openapi.Info(
         title="LMS",
@@ -44,3 +45,6 @@ urlpatterns = [
     path('api/', include('system.urls.Temp_unit')),
     path('api/', include('system.urls.Unit'))
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

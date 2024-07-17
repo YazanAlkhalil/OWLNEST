@@ -11,11 +11,13 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import UseFetch from '../AuthComponents/UseFetch';
 
 export default function FormDialog() {
     const [name, setName] = useState('')
     const [role, setRole] = useState('')
     const [open, setOpen] = useState(false)
+    const {fetchData} = UseFetch()
 
     const handleChange = (event) => {
         setRole(event.target.value);

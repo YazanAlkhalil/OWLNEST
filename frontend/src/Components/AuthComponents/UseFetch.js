@@ -1,103 +1,67 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function UseFetch() {
+const useFetch = () => {
   const navigate = useNavigate();
-  const [resData, setResData] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [resData, setResData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = async (
-   { 
+  const axiosInstance = axios.create({
+    baseURL: 'http://127.0.0.1:8000/api',
+    withCredentials: true,
+  });
+
+  const refreshToken = async () => {
+    try {
+      const refreshResponse = await axiosInstance.post('/refresh/');
+      return refreshResponse.status === 200;
+    } catch (error) {
+      console.log('Error refreshing token:', error);
+      return false;
+    }
+  };
+
+  const fetchData = useCallback(async ({
     url,
-    reqData,
-    method = "post",
+    method = 'get',
+    data = {},
     params = {},
     headers = {}
-    }
-  ) => {
+  }) => {
+    setLoading(true);
+    setError(null);
+
     try {
-      console.log("ssss");
-      console.log(reqData);
-      if (method === "post") {
-        const response = await axios.post(
-          url,
-          reqData,
-          {
-            withCredentials: true,
-            headers: headers
-          }
-        );
-        let res = response.data;
-        setResData(res);
-      } else if (method === "get") {
-        const response = await axios.get(url, {
-            withCredentials: true,
-            params
-         });
-        let res = response.data;
-        setResData(res);
-      } else if (method === "delete") {
-        const response = await axios.delete(url, {
-            withCredentials: true,
-            params });
-        let res = response.data;
-        setResData(res);
-      } else {
-        const response = await axios.patch(url, reqData, {
-            withCredentials: true,
-            params });
-        let res = response.data;
-        setResData(res);
-      }
+      const response = await axiosInstance({
+        url,
+        method,
+        data,
+        params,
+        headers
+      });
+
+      setResData(response.data);
+      return response.data;
     } catch (error) {
-      console.log(error.response, "asd");
-      if (error.response) {
-        if (error.response.status === 401) {
-          try {
-            const refreshResponse = await axios.post(
-              "http://127.0.0.1:8000/api/refresh/",
-              {},
-              {
-                withCredentials: true,
-                headers: { "Content-Type": "application/json" },
-              }
-            );
-            if (refreshResponse.status === 200) {
-              const retryResponse = await axios.post(
-                "http://127.0.0.1:8000/api/create_company/",
-                reqData
-              );
-              let res = retryResponse.data;
-              setResData(res);
-            } else {
-              console.log("Unexpected response from refresh endpoint");
-              navigate("/", { replace: true });
-            }
-          } catch (refreshError) {
-            if (refreshError.response && refreshError.response.status === 403) {
-              console.log("Refresh token expired");
-              navigate("/", { replace: true });
-            } else {
-              console.log("Error refreshing token:", refreshError);
-              navigate("/", { replace: true });
-            }
-          }
+      if (error.response && error.response.status === 401) {
+        const refreshSuccessful = await refreshToken();
+        if (refreshSuccessful) {
+          return fetchData({ url, method, data, params, headers });
         } else {
-          console.log("Error status:", error.response.status);
-          setError(error);
+          navigate('/', { replace: true });
         }
-      } else if (error.request) {
-        console.log("No response received:", error.request);
-        setError(error);
       } else {
-        console.log("Error", error.message);
+        console.error('API Error:', error);
         setError(error);
       }
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
   return { fetchData, resData, loading, error };
-}
+};
+
+export default useFetch;
