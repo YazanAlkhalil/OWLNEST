@@ -54,7 +54,7 @@ function LandingPage() {
                         <p className='text-xl text-white mt-10 mx-40'>
                             We allow companies to train there employees in the way they want.
                         </p>
-                        <button className='bg-accent btn hover:bg-accentHover px-6 mt-10 text-white '>
+                        <button onClick={()=> navigate('/signUp')} className='bg-accent btn hover:bg-accentHover px-6 mt-10 text-white '>
                             Get Started
                         </button>
                     </div>

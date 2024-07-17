@@ -92,7 +92,7 @@ export default function Login() {
               </form>
               <div className="sign-up mt-3">
                 <p className='fw-bold'>- Get Started Now -</p>
-                <NavLink to={'signUp'} className='inline-block align-middle pt-5 text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 bg-gray-100 text-gray-800 hover:bg-gray-200 button fw-bold '>Register</NavLink>
+                <NavLink to={'/signUp'} className='inline-block align-middle pt-5 text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 bg-gray-100 text-gray-800 hover:bg-gray-200 button fw-bold '>Register</NavLink>
               </div>
             </div>
             </div>

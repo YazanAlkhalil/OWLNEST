@@ -13,6 +13,11 @@ import { BiArrowBack } from "react-icons/bi";
 
 function CourseEdit() {
   const [isInfo, setIsInfo] = useState(false)
+  const [course,setCourse]=useState({
+    image,
+    name:'www',
+    description:"sdfa"
+  })
   const [isUploadingVideo, setIsUploadingVideo] = useState(false)
   const [isUploadingPDF, setIsUploadingPDF] = useState(false)
   const [createQuiz, setCreateQuiz] = useState(false)
@@ -20,36 +25,36 @@ function CourseEdit() {
   const [content, setContent] = useState([
     {
       type: "unit",
-      name: "unit 1",
+      title: "unit 1",
       id: "12",
     },
     {
       type: "lesson",
       content: "video",
-      name: "video 1",
+      title: "video 1",
       id: "1",
     },
     {
       type: "lesson",
       content: "pdf",
-      name: "pdf 1",
+      title: "pdf 1",
       id: "2",
     },
     {
       type: "lesson",
       content: "quiz",
-      name: "quiz 1",
+      title: "quiz 1",
       id: "3",
     },
     {
       type: "unit",
-      name: "unit 2",
+      title: "unit 2",
       id: "23",
     },
     {
       type: "lesson",
       content: "quiz",
-      name: "quiz 2",
+      title: "quiz 2",
       id: "4",
     },
 
@@ -82,11 +87,11 @@ function CourseEdit() {
   return (
     <>
       <div className='flex justify-between '>
-        <div className='flex'>
-          <img className='mr-4 rounded w-3/5' src={image} />
-          <div className='pr-40'>
-            <h1 className='text-xl font-bold'>Course name</h1>
-            <p className='mt-4 text-md font-light'>Course description goes here Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent aliquam aliquet erat eget placerat. Duis sodales aliquet justo fermentum tempor. Quisque ipsum urna, imperdiet et tristique in, eleifend non nulla. Mauris vel porta sapien. Nunc maximus sed leo eget varius. Proin vitae tempus sem, ut rutrum </p>
+        <div className='flex w-full'>
+          <img className='mr-4 rounded w-2/6' src={course.image} />
+          <div className='flex-grow'>
+            <h1 className='text-xl font-bold'>{course.name}</h1>
+            <p className='mt-4 text-md font-light'>{course.description} </p>
           </div>
         </div>
         <div>
@@ -96,21 +101,22 @@ function CourseEdit() {
         </div>
       </div>
       <div className='flex justify-end mb-4'>
-        <button className='mr-2 text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={() => setSortable(!sortable)}>
-          reorder
+        <button className='mr-2 text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' >
+          {sortable ? 'save' : 'reorder'}
         </button>
-        <FormDialog />
+        <FormDialog addUnit={addUnit}/>
       </div>
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <div >
 
           <div >
             <SortableContext items={content} strategy={verticalListSortingStrategy}>
-              {content.map((item) => {
+              {
+              content.map((item) => {
                 if (item.type == 'unit')
-                  return <Unit key={JSON.stringify(item)} createQuiz={() => setCreateQuiz(true)} uploadVideo={() => setIsUploadingVideo(true)} uploadPDF={() => setIsUploadingPDF(true)} sortable={sortable} item={item} />
-                if (item.type == 'lesson')
-                  return <Lesson sortable={sortable} key={JSON.stringify(item)} item={item} />
+                  return <Unit key={item.id} createQuiz={() => setCreateQuiz(true)} uploadVideo={() => setIsUploadingVideo(true)} uploadPDF={() => setIsUploadingPDF(true)} sortable={sortable} item={item} />
+                else
+                  return <Lesson sortable={sortable} key={item.id} item={item} />
               })}
             </SortableContext>
           </div>

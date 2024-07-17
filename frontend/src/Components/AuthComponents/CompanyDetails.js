@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { newCompany } from "../../features/Auth/CompanySlice";
 import UseFetch from "./UseFetch";
 
-
 const countries = [
   ["DZ", "Algeria"],
   ["BH", "Bahrain"],
@@ -30,15 +29,13 @@ const countries = [
   ["YE", "Yemen"],
 ];
 
-
-
 export default function CompanyDetails() {
   // const navigate = useNavigate();
   // const dispatch = useDispatch();
   const { fetchData, resData, loading, error } = UseFetch();
   const [compName, setCompName] = useState("");
   const [compEmail, setCompEmail] = useState("");
-  const [logo,setLogo] = useState('');
+  const [logo, setLogo] = useState();
   const [country, setCountry] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [location, setLocation] = useState("");
@@ -48,8 +45,8 @@ export default function CompanyDetails() {
 
   function handleLogo(e) {
     console.log(e.target.files);
-    setLogo(URL.createObjectURL(e.target.files[0]));
-}
+    setLogo(e.target.files[0]); 
+  }
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -77,24 +74,30 @@ export default function CompanyDetails() {
 
   const handleCreateNestClick = (e) => {
     e.preventDefault();
-    
 
-    const data = {
-      name : compName,
-      email: compEmail,
-      logo : logo,
-      country: country,
-      location: location,
-      size: size,
-      description: desc,
-      phone : phoneNumber
-    }
-    console.log(data);
+    if (!validateForm()) return;
+
+    const formData = new FormData();
+    formData.append("name", compName);
+    formData.append("email", compEmail);
+    formData.append("logo", logo);
+    formData.append("country", country);
+    formData.append("location", location);
+    formData.append("size", size);
+    formData.append("description", desc);
+    formData.append("phone", phoneNumber);
+    console.log(formData);
     if (validateForm()) {
-      // console.log(fetchData);
       // dispatch(newCompany(data));
-     fetchData({method: 'post',url: "http://127.0.0.1:8000/api/create_company/",reqData: data,params: {}})
-
+      fetchData({
+        method: "post",
+        url: "http://127.0.0.1:8000/api/create_company/",
+        reqData: formData,
+        params: {},
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     }
   };
 
@@ -120,7 +123,6 @@ export default function CompanyDetails() {
                       value={compName}
                       onChange={(e) => setCompName(e.target.value)}
                       className={` ${getInputClass("compName")}`}
-                
                     />
                   </div>
                   <div className="mb-4">
@@ -131,14 +133,18 @@ export default function CompanyDetails() {
                       value={compEmail}
                       onChange={(e) => setCompEmail(e.target.value)}
                       className={` ${getInputClass("compEmail")}`}
-                
                     />
                   </div>
                   <div className="mb-4">
                     <div className="file-upload">
                       <img src={uploadImg} alt="upload" className="mx-auto" />
                       <h6 className="fw-bold">Click box to upload LOGO</h6>
-                      <input type="file" multiple accept="image/*" onChange={handleLogo} />
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleLogo}
+                      />
                     </div>
                   </div>
                   <div className="mb-4 size flex justify-center">
@@ -148,11 +154,11 @@ export default function CompanyDetails() {
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
                       className={` ${getInputClass("country")}`}
-                      >
+                    >
                       {countries.map(([code, name]) => (
-                              <option key={code} value={code}>
-                                {name}
-                              </option>
+                        <option key={code} value={code}>
+                          {name}
+                        </option>
                       ))}
                     </select>
                     <input
@@ -162,7 +168,6 @@ export default function CompanyDetails() {
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
                       className={` ${getInputClass("location")}`}
-                
                     />
                   </div>
                   <div className="mb-4">
@@ -173,7 +178,6 @@ export default function CompanyDetails() {
                       value={desc}
                       onChange={(e) => setDesc(e.target.value)}
                       className={` ${getInputClass("desc")}`}
-                
                     />
                   </div>
                   <div className="mb-4 size flex justify-center">
@@ -195,12 +199,12 @@ export default function CompanyDetails() {
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       className={` ${getInputClass("phoneNumber")}`}
-                
                     />
                   </div>
                   <button
                     type="submit"
-                    className="inline-block text-white font-bold align-middle  select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline bg-gray-100 text-gray-800 hover:bg-gray-200 fw-bold text-gray-100">
+                    className="inline-block text-white font-bold align-middle  select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline bg-gray-100 text-gray-800 hover:bg-gray-200 fw-bold text-gray-100"
+                  >
                     Create NEST
                   </button>
                 </form>

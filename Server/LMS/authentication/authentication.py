@@ -9,7 +9,7 @@ from rest_framework.authentication import BaseAuthentication
 def createAccessToken(id):
     return jwt.encode({
         'user_id': id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=2),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
         'ist': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     }, 'access_secret', algorithm='HS256')
 
@@ -28,23 +28,22 @@ def createRefreshToken(id):
         'user_id': id,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
         'ist': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
-    }, 'refresh_secret', algorithm='HS256')
+    }, 'access_secret', algorithm='HS256')
 
 
 def decodeRefreshToken(token):
     try:
-        payload = jwt.decode(token, 'refresh_secret', algorithms='HS256' )
+        payload = jwt.decode(token, 'access_secret', algorithms='HS256' )
         return payload['user_id']
 
     except:
         raise exceptions.AuthenticationFailed('unauthenticated')
     
 
- 
 
 class JWTAuthenticationBackEnd(BaseAuthentication):
     def authenticate(self, request):
-        token = request.COOKIES.get('accessToken')  
+        token = request.COOKIES.get('accessToken')
         if not token:
             return None
         try:

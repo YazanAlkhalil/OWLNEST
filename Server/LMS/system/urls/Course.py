@@ -20,7 +20,7 @@ urlpatterns = [
         name='company-course-trainee-list'
     ),
     path(
-        'admin/company/<int:company_id>/courses/', 
+        'admin/company/<int:company_id>/courses/create', 
         CompanyCourseCreate.as_view(), 
         name='company-course-admin-create'
     ),
@@ -40,17 +40,17 @@ urlpatterns = [
         name='company-course-trainee-retrive'
     ),
     path(
-        'admin/company/<int:company_id>/courses/<int:course_id>', 
+        'admin/company/<int:company_id>/courses/<int:course_id>/update', 
         CompanyCourseUpdate.as_view(), 
         name='company-course-admin-update'
     ),
     path(
-        'trainer/company/<int:company_id>/courses/<int:course_id>', 
+        'trainer/company/<int:company_id>/courses/<int:course_id>/update', 
         CompanyCourseUpdate.as_view(), 
         name='company-course-trainer-update'
     ),
     path(
-        'admin/company/<int:company_id>/courses/<int:course_id>',
+        'admin/company/<int:company_id>/courses/<int:course_id>/delete',
         CompanyCourseDelete.as_view(),
         name='company-course-admin-delete'
     ),
