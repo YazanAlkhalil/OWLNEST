@@ -4,8 +4,7 @@ from django.conf import settings
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings 
-from authentication.models import User
-
+from authentication.models import User 
 from rest_framework.authentication import BaseAuthentication
 def createAccessToken(id):
     return jwt.encode({
@@ -41,18 +40,13 @@ def decodeRefreshToken(token):
         raise exceptions.AuthenticationFailed('unauthenticated')
     
 
-
+ 
 
 class JWTAuthenticationBackEnd(BaseAuthentication):
     def authenticate(self, request):
-        token = request.COOKIES.get('accessToken')
-        print('------------------s')
-        print('------------------s')
-        print(token)
-        print('------------------s')
+        token = request.COOKIES.get('accessToken')  
         if not token:
             return None
-        
         try:
             payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
             user_id = payload['user_id']
@@ -62,6 +56,8 @@ class JWTAuthenticationBackEnd(BaseAuthentication):
             except User.DoesNotExist:
                 return None
         except jwt.ExpiredSignatureError:
+            print("EXPIRED")
             return None
         except jwt.InvalidTokenError:
+            print("SHIT")
             return None

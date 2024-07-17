@@ -1,10 +1,9 @@
 from django.db import models
-from system.models.Video import Video
+from system.models.Pdf import Pdf
 
-class EditVideo(models.Model):
-  video = models.ForeignKey(Video, on_delete=models.CASCADE)
+class Temp_Pdf(models.Model):
+  pdf = models.ForeignKey(Pdf, on_delete=models.CASCADE)
   file_path = models.FileField()
-  description = models.TextField()
   EDITION_STATES = [
     ('PR', 'InProgress'),
     ('PE', 'Pending'),

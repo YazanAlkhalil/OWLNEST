@@ -5,8 +5,10 @@ from system.models.Owner import Owner
 class Company(models.Model):
     owner = models.OneToOneField(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=75)
-    email = models.CharField(max_length=255)
-    logo = models.CharField(max_length=255)
+    email = models.CharField(max_length=255,unique=True)
+    def logo_path(instance, filename):
+        return f'logo_{instance.id}/{filename}'
+    logo = models.ImageField(upload_to=logo_path, null=True, blank=True)
     COUNTRY_CHOICES = [
         ('DZ', 'Algeria'),
         ('BH', 'Bahrain'),
@@ -38,7 +40,7 @@ class Company(models.Model):
     ]
     size = models.CharField(max_length=1,choices=SIZE_CHOICES,default='S')
     description = models.CharField(max_length=255)
-    created_day = models.DateField(auto_now=True)
+    created_day = models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:
         return self.name

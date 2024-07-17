@@ -55,6 +55,8 @@ def update_progress_on_finished_content(sender, instance, created, **kwargs):
     if created:
         enrollment = instance.enrollment
         calculate_progress(enrollment)
+        #update trainee_contract xp 
+        enrollment.trainee_contract.total_xp += 10  
         #generate certification if passed
         
         
@@ -64,5 +66,7 @@ def update_progress_on_grade(sender, instance, created, **kwargs):
     if created:
         enrollment = instance.enrollment
         calculate_progress(enrollment)
+        #update tarinee_contract xp
+        enrollment.trainee_contract.total_xp += instance.xp
         #generate certification if passed
         
