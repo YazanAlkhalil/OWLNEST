@@ -17,6 +17,7 @@ from system.models.Trainee import Trainee
 from system.models.Trainer_Contract import Trainer_Contract
 from system.models.Trainee_Contract import Trainee_Contract
 from system.models.Admin_Contract import Admin_Contract
+from rest_framework.exceptions import AuthenticationFailed
 
 
 class CreateCompanyView(APIView):
@@ -56,15 +57,39 @@ class CreateCompanyView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'user not found'}, status=401)
 
-
-class EditCompanyView(APIView):
-    def post(self,request):
+class CompanyView(APIView):
+    def get(self,request):
         if request.user.is_authenticated:
             id = request.user.id
-            User = request.user
+            user = request.user
             if User is None:
                 return Response({'message': 'user not found'}, status=404)
-            company = Company.objects.get(id=id)
+            if Owner.objects.filter(user=user).exists():
+                owner = Owner.objects.get(user=user)
+                company = Company.objects.get(owner=owner)
+                return Response(CompanySerializer(company).data)
+        raise AuthenticationFailed('unauthenticated')
+
+class EditCompanyView(APIView):
+    def patch(self,request):
+        if request.user.is_authenticated:
+            id = request.user.id
+            user = request.user
+            if User is None:
+                return Response({'message': 'user not found'}, status=404)
+            if Owner.objects.filter(user=user).exists():
+                owner = Owner.objects.get(user=user)
+                company = Company.objects.get(owner=owner)
+                company_data = request.data
+                serializer = CompanySerializer(company, data=company_data, partial=True)
+                if serializer.is_valid(): 
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'message': 'user is not an owner'}, status=403)
+        return Response({'message': 'user not found'}, status=401)
 
 class DeleteOwnerView(APIView):
     def delete(self, request):
