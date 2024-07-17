@@ -3,11 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authentication import get_authorization_header
+from rest_framework import generics
+from rest_framework import status
 from authentication.serializers.userSerializer import UserSerializer,ResetPasswordEmailREquestSerializer,SetNewPasswordSerializer
 from authentication.models import User
-from rest_framework import status
 import re
-from rest_framework import generics
+import datetime
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str,force_str ,smart_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
@@ -52,6 +53,9 @@ class LoginView(APIView):
             raise AuthenticationFailed('incorrect password')
         accessToken = createAccessToken(user.id)
         refreshToken = createRefreshToken(user.id)
+
+        user.last_login = datetime.datetime.now()
+        user.save()
 
         response = Response()
 
