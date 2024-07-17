@@ -23,7 +23,7 @@ function NavBar({ highlight }) {
   useEffect(()=>{
       async function getRoles(){
         const res = await fetchData({url: 'http://localhost:8000/api/company/1/roles/'})
-        console.log(res.data)
+        console.log(res?.data)
       }
       getRoles()
   },[])
