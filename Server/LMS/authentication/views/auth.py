@@ -5,6 +5,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.authentication import get_authorization_header
 from authentication.serializers.userSerializer import UserSerializer,ResetPasswordEmailREquestSerializer,SetNewPasswordSerializer
 from authentication.models import User
+from rest_framework import status
 import re
 from rest_framework import generics
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -107,6 +108,31 @@ class DeleteUserView(APIView):
             return Response({'message': 'User not found'}, status=404)
         
 
+class EditProfielView(APIView):
+    def patch(self,request):
+        if request.user.is_authenticated:
+            id = request.user.id
+            user = request.user
+            password = user.password
+            if User is None:
+                return Response({'message': 'user not found'}, status=404)
+            user_data = request.data
+            old_password = user_data['old_password']
+            if not user.check_password(old_password):
+            # if not old_password == password:
+                return Response({'message': 'old password is not correct'}, status=400)
+            new_password = user_data['new_password']
+            user.set_password(new_password)  # <--- Use set_password to hash the new password
+            user.save()
+            serializer = UserSerializer(user, data=user_data, partial=True)
+            if serializer.is_valid(): 
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'user not found'}, status=404)
+
+
 class RequestPasswordResetEmail(generics.GenericAPIView):
     
     serializer_class = ResetPasswordEmailREquestSerializer
@@ -131,7 +157,9 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             recipient_list = [email]
 
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-        return Response({'success':'we have sent a link to reset your password'}, status = 200)
+            return Response({'success':'we have sent a link to reset your password'}, status = 200)
+        
+        return Response({'message':'user not found'}, status = 400)
 
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
