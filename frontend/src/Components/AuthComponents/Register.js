@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./Register.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { signupUser } from "../../features/Auth/SignUpSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { signupSelector, signupUser } from "../../features/Auth/SignUpSlice";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
+import toast from "react-hot-toast";
+import Loader from "../Loader";
 
 const countries = [
   ["DZ", "Algeria"],
@@ -29,6 +31,7 @@ const countries = [
 
 export default function Register() {
   const navigate = useNavigate();
+  const { isFetching } = useSelector(signupSelector);
   // states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -103,31 +106,45 @@ export default function Register() {
   // redux logic
   const dispatch = useDispatch();
 
-  function handleSubmittedClick(e) {
+  const handleSubmittedClick = async (e) => {
     e.preventDefault();
     const data = {
-      username: username,
-      password: password,
-      email: email,
-      phone: phone,
-      birthday: date,
-      gender: gender,
-      country: country,
+        username: username,
+        password: password,
+        email: email,
+        phone: phone,
+        birthday: date,
+        gender: gender,
+        country: country,
     };
-    // console.log(data);
+    
     if (validate2()) {
-      // console.log("he");
-      dispatch(signupUser(data));
-      navigate("/verify", { replace: true },{ state: { from: 'signup' } });
+        try {
+            const resultAction = await dispatch(signupUser(data));
+            if (signupUser.fulfilled.match(resultAction)) {
+                navigate('/verify', { replace: true });
+            } else {
+                const errorMessage = resultAction.payload?.message || 'Register failed';
+                toast.error(errorMessage);
+                console.log('Register failed:', errorMessage);
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'An unknown error occurred';
+            toast.error(errorMessage);
+            console.log('Register failed:', errorMessage);
+        }
     }
-  }
+};
 
   return (
     <>
       <div className="signUp">
         <div className="flex flex-wrap ">
           <div className="w-1/2">
-            <div className="container mx-auto sm:px-4">
+            {
+              isFetching ?  <div className='container w-[100%] h-[100%] flex justify-center items-center sm:px-4'>
+              <Loader />
+            </div> : <div className="container mx-auto sm:px-4">
               <div className="login-form text-center">
                 <h2 className="font-semibold text-3xl mb-4">Register</h2>
                 <form onSubmit={handleSubmittedClick}>
@@ -318,6 +335,7 @@ export default function Register() {
                 </div>
               </div>
             </div>
+            }
           </div>
           <div className="w-1/2 loginBackGround">
             <div>

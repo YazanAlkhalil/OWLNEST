@@ -30,22 +30,25 @@ const countries = [
 ];
 
 export default function CompanyDetails() {
-  // const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { fetchData, resData, loading, error } = UseFetch();
   const [compName, setCompName] = useState("");
   const [compEmail, setCompEmail] = useState("");
   const [logo, setLogo] = useState();
-  const [country, setCountry] = useState("");
+  const [logoToAppear, setLogoToAppear] = useState();
+  const [country, setCountry] = useState("SY");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [location, setLocation] = useState("");
-  const [size, setSize] = useState(0);
+  const [size, setSize] = useState("L");
   const [desc, setDesc] = useState("");
   const [errors, setErrors] = useState({});
+  const [testPhoto, setTestPhoto] = useState(false);
 
   function handleLogo(e) {
     console.log(e.target.files);
     setLogo(e.target.files[0]); 
+    setLogoToAppear(URL.createObjectURL(e.target.files[0]));
+    setTestPhoto(true);
   }
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,7 +91,6 @@ export default function CompanyDetails() {
     formData.append("phone", phoneNumber);
     console.log(formData);
     if (validateForm()) {
-      // dispatch(newCompany(data));
       fetchData({
         method: "post",
         url: "http://127.0.0.1:8000/api/create_company/",
@@ -98,6 +100,7 @@ export default function CompanyDetails() {
           "Content-Type": "multipart/form-data",
         },
       });
+      navigate('/company',{replace: true});
     }
   };
 
@@ -137,6 +140,9 @@ export default function CompanyDetails() {
                   </div>
                   <div className="mb-4">
                     <div className="file-upload">
+                      {!testPhoto  
+                      ?
+                      <div>
                       <img src={uploadImg} alt="upload" className="mx-auto" />
                       <h6 className="fw-bold">Click box to upload LOGO</h6>
                       <input
@@ -145,6 +151,18 @@ export default function CompanyDetails() {
                         accept="image/*"
                         onChange={handleLogo}
                       />
+                      </div>
+                      :
+                      <div>
+                        <img src={logoToAppear} alt="upload" className="w-[50%] h-[50%] rounded-full mx-auto" />
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleLogo}
+                      />
+                      </div>
+                      }
                     </div>
                   </div>
                   <div className="mb-4 size flex justify-center">
@@ -211,7 +229,7 @@ export default function CompanyDetails() {
               </div>
             </div>
           </div>
-          <div className="w-1/2 loginBackGround">
+          <div className="w-1/2 min-h-screen loginBackGround">
             <div>
               <img
                 src={backGround}

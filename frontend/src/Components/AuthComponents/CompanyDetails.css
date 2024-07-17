@@ -16,7 +16,6 @@
     background-color: rgba(216, 216, 216, 0.608);
     margin-left: 60px;
     border-radius: 20px;
-    /* padding: 1.5rem; */
     position: relative;
     cursor: pointer;
   }
@@ -38,7 +37,6 @@
     padding: 10px 20px;
     border-radius: 20px;
     background-color: rgba(216, 216, 216, 0.608);
-    color: rgba(0, 0, 0, 0.516);
     font-weight: bold;
 }
 .companyDetails .login-form select option{
@@ -66,7 +64,6 @@
     border-bottom-left-radius: 20px;
     padding-left: 200px;
     text-align: center;
-    height: 100vh;
     padding: 30px;
     background: rgb(63,86,251);
     background: radial-gradient(circle, rgba(63,86,251,1) 0%, rgba(13,30,150,1) 18%, rgba(2,7,34,1) 82%, rgba(0,1,6,1) 100%);

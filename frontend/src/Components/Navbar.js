@@ -13,7 +13,7 @@ import { logout } from "../features/Auth/LoginSlice";
 
 function NavBar({ highlight }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState(false);
   const overlayRef = useRef(null);
   const toggleOverlay = () => {

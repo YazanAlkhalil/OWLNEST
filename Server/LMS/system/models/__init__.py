@@ -1,1 +1,2 @@
 from .Additional_Resources import Additional_Resources
+from .Trainee_Contract import Trainee_Contract
