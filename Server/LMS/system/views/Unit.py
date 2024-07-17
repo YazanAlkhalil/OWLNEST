@@ -5,11 +5,16 @@ from rest_framework.response import Response
 # models
 from ..models.Unit import Unit
 from ..models.Temp_unit import Temp_Unit
+from ..models.Course import Course
 # serialzers
 from ..serializers.Unit import Unit_Serializer
+from ..serializers.Temp_Unit import Temp_Unit_Serializer
 # permissions
 from ..permissions.IsCourseAdmin import IsCourseAdmin
 from ..permissions.IsCourseAdminOrTrainer import IsCourseAdminOrTrainer
+from ..permissions.IsCourseTrainer import IsCourseTrainer
+# swagger
+from drf_yasg.utils import swagger_auto_schema
 
 # GET : api/admin/company/:company_id/courses/:course_id/unit
 # GET : api/trainer/company/:company_id/courses/:course_id/unit
@@ -36,35 +41,53 @@ class UnitRetrieve(generics.RetrieveAPIView):
         unit_id = self.kwargs['unit_id']
         return Unit.objects.filter(id=unit_id, course__id=course_id, course__company__id=company_id)
 
-# POST : api/admin/company/:company_id/courses/:course_id/temp_unit/:temp_unit_id/approve
+# POST : api/trainer/company/:company_id/courses/:course_id/unit
 class UnitCreate(generics.CreateAPIView):
     # set the serializer class
-    serializer_class = Unit_Serializer
+    serializer_class = Temp_Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseAdmin]
-    # save the cours to the temp_unit 
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    # save the cours to the temp_unit
     def perform_create(self, serializer):
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
-        temp_unit_id = self.kwargs['temp_unit_id']
-        try:
-            temp_unit = Temp_Unit.objects.get(id=temp_unit_id, course__id=course_id, course__company__id=company_id)
-        except Temp_Unit.DoesNotExist:
-            raise serializers.ValidationError("Temp_unit does not exist")
-        if temp_unit.state != 'PE':
-            raise serializers.ValidationError("Temp_unit is not in the pending state")
-        # Create and save the Unit instance
-        unit = Unit(
-            course=temp_unit.course,
-            title=temp_unit.title,
-            pref_description=temp_unit.pref_description,
-            order=temp_unit.order
-        )
-        unit.save()
-        # Update the state of the Temp_Unit instance and set the unit to it
-        temp_unit.state = 'PU'
-        temp_unit.unit = unit
-        temp_unit.save()
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return Response(response.data, status=status.HTTP_201_CREATED)
+        course = Course.objects.get(id=course_id, company__id=company_id)
+        serializer.save(course=course, state='PR')
+
+# PUT : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id
+class UnitUpdate(generics.UpdateAPIView):
+    # set the serializer class
+    serializer_class = Temp_Unit_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    # @swagger_auto_schema(
+    #     operation_description='for updating a specific unit',
+    #     # responses={200: ''}
+    # )
+    # def put(self, request, *args, **kwargs):
+    #     return super().delete(request, *args, **kwargs)
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']
+        unit_id = self.kwargs['unit_id']
+        return Temp_Unit.objects.filter(id=unit_id, course=course_id)
+    def perform_update(self, serializer):
+        serializer.save(state='PR')
+
+# DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id
+class UnitDelete(generics.DestroyAPIView):    # set the serializer class
+    serializer_class = Temp_Unit_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    @swagger_auto_schema(
+        operation_description='obviously for deleteing a specific unit',
+        responses={200: 'Unit set to delete state'}
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']
+        unit_id = self.kwargs['unit_id']
+        return Unit.objects.filter(id=unit_id, course=course_id)
+    def perform_destroy(self, instance):
+        instance.state = 'DE'
+        return Response({'message':'Unit set to delete state'}, status=204)

@@ -1,5 +1,5 @@
 from django.urls import path
-from ..views.Unit import UnitList, UnitRetrieve, UnitCreate
+from ..views.Unit import UnitList, UnitRetrieve, UnitCreate, UnitUpdate, UnitDelete
 
 urlpatterns = [
     path(
@@ -10,7 +10,7 @@ urlpatterns = [
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit',
         UnitList.as_view(),
-        name='unit-admin-list'
+        name='unit-trainer-list'
     ),
     path(
         'admin/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
@@ -20,11 +20,21 @@ urlpatterns = [
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
         UnitRetrieve.as_view(),
-        name='temp-unit-admin-approve'
+        name='unit-trainer-retrive'
     ),
     path(
-        'admin/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/temp_unit/<int:temp_unit_id>/approve',
-        UnitCreate.as_view(),
-        name='temp-unit-admin-approve'
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/create', 
+        UnitCreate.as_view(), 
+        name='unit-trainer-create'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>', 
+        UnitUpdate.as_view(), 
+        name='unit-trainer-update'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>', 
+        UnitDelete.as_view(), 
+        name='unit-trainer-delete'
     ),
 ]

@@ -37,7 +37,7 @@ class TempUnitListPending(generics.ListAPIView):
         unit_id = self.kwargs['unit_id']
         return Temp_Unit.objects.filter(unit=unit_id, course__id=course_id, course__company__id=company_id, state='PE')
 
-# POST : api/trainer/company/:company_id/courses/:course_id/temp_unit
+# POST : api/trainer/company/:company_id/courses/:course_id/unit
 class TempUnitCreate(generics.CreateAPIView):
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
