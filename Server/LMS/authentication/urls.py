@@ -3,7 +3,7 @@ from authentication.views.auth import RegisterView,LoginView,UserView,LogoutView
 from authentication.views.otp import OTPVerificationView,VerifyOTPView
 
 from django.contrib.auth import views as auth_views
-from authentication.views.auth import PasswordTokenCheckAPI,RequestPasswordResetEmail
+from authentication.views.auth import PasswordTokenCheckAPI,RequestPasswordResetEmail,EditProfielView
 
 
 
@@ -18,4 +18,5 @@ urlpatterns = [
     path('request_reset_email/',RequestPasswordResetEmail.as_view(),name='request_reset_email' ),
     path('password_reset/<uidb64>/<token>/',PasswordTokenCheckAPI.as_view(),name='password_reset_confirm'),
     path('password_reset_complete/',SetNewPasswordAPIView.as_view(),name='password_reset_complete'),
+    path('edit_profile/',EditProfielView.as_view(),name='edit_profile'),
 ]
