@@ -8,14 +8,27 @@ import { LuLogOut } from "react-icons/lu";
 import Badge from '@mui/material/Badge';
 import { useDispatch } from "react-redux";
 import { logout } from "../features/Auth/LoginSlice";
+import UseFetch from "./AuthComponents/UseFetch";
 
 
 
 function NavBar({ highlight }) {
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  const {fetchData} = UseFetch()
   const [dropdown, setDropdown] = useState(false);
   const overlayRef = useRef(null);
+
+
+  useEffect(()=>{
+      async function getRoles(){
+        const res = await fetchData({url: 'http://localhost:8000/api/company/1/roles/'})
+        console.log(res.data)
+      }
+      getRoles()
+  },[])
+
+
   const toggleOverlay = () => {
     setDropdown(!dropdown);
   };

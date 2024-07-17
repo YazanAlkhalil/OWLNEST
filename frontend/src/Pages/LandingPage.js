@@ -39,8 +39,8 @@ function LandingPage() {
                         <li className='hover:text-gray-200 hover:cursor-pointer'>subscribe</li>
                     </ul>
                     <div className='flex gap-6'>
-                        <button className='border text-base border-white hover:bg-white hover:cursor-pointer hover:text-black py-2 px-4 rounded' onClick={()=>navigate('/login')}>Sign In</button>
-                        <button className='bg-accent text-base hover:bg-accentHover hover:cursor-pointer py-2 px-4 rounded' onClick={()=>navigate('/signUp')}>Sign Up</button>
+                        <button className='border text-base border-white hover:bg-white hover:cursor-pointer hover:text-black py-2 px-4 rounded' onClick={()=>navigate('/login')}>Login</button>
+                        <button className='bg-accent text-base hover:bg-accentHover hover:cursor-pointer py-2 px-4 rounded' onClick={()=>navigate('/signUp')}>Register</button>
                     </div>
                 </div>
             </div>
