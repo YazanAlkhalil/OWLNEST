@@ -129,9 +129,14 @@ class CompaniesView(APIView):
                         'name': company.name,
                         'logo': company.logo.url
                     })
+            
+            response = Response()
+            response.data = {
+                'username': user.username,
+                'companies':companies,
+            }
 
-
-            return Response(companies, status=status.HTTP_200_OK)
+            return response
         return Response({'message': 'user not found'}, status=401)
 
 
@@ -144,4 +149,43 @@ class DeleteCompanyView(APIView):
             return Response({'message': 'company deleted successfully'})
         else:
             return Response({'message': 'company not found'}, status=404)
+
+
+class UserCompanyView(APIView):
+    def get(self, request,company_id):
+        if request.user.is_authenticated:
+            id = request.user.id
+            user = request.user
+            if user is None:
+                return Response({'message': 'user not found'}, status=404)
+            if not Company.objects.filter(id=company_id).exists():
+                return Response({'message': 'company not found'}, status=404)
+        
+            company = Company.objects.get(id=company_id)
+            roles = []
+            
+            if Owner.objects.filter(user=user).exists():
+                owner = Owner.objects.get(user=user)
+                if Company.objects.filter(owner=owner, id=company.id).exists():
+                    roles.append('owner')
+
+            if Admin.objects.filter(user=user).exists():
+                admin = Admin.objects.get(user=user)
+                if Admin_Contract.objects.filter(admin=admin, company=company).exists():
+                    roles.append('admin')
+            
+            if Trainer.objects.filter(user=user).exists():
+                trainer = Trainer.objects.get(user=user)
+                if Trainer_Contract.objects.filter(trainer=trainer,company=company).exists():
+                    roles.append('trainer')
+
+            if Trainee.objects.filter(user=user).exists():
+                trainee = Trainee.objects.get(user=user)
+                if Trainee_Contract.objects.filter(trainee=trainee,company=company).exists():
+                    roles.append('trainee')
+            
+            return  Response(roles , status =200)
+        
+        return Response({'message': 'user not found'}, status=401)
+
 
