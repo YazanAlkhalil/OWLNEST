@@ -54,15 +54,13 @@ class LoginView(APIView):
         accessToken = createAccessToken(user.id)
         refreshToken = createRefreshToken(user.id)
 
-        user.last_login = datetime.datetime.now()
+        user.last_login = datetime.now()
         user.save()
 
         response = Response()
 
         response.set_cookie(key='accessToken',value=accessToken ,httponly=True,samesite='None',secure=True)
         response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True,samesite='None',secure=True)
-        request.session['refresh_token_used'] = False
-        print(response)
 
         return response
 
@@ -82,10 +80,24 @@ class RefreshApiView(APIView):
         user_id = refresh_token["user_id"]
         exp = refresh_token["exp"]
         if datetime.fromtimestamp(exp) < datetime.now():
-            return Response({'message': 'Refresh token is expierd'},status= 403)
+            response = Response()
+            response.set_cookie(key='accessToken',value="" ,httponly=True,samesite='None',secure=True, max_age=3600)
+            response.set_cookie(key='refreshToken',value="" ,httponly=True,samesite='None',secure=True, max_age=3600*7*24)
+            response.delete_cookie('accessToken')
+            response.delete_cookie('refreshToken')
+
+            response.data = {
+                'message':'refresh token has expiered',
+            }
+
+            return response
         accessToken = createAccessToken(user_id)
         response = Response()
-        response.set_cookie(key='accessToken',value=accessToken ,httponly=True,samesite='None',secure=True)
+        response.set_cookie(key='accessToken',value=accessToken ,httponly=True,samesite='None',secure=True, max_age=3600)
+        response.data = {
+                'message':'success',
+                'token':accessToken
+        }
 
         return response
         
