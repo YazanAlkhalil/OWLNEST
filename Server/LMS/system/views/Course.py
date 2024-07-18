@@ -18,8 +18,8 @@ from ..models.Video import Video
 from ..models.Test import Test
 # serialzers
 from ..serializers.Course import Course_Serializer
+from ..serializers.Course_Pending import Course_Pending_Serializer
 # permissions
-from ..permissions.IsAdmin import IsAdmin
 from ..permissions.IsCourseAdmin import IsCourseAdmin
 from ..permissions.IsCourseAdminOrTrainer import IsCourseAdminOrTrainer
 from ..permissions.IsCourseTrainer import IsCourseTrainer
@@ -79,7 +79,7 @@ class CompanyCourseCreate(generics.CreateAPIView):
     # set the serializer class
     serializer_class = Course_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsCourseAdmin]
     # Document the view
     @swagger_auto_schema(
         operation_description='for creating a new course at least should have the following required fields',
@@ -120,16 +120,18 @@ class CompanyCoursePublish(generics.UpdateAPIView):
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
         course = Course.objects.get(id=course_id, company_id=company_id)
-        course.state = 'PE'
-        course.save()
-        temp_units = Temp_Unit.objects.filter(course=course_id)
+        temp_units = Temp_Unit.objects.filter(course=course)
         for temp_unit in temp_units:
-            temp_unit.state = 'PE'
-            temp_unit.save()
-            temp_contents = Temp_Content.objects.filter(temp_unit=temp_unit)
-            for temp_content in temp_contents:
-                temp_content.state = 'PE'
-                temp_content.save()
+            # pend all units but the in delete state (to be deleted later in the approve)
+            if not temp_unit.state == 'DE':
+                temp_unit.state = 'PE'
+                temp_unit.save()
+                temp_contents = Temp_Content.objects.filter(temp_unit=temp_unit)
+                # pend all the contetnts but the in delete state (to be deleted later in the approve)
+                for temp_content in temp_contents:
+                    if not temp_content.state == 'DE':
+                        temp_content.state = 'PE'
+                        temp_content.save()
         return Response({'status': 'Published'}, status=status.HTTP_200_OK)
 
 # POST: api/admin/company/:company_id/courses/:course_id/approve
@@ -270,13 +272,50 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
         context['view_type'] = 'detail'
         return context
 
+# GET   : api/admin/company/:company-id/pending_courses
+class CompanyCourseListPending(generics.ListAPIView):
+    # set the serializer class
+    serializer_class = Course_Pending_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseAdmin]
+    # Document the view
+    @swagger_auto_schema(
+        operation_description='for presenting all the pended course details (all the main course data)',
+        responses={200: course_list_response_body}
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    def get_queryset(self):    
+        user = self.request.user
+        company_id = self.kwargs['company_id']
+        # retrive the course if the admin is whom created it
+        if user.is_admin:
+            try:
+                admin_contract = Admin_Contract.objects.get(admin=user.admin)
+            except Admin_Contract.DoesNotExist:
+                raise serializers.ValidationError("Admin contract does not exist for this user")
+            courses = Course.objects.filter(admin_contract=admin_contract, company=company_id)
+            result_courses = []
+            for course in courses:
+                for unit in Temp_Unit.objects.filter(course=course):
+                    if unit.state == 'PE':
+                        result_courses.append(course)
+                    for content in Temp_Content.objects.filter(temp_unit=unit):
+                        if content.state == 'PE':
+                            result_courses.append(course)
+            return Course.objects.filter(id__in=[course.id for course in result_courses])
+    # when listing the courses set the view_type as list, otherwise set it as detail
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['view_type'] = 'list' if self.request.method == 'GET' else 'detail'
+        return context
 
 # GET   : api/admin/company/:company-id/pending_courses/course-id
 class CompanyCourseRetrievePending(generics.RetrieveAPIView):
     # set the serializer class
-    serializer_class = Course_Serializer
+    serializer_class = Course_Pending_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsCourseAdmin]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'course_id'
     # Document the view
@@ -296,8 +335,8 @@ class CompanyCourseRetrievePending(generics.RetrieveAPIView):
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
                 raise serializers.ValidationError("Admin contract does not exist for this user")
-            course = Course.objects.filter(id=course_id, admin_contract=admin_contract, company=company_id)
-            for unit in Temp_Unit.objects.filter(course=course[0]):
+            course = Course.objects.get(id=course_id, admin_contract=admin_contract, company=company_id)
+            for unit in Temp_Unit.objects.filter(course=course):
                 if unit.state == 'PE':
                     return course
                 for content in Temp_Content.objects.filter(temp_unit=unit):

@@ -1,40 +1,40 @@
 from django.urls import path
-from ..views.Content import ContentCreate
+from ..views.Content import ContentCreate, ContentList, ContentRetrieve, ContentUpdate, ContentDelete
 
 urlpatterns = [
     # path(
-    #     'admin/company/<int:company_id>/courses/<int:course_id>/unit',
-    #     UnitList.as_view(),
-    #     name='unit-admin-list'
+    #     'admin/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content',
+    #     ContentList.as_view(),
+    #     name='content-admin-list'
     # ),
     # path(
-    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit',
-    #     UnitList.as_view(),
-    #     name='unit-trainer-list'
+    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content',
+    #     ContentList.as_view(),
+    #     name='content-trainer-list'
     # ),
     # path(
-    #     'admin/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
-    #     UnitRetrieve.as_view(),
-    #     name='unit-admin-retrive'
+    #     'admin/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>',
+    #     ContentRetrieve.as_view(),
+    #     name='content-admin-retrive'
     # ),
     # path(
-    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
-    #     UnitRetrieve.as_view(),
-    #     name='unit-trainer-retrive'
+    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>',
+    #     ContentRetrieve.as_view(),
+    #     name='content-trainer-retrive'
     # ),
     path(
-        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content', 
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/create', 
         ContentCreate.as_view(), 
         name='content-trainer-create'
     ),
-    # path(
-    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>', 
-    #     UnitUpdate.as_view(), 
-    #     name='unit-trainer-update'
-    # ),
-    # path(
-    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>', 
-    #     UnitDelete.as_view(), 
-    #     name='unit-trainer-delete'
-    # ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>/update', 
+        ContentUpdate.as_view(), 
+        name='content-trainer-update'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>/delete', 
+        ContentDelete.as_view(), 
+        name='content-trainer-delete'
+    ),
 ]

@@ -6,4 +6,4 @@ class Unit_Serializer(serializers.ModelSerializer):
     contents = Content_Serializer(many=True, read_only=True, source='content_set')
     class Meta:
         model = Unit
-        fields = ['id', 'title', 'order', 'creation_date', 'contents']
+        fields = ['id', 'title', 'order', 'contents']

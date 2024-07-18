@@ -76,7 +76,6 @@ class Course_Serializer(serializers.ModelSerializer):
     # when the view_type is list send only the specified fields not all of them
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        print(representation)
         if self.context.get('view_type') == 'list':
             return {
                 'id': representation['id'],

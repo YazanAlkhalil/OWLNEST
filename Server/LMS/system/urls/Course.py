@@ -1,5 +1,5 @@
 from django.urls import path
-from ..views.Course import CompanyCourseList, CompanyCourseCreate, CompanyCoursePublish, CompanyCourseApprove, CompanyCourseRetrieve, CompanyCourseUpdate, CompanyCourseDelete, CompanyCourseRetriveInfo, CompanyCourseRetrievePending
+from ..views.Course import CompanyCourseList, CompanyCourseListPending, CompanyCourseCreate, CompanyCoursePublish, CompanyCourseApprove, CompanyCourseRetrieve, CompanyCourseUpdate, CompanyCourseDelete, CompanyCourseRetriveInfo, CompanyCourseRetrievePending
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -18,6 +18,11 @@ urlpatterns = [
         'trainee/company/<int:company_id>/courses', 
         CompanyCourseList.as_view(), 
         name='company-course-trainee-list'
+    ),
+    path(
+        'admin/company/<int:company_id>/pending_courses', 
+        CompanyCourseListPending.as_view(), 
+        name='company-pending-course-admin-list'
     ),
     path(
         'admin/company/<int:company_id>/courses/create', 
@@ -78,7 +83,7 @@ urlpatterns = [
         'trainer/company/<int:company_id>/courses/<int:course_id>/info',
         CompanyCourseRetriveInfo.as_view(),
         name='company-course-trainer-info'
-    ),
+    ),  
     path(
         'trainee/company/<int:company_id>/courses/<int:course_id>/info',
         CompanyCourseRetriveInfo.as_view(),
