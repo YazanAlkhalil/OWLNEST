@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const useFetch = () => {
@@ -41,8 +42,10 @@ const useFetch = () => {
         params,
         headers
       });
-
+      if(response.data.message)
+        toast.success(response.data.message)
       setResData(response.data);
+      console.log(response.data);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -54,7 +57,7 @@ const useFetch = () => {
         }
       } else {
         console.error('API Error:', error);
-        setError(error);
+        toast.error(error.response.data.message);
       }
     } finally {
       setLoading(false);

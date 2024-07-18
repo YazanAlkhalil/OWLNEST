@@ -59,10 +59,7 @@ function NavBar({ highlight }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  function log(s) {
-    console.log(s);
-    return 's'
-  }
+
   return (
     <div
       className={"flex justify-evenly items-center py-2 "
@@ -77,13 +74,13 @@ function NavBar({ highlight }) {
             "flex items-center flex-grow justify-evenly"
           }>
           <>
-            {Array.isArray(resData) && resData.includes('Trainee')
+            {Array.isArray(resData) && resData.includes('trainee')
               && <NavLink
                 className={highlight === "trainee" ? "text-accent" : ""}
                 to="/trainee">
                 Trainee
               </NavLink>}
-            {Array.isArray(resData) && resData.includes('Trainer')
+            {Array.isArray(resData) && resData.includes('trainer')
               && <NavLink
                 className={highlight === "trainer" ? "text-accent" : ""}
                 to="/trainer">
