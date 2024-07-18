@@ -213,6 +213,7 @@ class CompanyUsers(APIView):
                                 'roles': [],
                                 'last_login':admin.user.last_login
                             }
+                            
                         users[user_id]['roles'].append('trainer')
                     for trainee_contract in Trainee_Contract.objects.filter(company=company):
                         trainee = trainee_contract.trainee
