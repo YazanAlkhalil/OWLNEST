@@ -190,7 +190,7 @@ class CompanyUsers(APIView):
             if Owner.objects.filter(user=user).exists():
                 owner = Owner.objects.get(user=user)
                 if Company.objects.filter(owner=owner,id=company.id).exists():
-                    company = Company.objects.get(owner=owner,id=company.id)
+                    # company = Company.objects.get(owner=owner,id=company.id)
                     users = {}
                     for admin_contract in Admin_Contract.objects.filter(company=company):
                         admin = admin_contract.admin
@@ -211,7 +211,7 @@ class CompanyUsers(APIView):
                                 'id': trainer.user.id,
                                 'username': trainer.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainer.user.last_login
                             }
                         users[user_id]['roles'].append('trainer')
                     for trainee_contract in Trainee_Contract.objects.filter(company=company):
@@ -222,13 +222,14 @@ class CompanyUsers(APIView):
                                 'id': trainee.user.id,
                                 'username': trainee.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainee.user.last_login
                             }
                         users[user_id]['roles'].append('trainee')
                     return Response(list(users.values()))
             elif Admin.objects.filter(user=user).exists():
                 admin = Admin.objects.get(user=user)
                 if Admin_Contract.objects.filter(admin=admin,company=company).exists():
+                    # company =Company.objects.get(company=company)
                     users = {}
                     for admin_contract in Admin_Contract.objects.filter(company=company):
                         admin = admin_contract.admin
@@ -249,7 +250,7 @@ class CompanyUsers(APIView):
                                 'id': trainer.user.id,
                                 'username': trainer.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainer.user.last_login
                             }
                         users[user_id]['roles'].append('trainer')
                     for trainee_contract in Trainee_Contract.objects.filter(company=company):
@@ -260,7 +261,7 @@ class CompanyUsers(APIView):
                                 'id': trainee.user.id,
                                 'username': trainee.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainee.user.last_login
                             }
                         users[user_id]['roles'].append('trainee')
                     return Response(list(users.values()))
