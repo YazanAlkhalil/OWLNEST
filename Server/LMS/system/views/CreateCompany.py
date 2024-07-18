@@ -38,7 +38,7 @@ class CreateCompanyView(APIView):
             }
             wallet = Wallet.objects.create(**wallet_data)
             
-            company_data = request.data
+            company_data = request.data.copy()
             company_data.pop('user', None) 
             company_data['owner'] = owner.id
             

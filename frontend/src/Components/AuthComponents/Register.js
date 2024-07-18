@@ -117,7 +117,6 @@ export default function Register() {
         gender: gender,
         country: country,
     };
-    
     if (validate2()) {
         try {
             const resultAction = await dispatch(signupUser(data));
@@ -208,7 +207,7 @@ export default function Register() {
                       <div className="mb-4 mb-3">
                         <input
                           type="password"
-                          id="password"
+                          id="confirmPassword"
                           placeholder="Confirm Password"
                           value={confPass}
                           onChange={(e) => setConfPass(e.target.value)}

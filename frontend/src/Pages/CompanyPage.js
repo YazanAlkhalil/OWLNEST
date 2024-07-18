@@ -13,17 +13,17 @@ export default function CompanyPage() {
       const res = await fetchData({
         method: "get",
         url: "http://127.0.0.1:8000/api/get_companies/",
-        reqData: {},
+        data: {},
         params: {},
         headers:{}
       })
-      console.log(resData);
+      console.log(res);
     }
     getCompany();
   },[])
   return (
     <>
-    <Navbar2 name={resData.username}/>
+    <Navbar2 name={resData?.username}/>
     <div className="container mx-auto">
         <h1 className='font-black text-4xl p-8'>Companies:</h1>
         {
