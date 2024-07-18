@@ -57,7 +57,13 @@ const useFetch = () => {
         }
       } else {
         console.error('API Error:', error);
-        toast.error(error.response.data.message);
+        const errorMessage = getFirstItemOfFirstKey(error.response.data)
+        if(errorMessage){
+          toast.error(errorMessage);
+        }
+        else{
+          toast.error(error.response.data.message);
+        }
       }
     } finally {
       setLoading(false);
@@ -67,4 +73,18 @@ const useFetch = () => {
   return { fetchData, resData, loading, error };
 };
 
+function getFirstItemOfFirstKey(obj={}) {
+  const keys = Object.keys(obj);
+  
+  if (keys.length > 0) {
+      const firstKey = keys[0];
+      const firstArray = obj[firstKey];
+      
+      if (Array.isArray(firstArray) && firstArray.length > 0) {
+          return firstArray[0];
+      }
+  }
+  
+  return null;
+}
 export default useFetch;

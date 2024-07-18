@@ -60,7 +60,7 @@ class LoginView(APIView):
         response = Response()
 
         response.set_cookie(key='accessToken',value=accessToken ,httponly=True,samesite='None',secure=True, max_age=3600)
-        response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True,samesite='None',secure=True, max_age=3600)
+        response.set_cookie(key='refreshToken',value=refreshToken ,httponly=True,samesite='None',secure=True, max_age=3600*7*24)
         request.session['refresh_token_used'] = False
         print(response)
 
@@ -93,8 +93,11 @@ class RefreshApiView(APIView):
 class LogoutView(APIView):
     def post(self,request):
         response = Response()
+        response.set_cookie(key='accessToken',value="" ,httponly=True,samesite='None',secure=True, max_age=3600)
+        response.set_cookie(key='refreshToken',value="" ,httponly=True,samesite='None',secure=True, max_age=3600*7*24)
         response.delete_cookie('accessToken')
         response.delete_cookie('refreshToken')
+ 
         response.data = {
             'message':'success'
         }

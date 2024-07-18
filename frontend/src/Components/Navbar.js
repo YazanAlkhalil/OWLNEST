@@ -19,10 +19,10 @@ function NavBar({ highlight }) {
   const { fetchData, resData } = UseFetch()
   const [dropdown, setDropdown] = useState(false);
   const overlayRef = useRef(null);
-
+  const companyId = localStorage.getItem('companyId');
   useEffect(() => {
     async function getRoles() {
-      const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/1/roles/', method: 'get' });
+      const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/'+companyId+'/roles/', method: 'get' });
       if (Array.isArray(res) && res.length === 1) {
         let role = res[0] === 'owner' ? 'admin' : res[0];
         let targetPath = `/${role}`;

@@ -207,7 +207,7 @@ export default function Register() {
                       <div className="mb-4 mb-3">
                         <input
                           type="password"
-                          id="password"
+                          id="confirmPassword"
                           placeholder="Confirm Password"
                           value={confPass}
                           onChange={(e) => setConfPass(e.target.value)}
