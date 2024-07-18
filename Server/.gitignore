@@ -2,7 +2,6 @@
 **/settings.py
 **/db.sqlite3
 **/__pycache__/
-**/LMS.session.sql
 **/.vscode/
 **/db.sqlite3
 TODO
