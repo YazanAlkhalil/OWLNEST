@@ -6,3 +6,4 @@ class Trainer_Contract_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Trainer_Contract
         fields = ['id', 'trainer', 'company', 'joining_date']
+ 
