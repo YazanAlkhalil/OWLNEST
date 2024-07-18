@@ -224,6 +224,7 @@ class CompanyUsers(APIView):
                                 'roles': [],
                                 'last_login':admin.user.last_login
                             }
+                            
                         users[user_id]['roles'].append('trainee')
                     return Response(list(users.values()))
             elif Admin.objects.filter(user=user).exists():
