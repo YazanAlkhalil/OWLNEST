@@ -35,7 +35,7 @@ def createRefreshToken(id):
 def decodeRefreshToken(token):
     try:
         payload = jwt.decode(token, 'access_secret', algorithms='HS256' )
-        return payload['user_id']
+        return payload
 
     except:
         raise exceptions.AuthenticationFailed('unauthenticated')

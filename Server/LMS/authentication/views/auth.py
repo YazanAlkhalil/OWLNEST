@@ -8,7 +8,7 @@ from rest_framework import status
 from authentication.serializers.userSerializer import UserSerializer,ResetPasswordEmailREquestSerializer,SetNewPasswordSerializer
 from authentication.models import User
 import re
-import datetime
+from datetime import datetime
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str,force_str ,smart_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
@@ -76,18 +76,33 @@ class UserView(APIView):
 
 class RefreshApiView(APIView):
     def post(self,request):
-        refreshToken = request.COOKIES.get('refreshToken')
-        userId = decodeRefreshToken(refreshToken)
-        if userId is None:
-            raise AuthenticationFailed('Invalid refresh token')
-        
-        if request.session.get('refresh_token_used', False):  
-            return Response({'error': 'Refresh token has already been used'},status= 403)
-        request.session['refresh_token_used'] = True 
+        Token = request.COOKIES.get('refreshToken')
+        refresh_token = decodeRefreshToken(Token)
+        #payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=["HS256"])
+        user_id = refresh_token["user_id"]
+        exp = refresh_token["exp"]
+        if datetime.fromtimestamp(exp) < datetime.now():
+            return Response({'message': 'Refresh token is expierd'},status= 403)
+        accessToken = createAccessToken(user_id)
         response = Response()
-        response.delete_cookie('refreshToken')
-        response.set_cookie(key='accessToken', value=refreshToken, httponly=True)
+        response.set_cookie(key='accessToken',value=accessToken ,httponly=True,samesite='None',secure=True)
+
         return response
+        
+# class RefreshApiView(APIView):
+#     def post(self,request):
+#         refreshToken = request.COOKIES.get('refreshToken')
+#         userId = decodeRefreshToken(refreshToken)
+#         if userId is None:
+#             raise AuthenticationFailed('Invalid refresh token')
+        
+#         if request.session.get('refresh_token_used', False):  
+#             return Response({'error': 'Refresh token has already been used'},status= 403)
+#         request.session['refresh_token_used'] = True 
+#         response = Response()
+#         response.delete_cookie('refreshToken')
+#         response.set_cookie(key='accessToken', value=refreshToken, httponly=True)
+#         return response
 
 
 class LogoutView(APIView):
