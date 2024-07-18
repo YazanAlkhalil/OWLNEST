@@ -55,6 +55,8 @@ class AddUser(APIView):
                     )
             
             email = data.get('email')
+            if email == user.email:
+                return Response({'message':'you are already the owner'} , status = 403)
             role = data.get('role')
             email_pattern = r'^[^@]+@gmail\.com$'
             if not re.match(email_pattern, email):
