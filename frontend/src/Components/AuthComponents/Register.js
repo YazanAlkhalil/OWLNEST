@@ -117,7 +117,6 @@ export default function Register() {
         gender: gender,
         country: country,
     };
-    
     if (validate2()) {
         try {
             const resultAction = await dispatch(signupUser(data));

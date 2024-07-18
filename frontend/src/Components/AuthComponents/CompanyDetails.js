@@ -79,7 +79,6 @@ export default function CompanyDetails() {
     e.preventDefault();
 
     if (!validateForm()) return;
-
     const formData = new FormData();
     formData.append("name", compName);
     formData.append("email", compEmail);
@@ -89,12 +88,14 @@ export default function CompanyDetails() {
     formData.append("size", size);
     formData.append("description", desc);
     formData.append("phone", phoneNumber);
-    console.log(formData);
+    const formDataObj = Object.fromEntries(formData); 
+    console.log(formDataObj);
+  
     if (validateForm()) {
       fetchData({
         method: "post",
         url: "http://127.0.0.1:8000/api/create_company/",
-        reqData: formData,
+        data: formData,
         params: {},
         headers: {
           "Content-Type": "multipart/form-data",
