@@ -1,5 +1,5 @@
 # rest_framework
-from django.forms import ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework import generics, serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
@@ -55,21 +55,21 @@ class CompanyCourseList(generics.ListAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(company_id=company_id, admin_contract=admin_contract)
         # get the trainer courses
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer)
             except Trainer_Contract.DoesNotExist:
-                raise serializers.ValidationError("Tranier contract does not exist for this user")
+                raise ValidationError("Tranier contract does not exist for this user")
             return Course.objects.filter(company_id=company_id, trainer_contract_course__trainer_contract=trainer_contract)
         # get the trainee courses
         elif user.is_trainee:
             try:
                 trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee)
             except Trainee_Contract.DoesNotExist:
-                raise serializers.ValidationError("Trainee contract does not exist for this user")
+                raise ValidationError("Trainee contract does not exist for this user")
             return Course.objects.filter(enrollment__Trainee_Contract=trainee_contract, company=company_id)
     # when listing the courses set the view_type as list, otherwise set it as detail
     def get_serializer_context(self):
@@ -98,15 +98,15 @@ class CompanyCourseCreate(generics.CreateAPIView):
         try:
             company = Company.objects.get(id=company_id)
         except Company.DoesNotExist:
-            raise serializers.ValidationError("Company does not exist")
+            raise ValidationError("Company does not exist")
         if user.is_admin:
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             serializer.save(company=company, admin_contract=admin_contract)
         else:
-            raise serializer.ValidationError("Only admins can create courses")
+            raise ValidationError("Only admins can create courses")
 
 # POST: api/trainer/company/:company_id/courses/:course_id/publish
 class CompanyCoursePublish(generics.UpdateAPIView):
@@ -249,21 +249,21 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(id=course_id, admin_contract=admin_contract, company=company_id)
         # retrive the course if the trainer is whom created it
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer)
             except Trainer_Contract.DoesNotExist:
-                raise serializers.ValidationError("Tranier contract does not exist for this user")            
+                raise ValidationError("Tranier contract does not exist for this user")            
             return Course.objects.filter(id=course_id, company=company_id, trainer_contract_course__trainer_contract=trainer_contract)
         # retrive the course if the trainee has already enrolled in it 
         elif user.is_trainee:
             try:
                 trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee)
             except Trainee_Contract.DoesNotExist:
-                raise serializers.ValidationError("Trainee contract does not exist for this user")            
+                raise ValidationError("Trainee contract does not exist for this user")            
             return Course.objects.filter(id=course_id, enrollment__Trainer_Contract=trainee_contract, company=company_id)
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -291,7 +291,7 @@ class CompanyCourseListPending(generics.ListAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             courses = Course.objects.filter(admin_contract=admin_contract, company=company_id)
             result_courses = []
             for course in courses:
@@ -332,7 +332,7 @@ class CompanyCourseRetrievePending(generics.RetrieveAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             course = Course.objects.get(id=course_id, admin_contract=admin_contract, company=company_id)
             for unit in Temp_Unit.objects.filter(course=course):
                 if unit.state == 'PE':
@@ -371,14 +371,14 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
         # trainer can edit only his courses
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer)
             except Trainer_Contract.DoesNotExist:
-                raise serializers.ValidationError("Tranier contract does not exist for this user")            
+                raise ValidationError("Tranier contract does not exist for this user")            
             return Course.objects.filter(id=course_id, company=company_id, trainer_contract=trainer_contract)
         else:
             raise PermissionDenied("You do not have permission to edit courses")
@@ -410,7 +410,7 @@ class CompanyCourseDelete(generics.DestroyAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
         else:
             raise PermissionDenied("You do not have permission to delete courses")
@@ -447,21 +447,21 @@ class CompanyCourseRetriveInfo(generics.RetrieveAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin)
             except Admin_Contract.DoesNotExist:
-                raise serializers.ValidationError("Admin contract does not exist for this user")
+                raise ValidationError("Admin contract does not exist for this user")
             return Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
         # get the trainer courses
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer)
             except Trainer_Contract.DoesNotExist:
-                raise serializers.ValidationError("Tranier contract does not exist for this user")            
+                raise ValidationError("Tranier contract does not exist for this user")            
             return Course.objects.filter(id=course_id, company=company_id, trainer_contract=trainer_contract)
         # get the trainee courses
         elif user.is_trainee:
             try:
                 trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee)
             except Trainee_Contract.DoesNotExist:
-                raise serializers.ValidationError("Trainee contract does not exist for this user")            
+                raise ValidationError("Trainee contract does not exist for this user")            
             return Course.objects.filter(id=course_id, enrollment__Trainer_Contract=trainee_contract, company=company_id)
         else:
             raise PermissionDenied("You do not have permission to view this course")
