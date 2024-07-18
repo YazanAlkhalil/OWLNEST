@@ -37,6 +37,3 @@ urlpatterns = [
         CompanyView.as_view(),
         name='ompany'),
 ]
-# adding the urls for the static files (course image)
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

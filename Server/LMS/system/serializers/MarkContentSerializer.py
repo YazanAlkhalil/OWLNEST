@@ -17,5 +17,5 @@ class MarkContentSerializer(serializers.ModelSerializer):
             data["enrollment"] = enrollment
             data["xp"] = xp
             return data
-      def create(self, validated_data): 
-            return super().create(validated_data)
+  
+  
