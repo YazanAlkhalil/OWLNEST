@@ -47,7 +47,12 @@ export default function Router() {
       <Route path="/forgetPassEmail" element={<FoegetPassEmail />} />
       <Route path="/newPassword/api/password_reset/:uuid/:token" element={<NewPassword />} />
       {/* settings */}
-      <Route path="/settings" element={<Setting />} />
+      <Route path="/settings" element={<Setting />} >
+        <Route path="/settings" element={<Setting />} />
+        <Route path="/settings" element={<Setting />} />
+        <Route path="/settings" element={<Setting />} />
+        <Route path="/settings" element={<Setting />} />
+      </Route>
 
       <Route path="/trainee" element={<TraineeLayout />}>
         <Route path="/trainee/homePage" element={<TranieeDashboard />} />

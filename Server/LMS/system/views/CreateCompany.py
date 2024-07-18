@@ -211,7 +211,7 @@ class CompanyUsers(APIView):
                                 'id': trainer.user.id,
                                 'username': trainer.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainer.user.last_login
                             }
                             
                         users[user_id]['roles'].append('trainer')
@@ -223,7 +223,7 @@ class CompanyUsers(APIView):
                                 'id': trainee.user.id,
                                 'username': trainee.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainee.user.last_login
                             }
                             
                         users[user_id]['roles'].append('trainee')
@@ -251,7 +251,7 @@ class CompanyUsers(APIView):
                                 'id': trainer.user.id,
                                 'username': trainer.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainer.user.last_login
                             }
                         users[user_id]['roles'].append('trainer')
                     for trainee_contract in Trainee_Contract.objects.filter(company=company):
@@ -262,7 +262,7 @@ class CompanyUsers(APIView):
                                 'id': trainee.user.id,
                                 'username': trainee.user.username,
                                 'roles': [],
-                                'last_login':admin.user.last_login
+                                'last_login':trainee.user.last_login
                             }
                         users[user_id]['roles'].append('trainee')
                     return Response(list(users.values()))

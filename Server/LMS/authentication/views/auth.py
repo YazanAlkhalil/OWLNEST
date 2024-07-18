@@ -86,7 +86,7 @@ class RefreshApiView(APIView):
         request.session['refresh_token_used'] = True 
         response = Response()
         response.delete_cookie('refreshToken')
-        response.set_cookie(key='accessToken', value=refreshToken, httponly=True)
+        response.set_cookie(key='accessToken', value=refreshToken, httponly=True,samesite='None',secure=True, max_age=3600)
         return response
 
 
