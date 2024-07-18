@@ -69,7 +69,7 @@ class User(AbstractUser):
     otp = models.CharField(max_length=6,null =True,blank = True)
     otp_verified = models.BooleanField(default=False)
     joining_date = models.DateField(auto_now_add=True)
-    image = models.ImageField(null = True,blank = True)
+    image = models.ImageField(upload_to='images/',null = True,blank = True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()

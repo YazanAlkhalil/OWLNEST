@@ -1,12 +1,10 @@
 #DRF
 from rest_framework import serializers
-
+from rest_framework.exceptions import ValidationError
+ 
 
 # models
-from system.models.Favorite import Favorite
-from system.models.Enrollment import Enrollment
-from system.models.Trainee_Contract import Trainee_Contract
-
+from system.models.Favorite import Favorite 
 
 class FavoriteSerializer(serializers.ModelSerializer):
 
@@ -18,7 +16,12 @@ class FavoriteSerializer(serializers.ModelSerializer):
       def to_representation(self, instance):
             data = dict() 
             data["course"] = instance.enrollment.course.name
-            data["image"] = instance.enrollment.course.image.url
+            data["image"] = instance.enrollment.course.image.url if instance.enrollment.course.image else None
             data["progress"]= instance.enrollment.progress
             data["trainer"] = "mutaz"
             return data
+      
+      def to_internal_value(self, data):   
+            if Favorite.objects.filter(trainee_contract=data['trainee_contract'], enrollment=data['enrollment']).exists():
+              raise ValidationError({"message": "The course is already in favorites"})
+            return super().to_internal_value(data)

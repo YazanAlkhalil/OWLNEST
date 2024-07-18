@@ -20,7 +20,7 @@ class TraineeMainDashboard(serializers.Serializer):
       get pending courses : enrollment who hasn't finish any content yet 
       '''
       xp = serializers.DecimalField(max_digits=5,decimal_places=2)
-    #  training_time = serializers.TimeField()
+      training_time = serializers.TimeField()
       rank = serializers.IntegerField()
       daily_xp = serializers.ListField(child = serializers.DictField())
       finished_courses = serializers.IntegerField()
@@ -34,6 +34,10 @@ class TraineeMainDashboard(serializers.Serializer):
           # xp
           total_xp = trainee_contract.total_xp or 0 
           dashboard['xp'] = total_xp
+         # training time  
+          total_time = self.get_training_time(trainee_contract)
+          dashboard['training_time'] = total_time
+                   
           #rank
           rank = Trainee_Contract.objects.filter(
               total_xp__gt=total_xp
@@ -87,3 +91,14 @@ class TraineeMainDashboard(serializers.Serializer):
             })
 
         return daily_xp
+      
+      def get_training_time(self, trainee_contract):
+        total_time = timedelta()
+        enrollments = Enrollment.objects.filter(trainee_contract=trainee_contract)
+        for enrollment in enrollments:
+            total_time += enrollment.training_time
+        days = total_time.days
+        hours, remainder = divmod(total_time.seconds, 3600)
+        minutes = remainder // 60
+        formatted_time = f"{days:02}:{hours:02}:{minutes:02}"
+        return formatted_time

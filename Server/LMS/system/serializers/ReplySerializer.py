@@ -27,7 +27,7 @@ class ReplySerializer(serializers.ModelSerializer):
            data["likes"] = instance.likes.all().count()
            data["dislikes"] = instance.dislikes.all().count()
            data["username"] = instance.user.username
-           data["image"] =None
+           data["image"] =instance.user.image.url if instance.user.image else None
            if instance.user in instance.likes.all():
                 data["reaction"] = 1
            elif instance.user in instance.dislikes.all():

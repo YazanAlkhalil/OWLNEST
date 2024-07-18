@@ -3,8 +3,7 @@ from system.models.Company import Company
 from system.models.Admin_Contract import Admin_Contract
 from system.models.Additional_Resources import Additional_Resources
 from system.models.Trainer_Contract import Trainer_Contract
-from system.models.Trainee_Contract import Trainee_Contract
-
+from system.models.Trainee_Contract import Trainee_Contract 
 class Course(models.Model):
       # file will be uploaded to MEDIA_ROOT/course_<course-id>/<filename>
       def course_image_path(instance, filename):

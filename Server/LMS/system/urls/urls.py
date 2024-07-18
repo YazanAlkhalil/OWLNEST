@@ -10,6 +10,7 @@ from system.views.TraineeMainDashboard import TraineeMainDashboardView
 from system.views.ReactCommentView import ReactCommentView
 from system.views.ReactReplyView import ReactReplyView
 from system.views.AddToFavorite import AddToFavoriteView
+from system.views.NotificationView import NotificationList
 urlpatterns = [
   #admin
     path('course/<id>/report',CourseReportView.as_view()),
@@ -19,20 +20,26 @@ urlpatterns = [
     #comments
     path('course/<int:id>/comments',ListCreateCommentView.as_view()),
     path('course/<int:id>/comments/react',ReactCommentView.as_view()),
+
     #replies
     path('course/<id>/comments/reply',CreateReplyView.as_view()),
     path('course/<id>/comments/reply/react',ReactReplyView.as_view()),
    
     #mark as completed  
     path('mark-content-completed' , MarkContentView.as_view()),
+
     #course dashboard
     path('trainee/course/<id>/dashboard',TraineeCourseDashboard.as_view()),
+    
     #main dashboard
     path('trainee/company/<id>/dashboard',TraineeMainDashboardView.as_view()),
 
     #favorites
     path('trainee/company/<id>/favorites', AddToFavoriteView.as_view()),
     
+
+    #Noitification
+    path('user/company/<id>/notifications',NotificationList.as_view())
 ]
 
  
