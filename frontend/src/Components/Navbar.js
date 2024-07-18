@@ -26,8 +26,8 @@ function NavBar({ highlight }) {
       if (Array.isArray(res) && res.length === 1) {
         let role = res[0] === 'owner' ? 'admin' : res[0];
         let targetPath = `/${role}`;
-        
-        if (!location.pathname.startsWith(targetPath)) {
+        console.log(location.pathname,'path');
+        if (!location.pathname.startsWith(targetPath) && !location.pathname =='/settings') {
           navigate(targetPath);
         }
       }
