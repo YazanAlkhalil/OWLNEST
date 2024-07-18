@@ -1,8 +1,11 @@
 # rest_framework
+from django.forms import ValidationError
 from rest_framework import generics, serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
+# django
+from django.db import transaction
 # models
 from ..models.Course import Course
 from ..models.Company import Company
@@ -140,90 +143,85 @@ class CompanyCourseApprove(generics.CreateAPIView):
     serializer_class = Course_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseAdmin]
+
     @swagger_auto_schema(
         operation_description='Approve a specific course with all its units and contents',
         request_body=course_publish_approve_request_body,
         responses={200: 'Approved'}
     )
     def post(self, request, *args, **kwargs):
+        self.perform_create(self.get_serializer())
+        return Response({'status': 'Approved'}, status=status.HTTP_200_OK)
+
+    def perform_create(self, serializer):
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
         course = Course.objects.get(id=course_id, company_id=company_id)
+
         # Check if all units and contents are in 'PE' state
         temp_units = Temp_Unit.objects.filter(course=course_id)
         if not temp_units.exists():
-            return Response({'error': 'No units in pending or delete state'}, status=status.HTTP_400_BAD_REQUEST)
-        # check if the contetnt of each unit is in 'PE' state
-        for temp_unit in temp_units:
-            temp_contents = Temp_Content.objects.filter(temp_unit=temp_unit)
-            # delete the old unit
-            if temp_unit.unit:
-                Unit.objects.get(id=temp_unit.unit).delete()
-            # if unit in state delete then delete it from the temp_unit
-            if temp_unit.state == 'DE':
-                temp_unit.delete()
-                for temp_content in temp_contents:
-                    # delete the old content
-                    if temp_content.content:
-                        Content.objects.get(id=temp_content.content).delete()
-                    # if content in delete then delete it from the temp_content
-                    if temp_content.state == 'DE':
-                        temp_content.delete()
-            elif temp_unit.state == 'PE':
-                # Move Temp_Unit to Unit and mark it as 'PU'
-                unit = Unit.objects.create(
-                    course=course,
-                    title=temp_unit.title,
-                    order=temp_unit.order
-                )
-                temp_unit.unit = unit
-                temp_unit.state = 'PU'
-                temp_unit.save()
-                for temp_content in temp_contents:
-                    # delete the old content
-                    if temp_content.content:
-                        Content.objects.get(id=temp_content.content).delete()
-                    # if content in delete then delete it from the temp_content
-                    if temp_content.state == 'DE':
-                        temp_content.delete()
-                    elif temp_content.state == 'PE':
-                        # Move Temp_Content to Content and mark them as 'PU'
-                        content = Content.objects.create(
-                            unit=unit,
-                            title=temp_content.title,
-                            order=temp_content.order,
-                            is_video=temp_content.is_video,
-                            is_pdf=temp_content.is_pdf,
-                            is_test=temp_content.is_test
-                        )
-                        temp_content.content = content
-                        temp_content.state = 'PU'
-                        temp_content.save()
-                        # Move specific content type (Pdf, Video, Test) to access it from the content table
-                        if temp_content.is_pdf:
-                            pdf = Pdf.objects.get(temp_content=temp_content)
-                            pdf.content = content
-                            pdf.temp_content = None
-                            pdf.save()
-                        elif temp_content.is_video:
-                            video = Video.objects.get(temp_content=temp_content)
-                            video.content = content
-                            video.temp_content = None
-                            video.save()
-                        elif temp_content.is_test:
-                            video = Video.objects.get(temp_content=temp_content)
-                            video.content = content
-                            video.temp_content = None
-                            video.save()
-                        elif temp_content.is_test:
-                            test = Test.objects.get(temp_content=temp_content)
-                            test.content = content
-                            test.temp_content = None
-                            test.save()
-        # change the course state to 'PU'
-        course.state = 'PU'
-        course.save()
-        return Response({'status': 'Approved'}, status=status.HTTP_200_OK)
+            raise ValidationError({'error': 'No units in pending or delete state'})
+
+        with transaction.atomic():
+            for temp_unit in temp_units:
+                temp_contents = Temp_Content.objects.filter(temp_unit=temp_unit)
+                # Delete the old unit
+                if temp_unit.unit:
+                    Unit.objects.get(id=temp_unit.unit.id).delete()
+                # If unit in state delete then delete it from the temp_unit
+                if temp_unit.state == 'DE':
+                    temp_unit.delete()
+                elif temp_unit.state == 'PE':
+                    # Move Temp_Unit to Unit and mark it as 'PU'
+                    unit = Unit.objects.create(
+                        course=course,
+                        title=temp_unit.title,
+                        order=temp_unit.order
+                    )
+                    temp_unit.unit = unit
+                    temp_unit.state = 'PU'
+                    temp_unit.save()
+                    for temp_content in temp_contents:
+                        # Delete the old content
+                        if temp_content.content:
+                            Content.objects.get(id=temp_content.content.id).delete()
+                        # If content in delete then delete it from the temp_content
+                        if temp_content.state == 'DE':
+                            temp_content.delete()
+                        elif temp_content.state == 'PE':
+                            # Move Temp_Content to Content and mark them as 'PU'
+                            content = Content.objects.create(
+                                unit=unit,
+                                title=temp_content.title,
+                                order=temp_content.order,
+                                is_video=temp_content.is_video,
+                                is_pdf=temp_content.is_pdf,
+                                is_test=temp_content.is_test
+                            )
+                            content.save()
+                            temp_content.content = content
+                            temp_content.state = 'PU'
+                            temp_content.save()
+                            # Move specific content type (Pdf, Video, Test) to access it from the content table
+                            if temp_content.is_pdf:
+                                pdf = Pdf.objects.get(temp_content=temp_content)
+                                pdf.content = content
+                                pdf.temp_content = None
+                                pdf.save()
+                            elif temp_content.is_video:
+                                video = Video.objects.get(temp_content=temp_content)
+                                video.content = content
+                                video.temp_content = None
+                                video.save()
+                            elif temp_content.is_test:
+                                test = Test.objects.get(temp_content=temp_content)
+                                test.content = content
+                                test.temp_content = None
+                                test.save()
+            # Change the course state to 'PU'
+            course.state = 'PU'
+            course.save()
 
 # GET   : api/admin/company/:company-id/courses/course-id
 # GET   : api/trainer/company/:company-id/courses/course-id

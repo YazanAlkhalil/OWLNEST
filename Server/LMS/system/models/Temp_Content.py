@@ -20,7 +20,7 @@ class Temp_Content(models.Model):
     state = models.CharField(max_length=2, choices=EDITION_STATES)
 
     def __str__(self):
-        return f"{self.title}||{self.unit.title}||{self.unit.course.name}"
+        return f"{self.title}"
     
     class Meta:
         ordering = ['order']
