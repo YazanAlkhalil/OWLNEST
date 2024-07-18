@@ -6,6 +6,7 @@ import { signupSelector, signupUser } from "../../features/Auth/SignUpSlice";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
 import toast from "react-hot-toast";
 import Loader from "../Loader";
+import { FaBackward } from "react-icons/fa6";
 
 const countries = [
   ["DZ", "Algeria"],
@@ -331,6 +332,10 @@ export default function Register() {
                     className="inline-block pt-5 font-semibold text-white align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 bg-gray-100 text-gray-800 hover:bg-gray-200 button fw-bold text-gray-100">
                     LOGIN
                   </NavLink>
+                  <div>
+                    <FaBackward/>
+                  <h1>Go Back</h1>
+                  </div>
                 </div>
               </div>
             </div>
