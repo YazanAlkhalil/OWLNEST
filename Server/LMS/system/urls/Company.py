@@ -37,7 +37,7 @@ urlpatterns = [
         CompanyView.as_view(),
         name='ompany'),
     
-    path('company_users/',
+    path('company_users/<int:company_id>/',
         CompanyUsers.as_view(),
         name='company_users'),
 ]
