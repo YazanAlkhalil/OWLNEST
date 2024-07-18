@@ -1,28 +1,48 @@
 from django.urls import path
-from ..views.Course import CompanyCourseList, CompanyCourseCreate, CompanyCourseRetrieve, CompanyCourseUpdate, CompanyCourseDelete, CompanyCourseRetriveInfo
+from ..views.Course import CompanyCourseList, CompanyCourseListPending, CompanyCourseCreate, CompanyCoursePublish, CompanyCourseApprove, CompanyCourseRetrieve, CompanyCourseUpdate, CompanyCourseDelete, CompanyCourseRetriveInfo, CompanyCourseRetrievePending
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path(
-        'admin/company/<int:company_id>/courses/', 
+        'admin/company/<int:company_id>/courses', 
         CompanyCourseList.as_view(), 
         name='company-course-admin-list'
     ),
     path(
-        'trainer/company/<int:company_id>/courses/', 
+        'trainer/company/<int:company_id>/courses', 
         CompanyCourseList.as_view(), 
         name='company-course-trainer-list'
     ),
     path(
-        'trainee/company/<int:company_id>/courses/', 
+        'trainee/company/<int:company_id>/courses', 
         CompanyCourseList.as_view(), 
         name='company-course-trainee-list'
+    ),
+    path(
+        'admin/company/<int:company_id>/pending_courses', 
+        CompanyCourseListPending.as_view(), 
+        name='company-pending-course-admin-list'
     ),
     path(
         'admin/company/<int:company_id>/courses/create', 
         CompanyCourseCreate.as_view(), 
         name='company-course-admin-create'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/publish', 
+        CompanyCoursePublish.as_view(), 
+        name='company-course-trainer-publish'
+    ),
+    path(
+        'admin/company/<int:company_id>/courses/<int:course_id>/approve', 
+        CompanyCourseApprove.as_view(), 
+        name='company-course-admin-approve'
+    ),
+    path(
+        'admin/company/<int:company_id>/pending_courses/<int:course_id>', 
+        CompanyCourseRetrievePending.as_view(), 
+        name='company-pending-course-admin-retrive'
     ),
     path(
         'admin/company/<int:company_id>/courses/<int:course_id>', 
@@ -63,7 +83,7 @@ urlpatterns = [
         'trainer/company/<int:company_id>/courses/<int:course_id>/info',
         CompanyCourseRetriveInfo.as_view(),
         name='company-course-trainer-info'
-    ),
+    ),  
     path(
         'trainee/company/<int:company_id>/courses/<int:course_id>/info',
         CompanyCourseRetriveInfo.as_view(),

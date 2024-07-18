@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "LMS",
+            "database": "${workspaceFolder:Owlnest}/Server/LMS/db.sqlite3"
+        }
+    ]
+}

@@ -3,23 +3,73 @@ from rest_framework import serializers
 from ..models.Course import Course
 from ..models.Additional_Resources import Additional_Resources
 from ..models.Trainer_Contract import Trainer_Contract
+from ..models.Company import Company
+from authentication.models.User import User
+from ..models.Admin import Admin
+from ..models.Admin_Contract import Admin_Contract
+from ..models.Trainer import Trainer
+from ..models.Trainer_Contract import Trainer_Contract
+from ..models.Trainer_Contract_Course import Trainer_Contract_Course
 # serializers
 from ..serializers.Additional_resources import Additional_Resources_Serializer
 from ..serializers.Unit import Unit_Serializer
 
+class CompanyNameLogoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['name', 'logo']
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+
+class AdminSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Admin
+        fields = '__all__'
+
+class AdminContractSerializer(serializers.ModelSerializer):
+    admin = AdminSerializer(read_only=True)
+    class Meta:
+        model = Admin_Contract
+        fields = '__all__'
+
+class TrainerSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Trainer
+        fields = '__all__'
+
+class TrainerContractSerializer(serializers.ModelSerializer):
+    trainer = TrainerSerializer(read_only=True)
+    class Meta:
+        model = Trainer_Contract
+        fields = ['id', 'trainer']
+
+class TrainerContractCourseSerializer(serializers.ModelSerializer):
+    trainer_contract = TrainerContractSerializer(read_only=True)
+    class Meta:
+        model = Trainer_Contract_Course
+        fields = ['id', 'trainer_contract']
+
 class Course_Serializer(serializers.ModelSerializer):
     additional_resources = Additional_Resources_Serializer(many=True, required=False)
-    trainers = serializers.PrimaryKeyRelatedField(queryset=Trainer_Contract.objects.all(), many=True, required=False)
+    # trainers = serializers.PrimaryKeyRelatedField(queryset=Trainer_Contract.objects.all(), many=True, required=False)
     units = Unit_Serializer(many=True, read_only=True, source='unit_set')
+    company = CompanyNameLogoSerializer(read_only=True)
+    admin_contract = AdminContractSerializer(read_only=True)
+    trainers = TrainerContractCourseSerializer(source='trainer_contract_course_set', many=True, read_only=True)
     # sepcify the model for the serializer and the required fields
     class Meta:
         model = Course
-        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'expected_time', 'additional_resources', 'trainers', 'units']
+        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'additional_resources', 'trainers', 'units']
         extra_kwargs = {
             'company': {
                 'required': False
             },
-            'admin_contract':{
+            'admin_contract': {
                 'required': False
             }
         }
@@ -40,7 +90,6 @@ class Course_Serializer(serializers.ModelSerializer):
                 'name': representation['name'],
                 'image': representation['image'],
                 'pref_description': representation['pref_description'],
-                'expected_time': representation['expected_time'],
                 'trainers': representation['trainers'],
                 'units': representation['units']
             }
@@ -53,8 +102,8 @@ class Course_Serializer(serializers.ModelSerializer):
             course.trainers.add(trainer)
         return course
     # when updating the course if the additional resources where given then save it in its table then set it to the course
-    def update(self, validated_data):
-        if validated_data['additional_resources']:
+    def update(self, instance, validated_data):
+        if 'additional_resources' in validated_data:
             additional_resources_data = validated_data.pop('additional_resources', [])
             instance = super().update(instance, validated_data)
             for additional_resource in additional_resources_data:
