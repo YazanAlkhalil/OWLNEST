@@ -72,7 +72,7 @@ export default function FoegetPassEmail() {
                     <button 
                      type="submit"
                     onClick={handleSubmit}
-                     className='px-9 rounded mt-5 py-4 bg-primary text-white font-semibold '>Submit</button>
+                     className='px-9 rounded mt-5 py-4 dark:bg-DarkGray bg-primary text-white font-semibold '>Submit</button>
                     </form>
                         {/* ${errors.password ? 'border border-red-500' : 'border-gray-300'}  */}
                 </div>

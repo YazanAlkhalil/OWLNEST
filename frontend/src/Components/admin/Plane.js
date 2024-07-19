@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Plane() {
   return (
-    <section class="bg-primary rounded py-12">
+    <section class="bg-primary dark:bg-DarkGray rounded py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <h2 class="text-4xl font-extrabold text-white sm:text-5xl">

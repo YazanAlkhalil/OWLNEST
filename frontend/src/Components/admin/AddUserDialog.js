@@ -42,7 +42,7 @@ export default function FormDialog() {
     return (
         <React.Fragment>
             <div onClick={handleClickOpen}
-                className='bg-primary self-end mb-5 hover:bg-hover hover:cursor-pointer text-white p-3 rounded'>Add user</div>
+                className='bg-primary dark:bg-DarkGray dark:hover:bg-DarkGrayHover self-end mb-5 hover:bg-hover hover:cursor-pointer text-white p-3 rounded'>Add user</div>
 
             <Dialog
                 open={open}
@@ -56,7 +56,7 @@ export default function FormDialog() {
             >
                 <DialogTitle>Add User</DialogTitle>
                 <DialogContent >
-                    <div className="w-96 flex items-center border-b border-primary-500 py-2 mb-5">
+                    <div className="w-96 flex items-center border-b dark:border-DarkGray border-primary-500 py-2 mb-5">
                         <input  value={email} onChange={e => {
                             const value = e.target.value;
                             if(value.length <=50){

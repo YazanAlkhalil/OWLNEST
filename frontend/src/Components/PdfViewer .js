@@ -41,7 +41,7 @@ export default function PdfViewer ({pdfUrl}) {
       <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
           <button
             onClick={()=> navigate('/trainee/courses/:id/content')}
-            className="absolute top-2 right-2 px-8 py-2 font-semibold bg-primary text-white rounded-full p-2 hover:bg-secondary"
+            className="absolute top-2 right-2 px-8 py-2 font-semibold bg-primary dark:bg-DarkGray dark:hover:bg-DarkGrayHover text-white rounded-full p-2 hover:bg-secondary"
           >
             Go to next item
           </button>

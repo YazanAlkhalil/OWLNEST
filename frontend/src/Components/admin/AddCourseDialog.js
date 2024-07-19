@@ -6,12 +6,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import toast from 'react-hot-toast'
+import useFetch from '../AuthComponents/UseFetch';
 
 
 export default function FormDialog() {
+    const {fetchData} = useFetch()
+    const companyId = localStorage.getItem('companyId')
     const [info, setInfo] = useState({
         name: "",
-        description: "",
+        pref_description: "",
     })
     const [open, setOpen] = useState(false)
     const handleClickOpen = () => {
@@ -24,33 +27,35 @@ export default function FormDialog() {
     function reset() {
         setInfo({
             name: "",
-            description: "",
+            pref_description: "",
         })
         handleClose()
     }
-    function handleSubmit() {
 
-    }
     return (
         <React.Fragment>
             <div onClick={handleClickOpen}
-                className='bg-primary self-end mb-5 hover:bg-hover hover:cursor-pointer text-white p-3 rounded'>Add course</div>
+                className='bg-primary dark:bg-DarkGray  dark:hover:bg-DarkGrayHover self-end mb-5 hover:bg-hover hover:cursor-pointer text-white p-3 rounded'>Add course</div>
 
             <Dialog
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
                     component: 'form',
-                    onSubmit: (event) => {
+                    onSubmit:async (event) => {
                         event.preventDefault();
-
-
+                        let res = await fetchData({url:'http://127.0.0.1:8000/api/admin/company/'+companyId+'/courses/create',method:'POST',data:info})
+                        console.log(res,"res");
+                        if(res?.id){
+                            toast.success('Course added successfully')
+                            reset()
+                        }
                     },
                 }}
             >
                 <DialogTitle>Add course</DialogTitle>
                 <DialogContent >
-                    <div className="w-96 flex items-center border-b border-primary-500 py-2 mb-5">
+                    <div className="w-96 flex items-center border-b dark:border-DarkGray border-primary-500 py-2 mb-5">
                         <input  value={info.name} onChange={e => {
                             const value = e.target.value;
                             if(value.length <=50){
@@ -63,10 +68,10 @@ export default function FormDialog() {
                     <div className='flex items-end'>
 
                         <textarea
-                            value={info.description}
+                            value={info.pref_description}
                             onChange={e => {
                                 const value = e.target.value;                                if (value.length <= 350)
-                                    setInfo({ ...info, description: e.target.value })
+                                    setInfo({ ...info, pref_description: e.target.value })
                             }}
                             className='p-2 flex-grow  border-solid border border-gray-400'
                             rows="4"
@@ -74,13 +79,13 @@ export default function FormDialog() {
                             placeholder="Description (max 350 characters)"
                             style={{ resize: 'none' }}
                         />
-                        <span className='ml-1 w-4'>{350 - info.description.length}</span>
+                        <span className='ml-1 w-4'>{350 - info.pref_description.length}</span>
                         
                     </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={reset}>Cancel</Button>
-                    <Button onClick={handleSubmit} type="submit">Add</Button>
+                    <Button type="submit">Add</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

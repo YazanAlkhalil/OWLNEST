@@ -23,7 +23,7 @@ export default function QuizPassed({ title, score, type, time }) {
       </div>
       <div
         className={`${
-          type === "PASSED" ? "bg-primary" : "bg-red-600"
+          type === "PASSED" ? "bg-primary dark:bg-DarkGray" : "bg-red-600"
         } text-white px-7 py-4`}>
         <h1 className="font-semibold text-xl">{type}</h1>
       </div>

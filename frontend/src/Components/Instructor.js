@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './../images/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.avif';
+import logo from './../images/simple-user-default-icon-free-png.webp';
 
 export default function Instructor({name}) {
   return (

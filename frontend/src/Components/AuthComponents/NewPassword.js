@@ -71,7 +71,7 @@ export default function NewPassword() {
             </div>
             <button 
                 type="submit"
-                className='px-9 rounded mb-4 mt-8 py-4 bg-primary text-white font-semibold'
+                className='px-9 rounded mb-4 mt-8 py-4 dark:bg-DarkGray bg-primary text-white font-semibold'
             >
                 Submit
             </button>

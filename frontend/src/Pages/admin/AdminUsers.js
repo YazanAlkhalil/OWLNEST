@@ -50,10 +50,10 @@ function AdminUsers() {
         />
       </div>
       <div className='grid grid-cols-4'>
-        <div className='bg-secondary text-white p-4 rounded-l'>Name</div>
-        <div className='bg-secondary text-white p-4'>Roles</div>
-        <div className='bg-secondary text-white p-4'>Last login</div>
-        <div className='bg-secondary text-white p-4 rounded-r'>Actions</div>
+        <div className='bg-secondary dark:bg-DarkSecondary text-white p-4 rounded-l'>Name</div>
+        <div className='bg-secondary dark:bg-DarkSecondary text-white p-4'>Roles</div>
+        <div className='bg-secondary dark:bg-DarkSecondary text-white p-4'>Last login</div>
+        <div className='bg-secondary dark:bg-DarkSecondary text-white p-4 rounded-r'>Actions</div>
         {filteredData.map((user, index) => (
           <UserInCourseAdmin key={user.id} index={index} user={user} />
         ))}

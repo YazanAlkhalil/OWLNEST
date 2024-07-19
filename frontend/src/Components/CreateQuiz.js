@@ -33,10 +33,10 @@ function CreateQuiz() {
     return (
         <div className='flex flex-col'>
             <div className='flex'>
-                <div className="flex w-min items-center border-b border-primary-500 py-2">
+                <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
                     <input value={quizName} onChange={e => setQuizName(e.target.value)} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Quiz name" aria-label="quiz name" />
                 </div>
-                <div className="flex w-min items-center border-b border-primary-500 py-2">
+                <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
                     <input value={total} onChange={e => setTotal(e.target.value)} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Total Grades" aria-label="total grade" />
                 </div>
             </div>
