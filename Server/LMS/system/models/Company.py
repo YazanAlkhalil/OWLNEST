@@ -1,7 +1,9 @@
 from django.db import models
 from authentication.models import User
 from system.models.Owner import Owner
-
+from system.models.Trainee import Trainee
+from system.models.Trainer import Trainer
+from system.models.Admin import Admin
 class Company(models.Model):
     owner = models.OneToOneField(Owner,on_delete=models.CASCADE)
     name = models.CharField(max_length=75)
@@ -41,6 +43,8 @@ class Company(models.Model):
     size = models.CharField(max_length=1,choices=SIZE_CHOICES,default='S')
     description = models.CharField(max_length=255)
     created_day = models.DateField(auto_now_add=True)
-
+    trainees =  models.ManyToManyField(Trainee,through='system.Trainee_Contract')
+    trainers =  models.ManyToManyField(Trainer,through='system.Trainer_Contract')
+    admins =  models.ManyToManyField(Admin,through='system.Admin_Contract')
     def __str__(self) -> str:
         return self.name
