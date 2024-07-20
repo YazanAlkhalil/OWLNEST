@@ -15,6 +15,7 @@ pyjwt = "*"
 pillow = "*"
 python-dateutil = "*"
 drf-yasg = "*"
+channels = {version = "*", extras = ["daphne"]}
 
 [dev-packages]
 

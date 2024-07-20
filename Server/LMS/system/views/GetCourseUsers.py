@@ -32,9 +32,8 @@ class GetCourseUsers(APIView):
             for user in users:
                 role = None
                 is_participant = False
-                completion_date = None
-                if user == course.admin_contract.admin.user :
-                     continue
+                completion_date = None 
+
                 if hasattr(user, 'trainer'):
                     if course.trainers.filter(trainer=user.trainer).exists():
                         role = 'trainer'
@@ -51,6 +50,7 @@ class GetCourseUsers(APIView):
                 user_data.append({
                      'id':user.id,
                     'username': user.username,
+                    'email':user.email,
                     'role': role,
                     'is_participant': is_participant,
                     'completion_date': completion_date
