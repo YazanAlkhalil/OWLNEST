@@ -11,6 +11,11 @@ from system.views.ReactCommentView import ReactCommentView
 from system.views.ReactReplyView import ReactReplyView
 from system.views.AddToFavorite import AddToFavoriteView
 from system.views.NotificationView import NotificationList
+from system.views.GetCourseUsers import GetCourseUsers
+from system.views.ChangeCourseUserRole import ChangeCourseUserRole
+from system.views.RemoveUserFromCourse import RemoveUserFromCourse
+
+
 urlpatterns = [
   #admin
     path('course/<id>/report',CourseReportView.as_view()),
@@ -39,7 +44,18 @@ urlpatterns = [
     
 
     #Noitification
-    path('user/company/<id>/notifications',NotificationList.as_view())
+    path('user/company/<id>/notifications',NotificationList.as_view()),
+
+
+    #get course users
+    path('course/<id>/all-users',GetCourseUsers.as_view()),
+
+
+    #change user role in course 
+    path('course/<id>/user/change-role',ChangeCourseUserRole.as_view()),
+
+    #delete user from course 
+    path('course/<id>/remove-user',RemoveUserFromCourse.as_view())
 ]
 
  
