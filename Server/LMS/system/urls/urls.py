@@ -13,6 +13,9 @@ from system.views.AddToFavorite import AddToFavoriteView
 from system.views.NotificationView import NotificationList
 from system.views.GetCourseUsers import GetCourseUsers
 from system.views.ChangeCourseUserRole import ChangeCourseUserRole
+from system.views.RemoveUserFromCourse import RemoveUserFromCourse
+
+
 urlpatterns = [
   #admin
     path('course/<id>/report',CourseReportView.as_view()),
@@ -50,6 +53,9 @@ urlpatterns = [
 
     #change user role in course 
     path('course/<id>/user/change-role',ChangeCourseUserRole.as_view()),
+
+    #delete user from course 
+    path('course/<id>/remove-user',RemoveUserFromCourse.as_view())
 ]
 
  
