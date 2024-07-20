@@ -176,7 +176,7 @@ class AddUser(APIView):
                         serializer = TraineeSerializer(data = trainee_data)
                         if serializer.is_valid():
                             serializer.save()
-                            user.is_trainer = True
+                            user.is_trainee = True
                             user.save()
                             trainee = serializer.instance
                             trainee_contract_data = {

@@ -29,7 +29,7 @@ function AdminCoursesPage() {
         <FormDialog/>
         <div className='grid grid-cols-3 gap-y-10'>
             {courses.map(course => (
-                <TrainerCourse key={course.id} image={course.image} name={course.name}/>
+                <TrainerCourse key={course.id} id={course.id} image={course.image} name={course.name}/>
             ))}
         </div>
         </div>
