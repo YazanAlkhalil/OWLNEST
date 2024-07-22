@@ -2,6 +2,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 # models
 from ..models.Unit import Unit
 from ..models.Temp_unit import Temp_Unit
@@ -75,7 +76,10 @@ class UnitCreate(generics.CreateAPIView):
     def perform_create(self, serializer):
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
-        course = Course.objects.get(id=course_id, company__id=company_id)
+        try:
+            course = Course.objects.get(id=course_id, company__id=company_id)
+        except Course.DoesNotExist:
+            raise ValidationError({'message': 'Course does not exists'})
         serializer.save(course=course, state='PR')
 
 # PUT : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/update
