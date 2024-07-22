@@ -13,52 +13,6 @@ import { useParams } from 'react-router-dom';
 
 
 function AdminCourseUsers() {
-
-  const Data = [
-    {
-      name: 'John Doe',
-      role: 'trainer',
-      completionDate: null,
-      isParticipant: true,
-    },
-    {
-      name: 'Jane Smith',
-      role: 'trainee',
-      completionDate: '2023-05-15',
-      isParticipant: true,
-    },
-    {
-      name: 'Michael Johnson',
-      role: 'trainee',
-      completionDate: null,
-      isParticipant: false,
-    },
-    {
-      name: 'Emily Wilson',
-      role: 'trainer',
-      completionDate: '2023-03-20',
-      isParticipant: true,
-    },
-    {
-      name: 'David Thompson',
-      role: 'trainee',
-      completionDate: '2023-06-01',
-      isParticipant: true,
-    },
-    {
-      name: 'Sarah Anderson',
-      role: 'trainer',
-      completionDate: null,
-      isParticipant: false,
-    },
-    {
-      name: 'Robert Taylor',
-      role: 'trainee',
-      completionDate: '2023-04-10',
-      isParticipant: true,
-    },
-  ];
-
   const { fetchData } = useFetch()
   const { id } = useParams()
   const getUsers = async () => {

@@ -14,7 +14,7 @@ const CourseLayout = () => {
         { name: "Discussin", url: "/trainee/courses/:id/discussion" },
         { name: "Info", url: "/trainee/courses/:id/Info" },
       ]} />
-      <div className="h-screen col-span-5 flex flex-col grow-[24]">
+      <div className="h-screen dark:bg-Gray dark:text-white col-span-5 flex flex-col grow-[24]">
         <NavBar highlight='trainee'/>
         <main className="flex-1 p-8 overflow-auto">
           <Outlet />

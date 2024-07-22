@@ -23,6 +23,10 @@ function UserInCourse({ user, index,getUsers }) {
     const handleChange = (event) => {
         if(!user.is_participant)
             setRole(event.target.value);
+        else{
+            fetchData({url:"http://127.0.0.1:8000/api/course/"+id+"/user/change-role",method:"POST",data:{user_id:user.id,role:event.target.value}})
+            getUsers()
+        }
         
     };
 
@@ -42,7 +46,7 @@ function UserInCourse({ user, index,getUsers }) {
     console.log(user.role ? user.role : role,"role");
     return (
         <>
-            <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'}  p-2 rounded-l`}>{user.username}</div>
+            <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'}  p-2 rounded-l flex items-center`}>{user.username}</div>
             <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'}  p-2 `}>
                 <Box sx={{ maxWidth: 100 }}>
                     <FormControl fullWidth>
@@ -60,8 +64,8 @@ function UserInCourse({ user, index,getUsers }) {
                     </FormControl>
                 </Box>
             </div>
-            <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'}  p-2  `}> {user.completion_date? user.completion_date :"Not yet"}</div>
-            <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'} p-2 rounded-r pl-10`}>{user.is_participant ? <PiMinus onClick={handleDelete} className=' hover:cursor-pointer bg-white dark:bg-transparent  p-2 box-content rounded' /> : <PiPlus onClick={handleAdd} className=' hover:cursor-pointer bg-white dark:bg-transparent  p-2 box-content rounded' />}</div>
+            <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'}  p-2  flex items-center`}> {user.completion_date? user.completion_date :"Not yet"}</div>
+            <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'} p-2 rounded-r pl-10 flex items-center`}>{user.is_participant ? <PiMinus onClick={handleDelete} className=' hover:cursor-pointer bg-white dark:bg-transparent  p-2 box-content rounded' /> : <PiPlus onClick={handleAdd} className=' hover:cursor-pointer bg-white dark:bg-transparent  p-2 box-content rounded' />}</div>
         </>
     )
 }

@@ -61,7 +61,7 @@ export default function TraineeFavorites() {
         transitionDuration="2s"
         transitionTimingFunction="linear"
         animateOnRender
-        className="mt-3"
+        className="border-none outline-none mt-3"
       />
         <div className="text-xl font-semibold w-[330px] mt-2 py-1 px-2">
           {fav.title}

@@ -14,7 +14,7 @@ from django.shortcuts import get_object_or_404
 class ChangeCourseUserRole(APIView):
       def post(self,request,*args,**kwargs):
           if not 'user_id' in request.data.keys():
-               raise ValidationError({"messahe":"user_id missed"})
+               raise ValidationError({"message":"user_id missed"})
           if not 'role' in request.data.keys():
                raise ValidationError({"message":"role missed "}) 
           
@@ -38,7 +38,7 @@ class ChangeCourseUserRole(APIView):
                  trainer_contract,_ = Trainer_Contract.objects.get_or_create(trainer = trainer , company = course.company)
                  course.trainers.add(trainer_contract)
                  course.save()
-                 user.is_trainee = True
+                 user.is_trainer = True
                  user.save()
               else:
                   raise ValidationError({"message":"the user is niether trainee nor trainer in this course add it first"})

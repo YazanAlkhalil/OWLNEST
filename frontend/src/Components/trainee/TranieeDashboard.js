@@ -3,6 +3,7 @@ import Card from "../Card";
 import ChartExample from "../Chart";
 import SimpleCard from "../SimpleCard";
 import SkillesProgress from "../SkillesProgress";
+import { useSelector } from "react-redux";
 
 const finshidCourse = {
     id: 1,
@@ -21,6 +22,8 @@ const pendingCourse = {
 }
 
 export default function TranieeDashboard() {
+  const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+
   return (
     <>
       <div className="flex justify-evenly flex-wrap gap-7">
@@ -35,6 +38,8 @@ export default function TranieeDashboard() {
             title: {
               text: "Daily XP Gains",
             },
+            theme: !isDarkMode ? 'ag-default-dark' : 'ag-default',
+
             data: [
               { xp: "MON", Xp: 2000 },
               { xp: "TUE", Xp: 1500 },
