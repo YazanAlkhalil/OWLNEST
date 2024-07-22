@@ -51,7 +51,7 @@ class Trainer_Contract_Course_Serializer(serializers.ModelSerializer):
         model = Trainer_Contract_Course
         fields = ['id', 'trainer_contract']
 
-class Course_Pending_Serializer(serializers.ModelSerializer):
+class Course_Pending_Progress_Serializer(serializers.ModelSerializer):
     temp_units = Temp_Unit_Serializer(many=True, read_only=True, source='temp_unit_set')
     company = Company_Name_Logo_Serializer(read_only=True)
     admin_contract = Admin_Contract_Serializer(read_only=True)

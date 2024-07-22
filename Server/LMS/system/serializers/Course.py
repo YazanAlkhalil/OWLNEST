@@ -10,6 +10,9 @@ from ..models.Admin_Contract import Admin_Contract
 from ..models.Trainer import Trainer
 from ..models.Trainer_Contract import Trainer_Contract
 from ..models.Trainer_Contract_Course import Trainer_Contract_Course
+from ..models.Trainee_Contract import Trainee_Contract
+from ..models.Enrollment import Enrollment
+from ..models.Favorite import Favorite
 # serializers
 from ..serializers.Additional_resources import Additional_Resources_Serializer
 from ..serializers.Unit import Unit_Serializer
@@ -52,7 +55,7 @@ class TrainerContractCourseSerializer(serializers.ModelSerializer):
     trainer_contract = TrainerContractSerializer(read_only=True)
     class Meta:
         model = Trainer_Contract_Course
-        fields = ['id', 'trainer_contract']
+        fields = ['id', 'is_leader', 'trainer_contract']
 
 class Course_Serializer(serializers.ModelSerializer):
     additional_resources = Additional_Resources_Serializer(many=True, required=False)
@@ -61,10 +64,12 @@ class Course_Serializer(serializers.ModelSerializer):
     company = CompanyNameLogoSerializer(read_only=True)
     admin_contract = AdminContractSerializer(read_only=True)
     trainers = TrainerContractCourseSerializer(source='trainer_contract_course_set', many=True, read_only=True)
+    progress = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
     # sepcify the model for the serializer and the required fields
     class Meta:
         model = Course
-        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'additional_resources', 'trainers', 'units']
+        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'additional_resources', 'trainers', 'units', 'progress', 'is_favorite']
         extra_kwargs = {
             'company': {
                 'required': False
@@ -73,6 +78,34 @@ class Course_Serializer(serializers.ModelSerializer):
                 'required': False
             }
         }
+    # get the trainee progress in the course
+    def get_progress(self, obj):
+        user = self.context['request'].user
+        if user.is_trainee:
+            try:
+                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee)
+            except Trainee_Contract.DoesNotExist:
+                return None
+            try:
+                enrollment = Enrollment.objects.get(course=obj, trainee_contract=trainee_contract)
+                return enrollment.progress
+            except Enrollment.DoesNotExist:
+                return None
+        return None
+    # check if the trainee set the course in the favourit list
+    def get_is_favorite(self, obj):
+        user = self.context['request'].user
+        if user.is_trainee:
+            try:
+                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee)
+            except Trainee_Contract.DoesNotExist:
+                return None
+            try:
+                enrollment = Enrollment.objects.get(course=obj, trainee_contract=trainee_contract)
+                return Favorite.objects.filter(trainee_contract=trainee_contract, enrollment=enrollment).exists()
+            except (Enrollment.DoesNotExist, Trainee_Contract.DoesNotExist):
+                return False
+        return False
     # when the view_type is list send only the specified fields not all of them
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -80,7 +113,9 @@ class Course_Serializer(serializers.ModelSerializer):
             return {
                 'id': representation['id'],
                 'name': representation['name'],
-                'image': representation['image']
+                'image': representation['image'],
+                'progress': representation.get('progress') if self.context['request'].user.is_trainee else None,
+                'is_favorite': representation.get('is_favorite') if self.context['request'].user.is_trainee else None
             }
         if self.context.get('view_type') == 'detail':
             return {
@@ -91,7 +126,9 @@ class Course_Serializer(serializers.ModelSerializer):
                 'image': representation['image'],
                 'pref_description': representation['pref_description'],
                 'trainers': representation['trainers'],
-                'units': representation['units']
+                'units': representation['units'],
+                'progress': representation.get('progress') if self.context['request'].user.is_trainee else None,
+                'is_favorite': representation.get('is_favorite') if self.context['request'].user.is_trainee else None
             }
         return representation
     # when create a new course add the trainers for this course

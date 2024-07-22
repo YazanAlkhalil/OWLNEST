@@ -122,7 +122,10 @@ class ContentUpdate(generics.UpdateAPIView):
     def get_object(self):
         temp_unit_id = self.kwargs['unit_id']
         content_id = self.kwargs['content_id']
-        return Temp_Content.objects.get(id=content_id, temp_unit__id=temp_unit_id)
+        try:
+            Temp_Content.objects.get(id=content_id, temp_unit__id=temp_unit_id)
+        except Temp_Content.DoesNotExist:
+            raise ValidationError({'message': 'Unit does not exists'})
     def perform_update(self, serializer):
         temp_content = self.get_object()
         # Check the type of content and update accordingly
