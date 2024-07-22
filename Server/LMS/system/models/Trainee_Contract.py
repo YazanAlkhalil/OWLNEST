@@ -7,6 +7,7 @@ class Trainee_Contract(models.Model):
     company = models.ForeignKey(Company , on_delete=models.CASCADE)
     total_xp = models.DecimalField(max_digits=5,decimal_places=2 , default=0.0)
     joining_date = models.DateField(auto_now_add=True)
+    employed = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return f"{self.trainee.user.username} || {self.company.name}"
