@@ -49,6 +49,8 @@ urlpatterns = [
     path('delete_admin/<int:user_id>/',
         DeleteAdmin.as_view(),
         name='delete_admin'),
+    
+    
 ]
 # adding the urls for the static files (course image)
 if settings.DEBUG:

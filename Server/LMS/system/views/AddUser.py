@@ -37,7 +37,8 @@ class AddUser(APIView):
             company = Company.objects.get(id=company_id)
 
             if Admin.objects.filter(user=user).exists():
-                if Admin_Contract.objects.filter(admin=user.id, company=company.id).exists():
+                admin = Admin.objects.get(user=user)
+                if Admin_Contract.objects.filter(admin=admin, company=company.id , employed = True ).exists():
                     user_role = 'admin'
                 else:
                     user_role = "null"
@@ -50,8 +51,8 @@ class AddUser(APIView):
             
             if user_role == "null":
                 return Response(
-                    {'message': 'You are not authorized to perform this action1'},
-                    status=status.HTTP_403_FORBIDDEN
+                    {'message': 'You are not authorized to perform this action'},
+                    status=401
                     )
             
             email = data.get('email')
@@ -101,25 +102,25 @@ class AddUser(APIView):
                         else:
                             return Response(
                             {'message': 'this user is already exists'},
-                            status=status.HTTP_403_FORBIDDEN
+                            status=401
                         )
                 if user_role == 'admin':
                     if role not in ['Trainer', 'Trainee']:
                         return Response(
-                            {'message': 'You are not authorized to perform this action2'},
-                            status=status.HTTP_403_FORBIDDEN
+                            {'message': 'You are not authorized to perform this action'},
+                            status=401
                         )
                 elif user_role == 'owner':
                     if role not in ['Admin', 'Trainer', 'Trainee']:
                         return Response(
-                            {'message': 'You are not authorized to perform this action3'},
-                            status=status.HTTP_403_FORBIDDEN
+                            {'message': 'You are not authorized to perform this action'},
+                            status=401
                         )
 
                 else :
                     return Response(
-                            {'message': 'You are not authorized to perform this action4'},
-                            status=status.HTTP_403_FORBIDDEN
+                            {'message': 'You are not authorized to perform this action'},
+                            status=401
                         )
                 
                 if role == 'Admin':

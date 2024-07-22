@@ -57,6 +57,7 @@ class CreateCompanyView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'user not found'}, status=401)
 
+
 class CompanyView(APIView):
     def get(self,request):
         if request.user.is_authenticated:
@@ -238,47 +239,51 @@ class CompanyUsers(APIView):
             elif Admin.objects.filter(user=user).exists():
                 admin = Admin.objects.get(user=user)
                 if Admin_Contract.objects.filter(admin=admin,company=company).exists():
+                    con = Admin_Contract.objects.get(admin=admin,company=company)
+                    if con.employed is True:
                     # company =Company.objects.get(company=company)
-                    users = {}
-                    for admin_contract in Admin_Contract.objects.filter(company=company):
-                        if admin_contract.employed is True:
-                            admin = admin_contract.admin
-                            user_id = admin.user.id
-                            if user_id not in users:
-                                users[user_id] = {
-                                    'id': admin.user.id,
-                                    'username': admin.user.username,
-                                    'roles': [],
-                                    'last_login':admin.user.last_login
-                                }
-                            users[user_id]['roles'].append('admin')
-                    for trainer_contract in Trainer_Contract.objects.filter(company=company):
-                        if trainer_contract.employed is True:
-                            trainer = trainer_contract.trainer
-                            user_id = trainer.user.id
-                            if user_id not in users:
-                                users[user_id] = {
-                                    'id': trainer.user.id,
-                                    'username': trainer.user.username,
-                                    'roles': [],
-                                    'last_login':trainer.user.last_login
-                                }
-                            users[user_id]['roles'].append('trainer')
-                    for trainee_contract in Trainee_Contract.objects.filter(company=company):
-                        if trainee_contract.employed is True:
-                            trainee = trainee_contract.trainee
-                            user_id = trainee.user.id
-                            if user_id not in users:
-                                users[user_id] = {
-                                    'id': trainee.user.id,
-                                    'username': trainee.user.username,
-                                    'roles': [],
-                                    'last_login':trainee.user.last_login
-                                }
-                            users[user_id]['roles'].append('trainee')
-                    return Response(list(users.values()))
+                        users = {}
+                        for admin_contract in Admin_Contract.objects.filter(company=company):
+                            if admin_contract.employed is True:
+                                admin = admin_contract.admin
+                                user_id = admin.user.id
+                                if user_id not in users:
+                                    users[user_id] = {
+                                        'id': admin.user.id,
+                                        'username': admin.user.username,
+                                        'roles': [],
+                                        'last_login':admin.user.last_login
+                                    }
+                                users[user_id]['roles'].append('admin')
+                        for trainer_contract in Trainer_Contract.objects.filter(company=company):
+                            if trainer_contract.employed is True:
+                                trainer = trainer_contract.trainer
+                                user_id = trainer.user.id
+                                if user_id not in users:
+                                    users[user_id] = {
+                                        'id': trainer.user.id,
+                                        'username': trainer.user.username,
+                                        'roles': [],
+                                        'last_login':trainer.user.last_login
+                                    }
+                                users[user_id]['roles'].append('trainer')
+                        for trainee_contract in Trainee_Contract.objects.filter(company=company):
+                            if trainee_contract.employed is True:
+                                trainee = trainee_contract.trainee
+                                user_id = trainee.user.id
+                                if user_id not in users:
+                                    users[user_id] = {
+                                        'id': trainee.user.id,
+                                        'username': trainee.user.username,
+                                        'roles': [],
+                                        'last_login':trainee.user.last_login
+                                    }
+                                users[user_id]['roles'].append('trainee')
+                        return Response(list(users.values()))
+                    else: 
+                        return Response({'message':'You are not authorized to access this page.'},status =401)
                 else:
-                    return Response({'message':'You are not authorized to access this page.'})
+                    return Response({'message':'You are not authorized to access this page.'},status=401)
                 
             else:
                 return Response({'message': 'You are not authorized to access this page'}, status=403)
@@ -334,6 +339,9 @@ class UserCompanyView(APIView):
                     con = Trainee_Contract.objects.get(trainee=trainee,company=company)
                     if con.employed is True:
                         roles.append('trainee')
+
+            if len(roles) == 0:
+                return Response({'message': 'page not found'}, status=404)
             
             return  Response(roles , status =200)
         
