@@ -129,41 +129,47 @@ class CompaniesView(APIView):
             if Admin.objects.filter(user=user).exists():
                 admin = Admin.objects.get(user=user)
                 contract_qs = Admin_Contract.objects.filter(admin=admin)
-                for contract in contract_qs:
-                    company = Company.objects.get(id=contract.company.id)
-                    if company.id not in company_ids:
-                        companies.append({
-                            'id': company.id,
-                            'name': company.name,
-                            'logo': company.logo.url
-                        })
-                        company_ids.add(company.id)
+                con = Admin_Contract.objects.get(admin=admin)
+                if con.employed is True:
+                    for contract in contract_qs:
+                        company = Company.objects.get(id=contract.company.id)
+                        if company.id not in company_ids:
+                            companies.append({
+                                'id': company.id,
+                                'name': company.name,
+                                'logo': company.logo.url
+                            })
+                            company_ids.add(company.id)
 
             if Trainer.objects.filter(user=user).exists():
                 trainer = Trainer.objects.get(user=user)
                 contract_qs = Trainer_Contract.objects.filter(trainer=trainer)
-                for contract in contract_qs:
-                    company = Company.objects.get(id=contract.company.id)
-                    if company.id not in company_ids:
-                        companies.append({
-                            'id': company.id,
-                            'name': company.name,
-                            'logo': company.logo.url
-                        })
-                        company_ids.add(company.id)
+                con = Trainer_Contract.objects.get(trainer=trainer)
+                if con.employed is True:
+                    for contract in contract_qs:
+                        company = Company.objects.get(id=contract.company.id)
+                        if company.id not in company_ids:
+                            companies.append({
+                                'id': company.id,
+                                'name': company.name,
+                                'logo': company.logo.url
+                            })
+                            company_ids.add(company.id)
 
             if Trainee.objects.filter(user=user).exists():
                 trainee = Trainee.objects.get(user=user)
                 contract_qs = Trainee_Contract.objects.filter(trainee=trainee)
-                for contract in contract_qs:
-                    company = Company.objects.get(id=contract.company.id)
-                    if company.id not in company_ids:
-                        companies.append({
-                            'id': company.id,
-                            'name': company.name,
-                            'logo': company.logo.url
-                        })
-                        company_ids.add(company.id)
+                con = Trainee_Contract.objects.get(trainee=trainee)
+                if con.employed is True:
+                    for contract in contract_qs:
+                        company = Company.objects.get(id=contract.company.id)
+                        if company.id not in company_ids:
+                            companies.append({
+                                'id': company.id,
+                                'name': company.name,
+                                'logo': company.logo.url
+                            })
+                            company_ids.add(company.id)
             
             response = Response()
             response.data = {
@@ -193,38 +199,41 @@ class CompanyUsers(APIView):
                     # company = Company.objects.get(owner=owner,id=company.id)
                     users = {}
                     for admin_contract in Admin_Contract.objects.filter(company=company):
-                        admin = admin_contract.admin
-                        user_id = admin.user.id
-                        if user_id not in users:
-                            users[user_id] = {
-                                'id': admin.user.id,
-                                'username': admin.user.username,
-                                'roles': [],
-                                'last_login':admin.user.last_login
-                            }
-                        users[user_id]['roles'].append('admin')
+                        if admin_contract.employed is True:
+                            admin = admin_contract.admin
+                            user_id = admin.user.id
+                            if user_id not in users:
+                                users[user_id] = {
+                                    'id': admin.user.id,
+                                    'username': admin.user.username,
+                                    'roles': [],
+                                    'last_login':admin.user.last_login
+                                }
+                            users[user_id]['roles'].append('admin')
                     for trainer_contract in Trainer_Contract.objects.filter(company=company):
-                        trainer = trainer_contract.trainer
-                        user_id = trainer.user.id
-                        if user_id not in users:
-                            users[user_id] = {
-                                'id': trainer.user.id,
-                                'username': trainer.user.username,
-                                'roles': [],
-                                'last_login':trainer.user.last_login
-                            }
-                        users[user_id]['roles'].append('trainer')
+                        if trainer_contract.employed is True:
+                            trainer = trainer_contract.trainer
+                            user_id = trainer.user.id
+                            if user_id not in users:
+                                users[user_id] = {
+                                    'id': trainer.user.id,
+                                    'username': trainer.user.username,
+                                    'roles': [],
+                                    'last_login':trainer.user.last_login
+                                }
+                            users[user_id]['roles'].append('trainer')
                     for trainee_contract in Trainee_Contract.objects.filter(company=company):
-                        trainee = trainee_contract.trainee
-                        user_id = trainee.user.id
-                        if user_id not in users:
-                            users[user_id] = {
-                                'id': trainee.user.id,
-                                'username': trainee.user.username,
-                                'roles': [],
-                                'last_login':trainee.user.last_login
-                            }
-                        users[user_id]['roles'].append('trainee')
+                        if trainee_contract.employed is True:
+                            trainee = trainee_contract.trainee
+                            user_id = trainee.user.id
+                            if user_id not in users:
+                                users[user_id] = {
+                                    'id': trainee.user.id,
+                                    'username': trainee.user.username,
+                                    'roles': [],
+                                    'last_login':trainee.user.last_login
+                                }
+                            users[user_id]['roles'].append('trainee')
                     return Response(list(users.values()))
             elif Admin.objects.filter(user=user).exists():
                 admin = Admin.objects.get(user=user)
@@ -232,38 +241,41 @@ class CompanyUsers(APIView):
                     # company =Company.objects.get(company=company)
                     users = {}
                     for admin_contract in Admin_Contract.objects.filter(company=company):
-                        admin = admin_contract.admin
-                        user_id = admin.user.id
-                        if user_id not in users:
-                            users[user_id] = {
-                                'id': admin.user.id,
-                                'username': admin.user.username,
-                                'roles': [],
-                                'last_login':admin.user.last_login
-                            }
-                        users[user_id]['roles'].append('admin')
+                        if admin_contract.employed is True:
+                            admin = admin_contract.admin
+                            user_id = admin.user.id
+                            if user_id not in users:
+                                users[user_id] = {
+                                    'id': admin.user.id,
+                                    'username': admin.user.username,
+                                    'roles': [],
+                                    'last_login':admin.user.last_login
+                                }
+                            users[user_id]['roles'].append('admin')
                     for trainer_contract in Trainer_Contract.objects.filter(company=company):
-                        trainer = trainer_contract.trainer
-                        user_id = trainer.user.id
-                        if user_id not in users:
-                            users[user_id] = {
-                                'id': trainer.user.id,
-                                'username': trainer.user.username,
-                                'roles': [],
-                                'last_login':trainer.user.last_login
-                            }
-                        users[user_id]['roles'].append('trainer')
+                        if trainer_contract.employed is True:
+                            trainer = trainer_contract.trainer
+                            user_id = trainer.user.id
+                            if user_id not in users:
+                                users[user_id] = {
+                                    'id': trainer.user.id,
+                                    'username': trainer.user.username,
+                                    'roles': [],
+                                    'last_login':trainer.user.last_login
+                                }
+                            users[user_id]['roles'].append('trainer')
                     for trainee_contract in Trainee_Contract.objects.filter(company=company):
-                        trainee = trainee_contract.trainee
-                        user_id = trainee.user.id
-                        if user_id not in users:
-                            users[user_id] = {
-                                'id': trainee.user.id,
-                                'username': trainee.user.username,
-                                'roles': [],
-                                'last_login':trainee.user.last_login
-                            }
-                        users[user_id]['roles'].append('trainee')
+                        if trainee_contract.employed is True:
+                            trainee = trainee_contract.trainee
+                            user_id = trainee.user.id
+                            if user_id not in users:
+                                users[user_id] = {
+                                    'id': trainee.user.id,
+                                    'username': trainee.user.username,
+                                    'roles': [],
+                                    'last_login':trainee.user.last_login
+                                }
+                            users[user_id]['roles'].append('trainee')
                     return Response(list(users.values()))
                 else:
                     return Response({'message':'You are not authorized to access this page.'})
@@ -305,17 +317,23 @@ class UserCompanyView(APIView):
             if Admin.objects.filter(user=user).exists():
                 admin = Admin.objects.get(user=user)
                 if Admin_Contract.objects.filter(admin=admin, company=company).exists():
-                    roles.append('admin')
+                    con = Admin_Contract.objects.get(admin=admin,company=company)
+                    if con.employed is True:
+                        roles.append('admin')
             
             if Trainer.objects.filter(user=user).exists():
                 trainer = Trainer.objects.get(user=user)
                 if Trainer_Contract.objects.filter(trainer=trainer,company=company).exists():
-                    roles.append('trainer')
+                    con = Trainer_Contract.objects.get(trainer=trainer,company=company)
+                    if con.employed is True:
+                        roles.append('trainer')
 
             if Trainee.objects.filter(user=user).exists():
                 trainee = Trainee.objects.get(user=user)
                 if Trainee_Contract.objects.filter(trainee=trainee,company=company).exists():
-                    roles.append('trainee')
+                    con = Trainee_Contract.objects.get(trainee=trainee,company=company)
+                    if con.employed is True:
+                        roles.append('trainee')
             
             return  Response(roles , status =200)
         
