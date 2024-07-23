@@ -1,7 +1,7 @@
 from django.urls import path
 from system.views.CreateCompany import CreateCompanyView,CompaniesView,DeleteOwnerView,DeleteCompanyView,UserCompanyView,EditCompanyView,CompanyView,CompanyUsers
 from system.views.AddUser import AddUser
-from system.views.DeleteUsers import DeleteUser,DeleteAdmin
+from system.views.DeleteUsers import DeleteUser,DeleteAdmin,AddAdmin
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -50,5 +50,7 @@ urlpatterns = [
         DeleteAdmin.as_view(),
         name='delete_admin'),
     
-    
+    path('add_admin/<int:user_id>/',
+        AddAdmin.as_view(),
+        name='add_admin'),
 ]
