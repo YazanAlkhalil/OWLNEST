@@ -65,45 +65,45 @@ class AddUser(APIView):
 
             if User.objects.filter(email=email).exists():
                 new_user = User.objects.get(email=email)
-                if Admin.objects.filter(user=new_user).exists():
-                    admin = Admin.objects.get(user=new_user)
-                    if Admin_Contract.objects.filter(admin= admin ,company=company):
-                        contract = Admin_Contract.objects.get(admin=admin,company=company)
-                        if contract.employed is False:
-                            contract.employed=True
-                            contract.save()
-                            return Response({'message': 'User added successfully'}, status=201)
-                        else:
-                            return Response(
-                            {'message': 'this user is already exists'},
-                            status=status.HTTP_403_FORBIDDEN
-                        )
-                if Trainer.objects.filter(user=new_user).exists():
-                    trainer = Trainer.objects.get(user=new_user)
-                    if Trainer_Contract.objects.filter(company=company,trainer= trainer):
-                        contract = Trainer_Contract.objects.get(trainer=trainer,company=company)
-                        if contract.employed is False:
-                            contract.employed=True
-                            contract.save()
-                            return Response({'message': 'User added successfully'}, status=201)
-                        else:
-                            return Response(
-                            {'message': 'this user is already exists'},
-                            status=status.HTTP_403_FORBIDDEN
-                        )
-                if Trainee.objects.filter(user=new_user).exists():
-                    trainee = Trainee.objects.get(user=new_user)
-                    if Trainee_Contract.objects.filter(trainee= trainee ,company=company) :
-                        contract = Trainee_Contract.objects.get(trainee=trainee,company=company.id)
-                        if contract.employed is False:
-                            contract.employed=True
-                            contract.save()
-                            return Response({'message': 'User added successfully'}, status=201)
-                        else:
-                            return Response(
-                            {'message': 'this user is already exists'},
-                            status=401
-                        )
+                # if Admin.objects.filter(user=new_user).exists():
+                #     admin = Admin.objects.get(user=new_user)
+                #     if Admin_Contract.objects.filter(admin= admin ,company=company):
+                #         contract = Admin_Contract.objects.get(admin=admin,company=company)
+                #         if contract.employed is False:
+                #             contract.employed=True
+                #             contract.save()
+                #             return Response({'message': 'User added successfully'}, status=201)
+                #         else:
+                #             return Response(
+                #             {'message': 'this user is already exists'},
+                #             status=status.HTTP_403_FORBIDDEN
+                #         )
+                # if Trainer.objects.filter(user=new_user).exists():
+                #     trainer = Trainer.objects.get(user=new_user)
+                #     if Trainer_Contract.objects.filter(company=company,trainer= trainer):
+                #         contract = Trainer_Contract.objects.get(trainer=trainer,company=company)
+                #         if contract.employed is False:
+                #             contract.employed=True
+                #             contract.save()
+                #             return Response({'message': 'User added successfully'}, status=201)
+                #         else:
+                #             return Response(
+                #             {'message': 'this user is already exists'},
+                #             status=status.HTTP_403_FORBIDDEN
+                #         )
+                # if Trainee.objects.filter(user=new_user).exists():
+                #     trainee = Trainee.objects.get(user=new_user)
+                #     if Trainee_Contract.objects.filter(trainee= trainee ,company=company) :
+                #         contract = Trainee_Contract.objects.get(trainee=trainee,company=company.id)
+                #         if contract.employed is False:
+                #             contract.employed=True
+                #             contract.save()
+                #             return Response({'message': 'User added successfully'}, status=201)
+                #         else:
+                #             return Response(
+                #             {'message': 'this user is already exists'},
+                #             status=401
+                #         )
                 if user_role == 'admin':
                     if role not in ['Trainer', 'Trainee']:
                         return Response(
@@ -130,6 +130,17 @@ class AddUser(APIView):
                     }
                     if Admin.objects.filter(user=new_user).exists():
                         admin = Admin.objects.get(user=new_user)
+                        if Admin_Contract.objects.filter(admin= admin ,company=company):
+                            contract = Admin_Contract.objects.get(admin=admin,company=company)
+                            if contract.employed is False:
+                                contract.employed=True
+                                contract.save()
+                                return Response({'message': 'User added successfully'}, status=201)
+                            if contract.employed is True:
+                                return Response(
+                                {'message': 'this user is already exists'},
+                                status=status.HTTP_403_FORBIDDEN
+                            )
                         admin_contract_data = {
                             'admin':admin,
                             'company':company
@@ -158,6 +169,17 @@ class AddUser(APIView):
                     }
                     if Trainer.objects.filter(user=new_user).exists():
                         trainer = Trainer.objects.get(user=new_user)
+                        if Trainer_Contract.objects.filter(company=company,trainer= trainer):
+                            contract = Trainer_Contract.objects.get(trainer=trainer,company=company)
+                            if contract.employed is False:
+                                contract.employed=True
+                                contract.save()
+                                return Response({'message': 'User added successfully'}, status=201)
+                            if contract.employed is True:
+                                return Response(
+                                {'message': 'this user is already exists'},
+                                status=status.HTTP_403_FORBIDDEN
+                            )
                         trainer_contract_data = {
                             'trainer':trainer,
                             'company':company
@@ -186,6 +208,17 @@ class AddUser(APIView):
                     }
                     if Trainee.objects.filter(user=new_user).exists():
                         trainee = Trainee.objects.get(user=new_user)
+                        if Trainee_Contract.objects.filter(trainee= trainee ,company=company) :
+                            contract = Trainee_Contract.objects.get(trainee=trainee,company=company.id)
+                            if contract.employed is False:
+                                contract.employed=True
+                                contract.save()
+                                return Response({'message': 'User added successfully'}, status=201)
+                            if contract.employed is True:
+                                return Response(
+                                {'message': 'this user is already exists'},
+                                status=401
+                            )
                         trainee_contract_data = {
                             'trainee':trainee,
                             'company':company
