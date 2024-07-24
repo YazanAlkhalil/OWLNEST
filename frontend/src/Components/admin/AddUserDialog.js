@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import UseFetch from '../AuthComponents/UseFetch';
 
-export default function FormDialog() {
+export default function FormDialog({fetchUsers}) {
     const [email, setEmail] = useState('')
     const [role, setRole] = useState('')
     const [open, setOpen] = useState(false)
@@ -36,7 +36,10 @@ export default function FormDialog() {
         handleClose()
     }
     async function handleSubmit() {
-        await fetchData({url:'/add_user/?company_id='+companyId,data :{email,role},method:'POST'})        
+        await fetchData({url:'/add_user/?company_id='+companyId,data :{email,role},method:'POST'}) 
+        handleClose() 
+        reset()
+        fetchUsers()
     }
     console.log(role);
     return (
@@ -62,7 +65,7 @@ export default function FormDialog() {
                             if(value.length <=50){
                                 setEmail( value )}} 
                             }
-                            className="w-full appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Email" aria-label="Name" />
+                            className="w-full appearance-none bg-transparent border-none mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Email" aria-label="Name" />
                     </div>
                     <Box sx={{ maxWidth: 100 }}>
                     <FormControl fullWidth>
