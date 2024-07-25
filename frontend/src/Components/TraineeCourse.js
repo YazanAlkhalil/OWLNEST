@@ -43,7 +43,7 @@ export default function TraineeCourse({ id, image, name }) {
         animateOnRender
         className="mt-3"
       />
-      <div className="text-xl font-semibold w-[330px] mt-2 py-1 px-2">
+      <div className="text-xl dark:bg-DarkGray font-semibold w-[330px] mt-2 py-1 px-2">
         {name}
       </div>
       <div className="px-2 py-1 text-xl flex justify-between">

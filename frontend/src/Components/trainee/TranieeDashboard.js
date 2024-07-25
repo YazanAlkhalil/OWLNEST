@@ -4,26 +4,14 @@ import ChartExample from "../Chart";
 import SimpleCard from "../SimpleCard";
 import SkillesProgress from "../SkillesProgress";
 import useFetch from "../AuthComponents/UseFetch";
+import { useSelector } from "react-redux";
 
-const finshidCourse = {
-    id: 1,
-    title: "Finished Courses",
-    value: "5",
-}
-const inProgressCourse = {
-    id: 1,
-    title: "In Progress Courses",
-    value: "2",
-}
-const pendingCourse = {
-    id: 1,
-    title: "Pending Courses",
-    value: "3",
-}
 
 export default function TranieeDashboard() {
   const { fetchData, resData } = useFetch();
   const companyId = localStorage.getItem('companyId');
+  const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+
 
   useEffect(()=>{
     async function getData() {
@@ -47,6 +35,7 @@ export default function TranieeDashboard() {
             title: {
               text: "Daily XP Gains",
             },
+            theme: !isDarkMode ? 'ag-default-dark' : 'ag-default',
             data: resData?.daily_xp.map((item)=>{
               return { xp: item.day, Xp: item.xp }
 
