@@ -4,10 +4,10 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 export default function CrcularProgressBar({value}) {
   return (
     <CircularProgressbar
-    className='w-[150px] h-[150px] font-semibold'
+    className='w-[170px] h-[170px] font-semibold'
       value={value}
       text={`${value}%`}
-      strokeWidth='20'
+      strokeWidth='16'
       styles={buildStyles({
         pathColor: `#3F6188`,
         pathTransitionDuration: 2,

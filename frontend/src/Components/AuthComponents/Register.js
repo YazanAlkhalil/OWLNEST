@@ -327,7 +327,7 @@ export default function Register() {
                     - Already have an account? -
                   </p>
                   <NavLink
-                    to={"/"}
+                    to={"/login"}
                     className="inline-block pt-5 font-semibold text-white align-middle text-center select-none border font-normal whitespace-no-wrap rounded py-1 px-3 leading-normal no-underline pt-3 bg-gray-100 text-gray-800 hover:bg-gray-200 button fw-bold text-gray-100">
                     LOGIN
                   </NavLink>

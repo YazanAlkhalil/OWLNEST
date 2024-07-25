@@ -52,26 +52,26 @@ class AddUserToCourse(CreateAPIView):
                 course.trainees.add(trainee_contract)
                 course.save()
 
-          #send notify for the trainee
-          data =  {
-               "from_user":request.user.id,
-               "to_user": user.id,
-               "message": f"Hi, {user.username} you have been enroll in course {course.name} by admin {request.user.username}",
-               "company":course.company.id
-          }
+        #   #send notify for the trainee
+        #   data =  {
+        #        "from_user":request.user.id,
+        #        "to_user": user.id,
+        #        "message": f"Hi, {user.username} you have been enroll in course {course.name} by admin {request.user.username}",
+        #        "company":course.company.id
+        #   }
 
-          notification  = NotificationSerializer(data = data)
-          notification.is_valid(raise_exception= True)
-          notification.save()
-          # Send notification via WebSocket
-          channel_layer = get_channel_layer()
-          async_to_sync(channel_layer.group_send)(
-                f'user_{user.id}',
-                  {
-                      'type': 'send_notification',
-                      'message': Notification.objects.filter(to_user=user , company = course.company , is_read = False).count()
-                  }
-              )
+        #   notification  = NotificationSerializer(data = data)
+        #   notification.is_valid(raise_exception= True)
+        #   notification.save()
+        #   # Send notification via WebSocket
+        #   channel_layer = get_channel_layer()
+        #   async_to_sync(channel_layer.group_send)(
+        #         f'user_{user.id}',
+        #           {
+        #               'type': 'send_notification',
+        #               'message': Notification.objects.filter(to_user=user , company = course.company , is_read = False).count()
+        #           }
+        #       )
 
           if request.data["role"].lower() == 'trainer':
                 trainer,_ = Trainer.objects.get_or_create(user = user)

@@ -27,9 +27,9 @@ function NavBar({ highlight }) {
         let role = res[0] === 'owner' ? 'admin' : res[0];
         let targetPath = `/${role}`;
         
-        if (!location.pathname.startsWith(targetPath)) {
-          navigate(targetPath);
-        }
+        // if (!location.pathname.startsWith(targetPath)) {
+        //   navigate(targetPath);
+        // }
       }
     }
     getRoles();
