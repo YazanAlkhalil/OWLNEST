@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import UseFetch from '../AuthComponents/UseFetch';
 
-export default function FormDialog() {
+export default function FormDialog({fetchUsers}) {
     const [email, setEmail] = useState('')
     const [role, setRole] = useState('')
     const [open, setOpen] = useState(false)
@@ -36,13 +36,16 @@ export default function FormDialog() {
         handleClose()
     }
     async function handleSubmit() {
-        await fetchData({url:'/add_user/?company_id='+companyId,data :{email,role},method:'POST'})        
+        await fetchData({url:'/add_user/?company_id='+companyId,data :{email,role},method:'POST'}) 
+        handleClose() 
+        reset()
+        fetchUsers()
     }
     console.log(role);
     return (
         <React.Fragment>
             <div onClick={handleClickOpen}
-                className='bg-primary self-end mb-5 hover:bg-hover hover:cursor-pointer text-white p-3 rounded'>Add user</div>
+                className='bg-primary dark:bg-DarkGray dark:hover:bg-DarkGrayHover self-end mb-5 hover:bg-hover hover:cursor-pointer text-white p-3 rounded'>Add user</div>
 
             <Dialog
                 open={open}
@@ -56,13 +59,13 @@ export default function FormDialog() {
             >
                 <DialogTitle>Add User</DialogTitle>
                 <DialogContent >
-                    <div className="w-96 flex items-center border-b border-primary-500 py-2 mb-5">
+                    <div className="w-96 flex items-center border-b dark:border-DarkGray border-primary-500 py-2 mb-5">
                         <input  value={email} onChange={e => {
                             const value = e.target.value;
                             if(value.length <=50){
                                 setEmail( value )}} 
                             }
-                            className="w-full appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Email" aria-label="Name" />
+                            className="w-full appearance-none bg-transparent border-none mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Email" aria-label="Name" />
                     </div>
                     <Box sx={{ maxWidth: 100 }}>
                     <FormControl fullWidth>

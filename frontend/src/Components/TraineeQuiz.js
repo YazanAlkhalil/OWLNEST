@@ -65,7 +65,7 @@ export default function TraineeQuiz() {
           {showScore ? (
             <div className="text-center h-[90px] ">
               <h2 className="text-2xl mb-5 font-semibold">You scored {score} out of {questions.length}</h2>
-              <NavLink to={'/trainee/courses/:id/content'} className='px-8 py-4 bg-primary text-xl font-semibold text-white hover:bg-secondary cursor-pointer' >Go to next item</NavLink>
+              <NavLink to={'/trainee/courses/:id/content'} className='px-8 py-4 bg-primary dark:bg-DarkGray  dark:hover:bg-DarkGrayHover text-xl font-semibold text-white hover:bg-secondary cursor-pointer' >Go to next item</NavLink>
             </div>
           ) : (
             <>
@@ -74,7 +74,7 @@ export default function TraineeQuiz() {
                   Question {currentQuestion + 1}/{questions.length}
                 </h2>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                  <div className="bg-primary h-2.5 rounded-full" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div>
+                  <div className="dark:bg-DarkGray bg-primary h-2.5 rounded-full" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}></div>
                 </div>
                 <p className="mt-2 text-gray-700">{questions[currentQuestion].questionText}</p>
               </div>
@@ -83,7 +83,7 @@ export default function TraineeQuiz() {
                   <button
                     key={index}
                     onClick={() => handleAnswerButtonClick(option.isCorrect)}
-                    className="px-4 py-2 text-white bg-primary rounded hover:bg-secondary"
+                    className="px-4 py-2 text-white dark:bg-DarkGray  dark:hover:bg-DarkGrayHover bg-primary rounded hover:bg-secondary"
                   >
                     {option.answerText}
                   </button>

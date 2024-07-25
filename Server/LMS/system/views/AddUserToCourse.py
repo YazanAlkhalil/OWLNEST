@@ -51,6 +51,8 @@ class AddUserToCourse(CreateAPIView):
           if not course.trainees.filter(id=trainee_contract.id).exists():
                 course.trainees.add(trainee_contract)
                 course.save()
+          trainee.user.is_trainee = True
+          trainee.user.save()
 
         #   #send notify for the trainee
         #   data =  {
@@ -79,6 +81,8 @@ class AddUserToCourse(CreateAPIView):
                 if not course.trainers.filter(id=trainer_contract.id).exists():
                     course.trainers.add(trainer_contract)
                     course.save()#send notify for the trainee
+                trainer.user.is_trainer = True
+                trainer.user.save()
                 data =  {
                     "from_user":request.user.id,
                     "to_user": user.id,

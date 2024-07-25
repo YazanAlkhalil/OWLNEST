@@ -1,31 +1,33 @@
-import { BrowserRouter,
-  //  Routes, Route, Navigate 
-  } 
-   from 'react-router-dom';
-// import RegisterPage from './Pages/Auth/RegisterPage';
+import {
+  BrowserRouter,
+}
+  from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import Router from './Router';
 // import CreateCoursePage from './Pages/trainer/CreateCoursePage';
 import { Toaster } from 'react-hot-toast';
-// import TrainerLayout from './Components/TrainerLayout';
-// import TraineeLayout from './Components/TraineeLayout'
-// import AdminLayout from './Components/AdminLayout';
-// import LoginPage from './Pages/Auth/LoginPage';
-// import RegisterPage from './Pages/Auth/RegisterPage';
-// import TrainerCoursesPage from './Pages/trainer/TrainerCoursesPage';
-// import LoginPage from "./Pages/Auth/LoginPage";
-// import AdminCoursesPage from './Pages/admin/AdminCoursesPage'
-// import AdminCourseDetails from './Pages/admin/AdminCourseDetails';
-// import AdminDashboard from './Pages/admin/AdminDashboard';
-// import AdminUsers from './Pages/admin/AdminUsers';
-// import NotFoundPage from './Pages/NotFoundPage'
+import { useSelector } from 'react-redux';
+
 
 
 function App() {
+  const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+  const darkTheme = createTheme({
+    palette: {
+      mode: isDarkMode ? 'light' : "dark",
+    },
+  });
   return (
-    <BrowserRouter>
-      <Router />
-      <Toaster />
-    </BrowserRouter>
+    <ThemeProvider theme={darkTheme}>
+      <BrowserRouter>
+        <div className={isDarkMode ? "" : "dark"}>
+          <Router />
+          <Toaster />
+        </div>
+
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

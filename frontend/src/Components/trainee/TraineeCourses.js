@@ -1,7 +1,7 @@
-import React from 'react'
-import image from '../../images/multimedia-courses-scope-and-career 1.png'
-import image2 from '../../images/BA-Courses 1.png'
-import TraineeCourse from '../TraineeCourse'
+import React from "react";
+import image from "../../images/multimedia-courses-scope-and-career 1.png";
+import image2 from "../../images/BA-Courses 1.png";
+import TraineeCourse from "../TraineeCourse";
 
 export default function TraineeCourses() {
   return (
@@ -15,5 +15,5 @@ export default function TraineeCourses() {
       <TraineeCourse id={'6'} image={image2} name={'Soft skills'} />
       </div>
     </>
-  )
+  );
 }

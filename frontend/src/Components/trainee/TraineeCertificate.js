@@ -45,7 +45,7 @@ export default function TraineeCertificate() {
       <div className="flex flex-wrap gap-4">
         {certificateArray.map((cer)=>{
           return(
-            <div key={cer.id} className="bg-white shadow-md rounded p-4">
+            <div key={cer.id} className="bg-white dark:bg-DarkSecondary shadow-md rounded p-4">
               <img src={cer.image} alt={cer.title} className="w-[270px] h-40 object-cover rounded-t"/>
               <h5 className="text-lg font-semibold m-2">{cer.title}</h5>
               <p className="text-sm font-semibold m-2">{cer.description}</p>

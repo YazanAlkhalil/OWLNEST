@@ -22,12 +22,12 @@ function Lesson({item,sortable}) {
     }
     if (!sortable) {
       return <div
-      className='bg-gray-50 hover:cursor-pointer hover:bg-gray-200 text-black border flex justify-between items-center mb-2 p-2 rounded'>
+      className='group dark:bg-DarkSecondary dark:hover:bg-DarkGrayHover dark:text-white bg-gray-50 hover:cursor-pointer hover:bg-gray-200 text-black border flex justify-between items-center mb-2 p-2 rounded'>
                 <div className="flex items-center">
           {getIcon(item.type)}
           <h4 className='ml-2 text-xl'>{item.title}</h4>
         </div>
-        <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-white rounded-full bg-red-300 hover:bg-red-500' />
+        <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-transparent  group-hover:text-red-500  rounded-full ' />
       </div>
     }
     return <div style={style} ref={setNodeRef} {...attributes} {...listeners}

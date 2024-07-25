@@ -32,6 +32,8 @@ import TraineePdf from "./Components/trainee/TraineePdf";
 import LandingPage from "./Pages/LandingPage";
 import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
 import NewPassword from "./Components/AuthComponents/NewPassword";
+import SettingsLayout from "./Components/SettingsLayout";
+import SettingGeneral from "./Pages/SettingGeneral";
 
 export default function Router() {
   return (
@@ -45,10 +47,13 @@ export default function Router() {
       <Route path="/company" element={<CompanyPage />} />
       <Route path="/forgetPassEmail" element={<FoegetPassEmail />} />
       <Route path="/newPassword/api/password_reset/:uuid/:token" element={<NewPassword />} />
+      {/* settings */}
+      <Route path="/settings" element={<SettingsLayout />} >
+        <Route path="/settings/general" element={<SettingGeneral />} />
+      </Route>
 
       <Route path="/trainee" element={<TraineeLayout />}>
         <Route path="/trainee/homePage" element={<TranieeDashboard />} />
-
         <Route path="/trainee/courses" element={<TraineeCourses />}>
         </Route>
         <Route path="/trainee/favorites" element={<TraineeFavorites />} />

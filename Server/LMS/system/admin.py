@@ -23,7 +23,9 @@ from system.models.Pdf import Pdf
 from system.models.Video import Video
 from system.models.Test import Test
 from system.models.Question import Question
-from system.models.Answer import Answer 
+from system.models.Answer import Answer
+from system.models.Temp_unit import Temp_Unit
+from system.models.Temp_Content import Temp_Content
 from system.models.Additional_Resources import Additional_Resources
 
 from system.models.Comment import Comment
@@ -59,7 +61,9 @@ admin.site.register(Pdf)
 admin.site.register(Video)
 admin.site.register(Test)
 admin.site.register(Question)
-admin.site.register(Answer) 
+admin.site.register(Answer)
+admin.site.register(Temp_Unit)
+admin.site.register(Temp_Content)
 admin.site.register(Additional_Resources)
 
 admin.site.register(Comment)

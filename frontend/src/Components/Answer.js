@@ -12,7 +12,7 @@ const Answer = ({ answerData, updateAnswer,deleteAnswer }) => {
   return (
     <div className='mb-4'>
       <div className='flex items-end justify-between gap-5'>
-        <div className="flex w-min items-center border-b border-primary-500 py-2">
+        <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
           <input placeholder="answer" value={answerData.text} onChange={updateText} className="text-xl appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" aria-label="lesson name" />
         </div>
         <div className="flex items-center ">

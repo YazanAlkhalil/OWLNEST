@@ -9,7 +9,7 @@ const TrainerLayout = () => {
         { name: "courses", url: "/trainer/courses" },
         { name: "inprogress", url: "/trainer/inprogress" },
       ]} />
-      <div className="h-screen col-span-5 overflow-auto flex flex-col grow-[24]">
+      <div className="dark:bg-Gray dark:text-white h-screen col-span-5 overflow-auto flex flex-col grow-[24]">
         <Navbar highlight='trainer' />
         <main className="flex-1 p-8 overflow-auto">
           <Outlet />

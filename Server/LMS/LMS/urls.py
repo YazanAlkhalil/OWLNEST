@@ -41,8 +41,8 @@ urlpatterns = [
     path('api/', include('system.urls.urls')),
     path('api/', include('rest_framework.urls')),
     path('api/', include('system.urls.Company')),
-    path('api/', include('system.urls.Temp_unit')),
-    path('api/', include('system.urls.Unit'))
+    path('api/', include('system.urls.Unit')),
+    path('api/', include('system.urls.Content'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

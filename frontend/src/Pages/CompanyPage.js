@@ -18,13 +18,14 @@ export default function CompanyPage() {
         headers:{}
       })
       console.log(res);
+      localStorage.setItem('username', res.username)
     }
     getCompany();
   },[])
   return (
     <>
     <Navbar2 name={resData?.username}/>
-    <div className="container mx-auto">
+    <div className="container mx-auto bg-Gray h-screen dark:text-white">
         <h1 className='font-black text-4xl p-8'>Companies:</h1>
         {
           resData ? 

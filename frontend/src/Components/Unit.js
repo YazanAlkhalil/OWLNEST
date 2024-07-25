@@ -48,7 +48,7 @@ function Unit({ item,sortable,uploadVideo,uploadPDF,createQuiz }) {
         >
           add lesson
         </button>
-        <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-white rounded-full bg-red-300 hover:bg-red-500' />
+        <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-red-500 rounded-full  ' />
         </div>
         <div
           ref={overlayRef}
