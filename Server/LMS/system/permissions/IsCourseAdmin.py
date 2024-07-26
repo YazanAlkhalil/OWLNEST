@@ -12,10 +12,12 @@ class IsCourseAdmin(permissions.BasePermission):
         if isinstance(obj, Course):
             # Check if the user is the admin or a trainer of the course
             if request.user.is_admin:
-                return obj.admin_contract.admin == request.user.admin
+                if obj.admin_contract.employed:
+                    return obj.admin_contract.admin == request.user.admin
             return False
         elif isinstance(obj, Unit) or isinstance(obj, Temp_Unit):
             # Check if the user is the admin or a trainer of the course
             if request.user.is_admin:
-                return obj.course.admin_contract.admin == request.user.admin
+                if obj.course.admin_contract.employed:
+                    return obj.course.admin_contract.admin == request.user.admin
             return False
