@@ -8,6 +8,5 @@ from authentication.models.User import User
 
 class Courses_In_Plane(models.Model):
       company_plane = models.ForeignKey(Company_Planes, on_delete=models.CASCADE)
-      course = models.ForeignKey(Course, on_delete=models.CASCADE,unique=True)
+      course = models.OneToOneField(Course, on_delete=models.CASCADE)
       added_in = models.DateField(auto_now_add=True)
-      user = models.ForeignKey(User, on_delete=models.CASCADE)
