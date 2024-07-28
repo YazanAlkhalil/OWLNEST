@@ -10,7 +10,7 @@ const AdminLayout = () => {
         { name: "courses", url: "/admin/courses" },
         { name: "users", url: "/admin/users" },
       ]} />
-      <div className="h-screen col-span-5 flex flex-col grow-[24]">
+      <div className="dark:bg-Gray dark:text-white h-screen col-span-5 flex flex-col grow-[24]">
         <Navbar highlight='admin'/>
         <main className="flex-1 p-8 overflow-auto">
           <Outlet />

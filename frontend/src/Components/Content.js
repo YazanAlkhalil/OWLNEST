@@ -12,13 +12,13 @@ function getIcon(icon) {
 export default function Content({ unit, lessons }) {
     const navigate = useNavigate();
   return (
-    <div className="m-3">
+    <div className="m-3 ">
       <h1 className="mb-4 font-semibold text-xl">{unit} :</h1>
       {lessons.map((les) => {
         return (
           <div
             key={les.id}
-            className="flex justify-between bg-gray-300 px-6 py-3 mb-4 hover:cursor-pointer"
+            className="flex dark:bg-DarkSecondary justify-between bg-gray-300 px-6 py-3 mb-4 hover:cursor-pointer"
             onClick={les.type === 'video'
                ? ()=>  navigate('/trainee/courses/:id/content/lesson') 
                : les.type === 'pdf' ?  ()=> navigate('/trainee/courses/:id/content/Text') 

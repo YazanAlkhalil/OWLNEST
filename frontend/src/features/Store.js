@@ -6,7 +6,7 @@ import ResendReducer from "./Auth/ResendOtpSlice";
 import ForgetPasswordReducer from "./Auth/ForgetPasswordSlice";
 import CompanyReducer from "./Auth/CompanySlice";
 import { RequestEmailSlice } from "./Auth/RequestEmail";
-
+import themeReducer from './DarkMode/DarkModeSlice'
 
 
 const store = configureStore({
@@ -18,6 +18,7 @@ const store = configureStore({
         forgetPassword:  ForgetPasswordReducer,
         newCompany:  CompanyReducer,
         requestEmail: RequestEmailSlice.reducer,
+        theme: themeReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

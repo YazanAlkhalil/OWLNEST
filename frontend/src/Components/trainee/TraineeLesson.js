@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@mui/material";
@@ -8,8 +8,23 @@ import { useNavigate } from "react-router-dom";
 export default function TraineeVideoLesson() {
   const navigate = useNavigate();
   const onGoBackClick = () => {
-    navigate('/trainee/courses/:id/content')
+    navigate("/trainee/courses/:id/content");
   };
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://127.0.0.1:8000/ws/course/1/content/1");
+
+ 
+    socket.onclose = function (e) {
+      console.error("WebSocket closed unexpectedly");
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+
   return (
     <div>
       <FontAwesomeIcon
@@ -46,15 +61,16 @@ export default function TraineeVideoLesson() {
           variant="outlined"
           sx={{
             backgroundColor: "#001F34",
-            color: "white", 
+            color: "white",
             borderColor: "#001F34",
-            fontWeight: 'bold', 
+            fontWeight: "bold",
             "&:hover": {
-              color: "black", 
-              backgroundColor : "#3F6188"
+              color: "black",
+              backgroundColor: "#3F6188",
             },
           }}
-          endIcon={<IoCheckmarkDoneSharp />}>
+          endIcon={<IoCheckmarkDoneSharp />}
+        >
           Mark as Completed
         </Button>
       </div>

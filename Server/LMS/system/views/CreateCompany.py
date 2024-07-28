@@ -38,7 +38,7 @@ class CreateCompanyView(APIView):
             }
             wallet = Wallet.objects.create(**wallet_data)
             
-            company_data = request.data
+            company_data = request.data.copy()
             company_data.pop('user', None) 
             company_data['owner'] = owner.id
             
@@ -211,7 +211,7 @@ class CompanyUsers(APIView):
             if Owner.objects.filter(user=user).exists():
                 owner = Owner.objects.get(user=user)
                 if Company.objects.filter(owner=owner,id=company.id).exists():
-                    # company = Company.objects.get(owner=owner,id=company.id)
+                    company = Company.objects.get(owner=owner,id=company.id)
                     users = {}
                     for admin_contract in Admin_Contract.objects.filter(company=company):
                         if admin_contract.employed is True:

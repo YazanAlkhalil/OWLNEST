@@ -2,11 +2,13 @@ import React from 'react'
 import Card from '../../Components/Card'
 import ChartExample from '../../Components/Chart'
 import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux';
 
 
 
 
 function AdminDashboard() {
+  const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   return (
     <div className='flex flex-col h-full'>
         <div className='flex justify-between items-center'>
@@ -22,7 +24,7 @@ function AdminDashboard() {
         <Card title={'Trainers'} value={"134"} />
         <Card title={'Admins'} value={"32"} />
         <Card title={'Total Course Completions'} value={"1002"} /> */}
-        <div className='flex text-lg bg-secondary text-white  justify-around w-full py-4 rounded'>
+        <div className='flex text-lg bg-secondary dark:bg-DarkSecondary text-white  justify-around w-full py-4 rounded'>
             <div className='flex flex-col items-center'>
                 <div>Trainees</div>
                 <div>234</div>
@@ -44,6 +46,7 @@ function AdminDashboard() {
         </div>
         <ChartExample options={{
     height: 380,
+    theme: !isDarkMode ? 'ag-default-dark' : 'ag-default',
     title: {
       text: "Courses Completions",
     },

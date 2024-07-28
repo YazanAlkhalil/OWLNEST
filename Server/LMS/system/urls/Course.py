@@ -1,28 +1,63 @@
 from django.urls import path
-from ..views.Course import CompanyCourseList, CompanyCourseCreate, CompanyCourseRetrieve, CompanyCourseUpdate, CompanyCourseDelete, CompanyCourseRetriveInfo
+from ..views.Course import CompanyCourseList, CompanyCourseListPending, CompanyCourseListInProgress, CompanyCourseRetrieveInProgress, CompanyCourseCreate, CompanyCoursePublish, CompanyCourseApprove, CompanyCourseRetrieve, CompanyCourseSetTrainerLeader, CompanyCourseRetrievePartandNotPartUsers, CompanyCourseUpdate, CompanyCourseDelete, CompanyCourseRetriveInfo, CompanyCourseRetrievePending
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path(
-        'admin/company/<int:company_id>/courses/', 
+        'admin/company/<int:company_id>/courses', 
         CompanyCourseList.as_view(), 
         name='company-course-admin-list'
     ),
     path(
-        'trainer/company/<int:company_id>/courses/', 
+        'trainer/company/<int:company_id>/courses', 
         CompanyCourseList.as_view(), 
         name='company-course-trainer-list'
     ),
     path(
-        'trainee/company/<int:company_id>/courses/', 
+        'trainee/company/<int:company_id>/courses', 
         CompanyCourseList.as_view(), 
         name='company-course-trainee-list'
+    ),
+    path(
+        'owner/company/<int:company_id>/courses', 
+        CompanyCourseList.as_view(), 
+        name='company-course-owner-list'
+    ),
+    path(
+        'admin/company/<int:company_id>/pending_courses', 
+        CompanyCourseListPending.as_view(), 
+        name='company-pending-course-admin-list'
+    ),
+    path(
+        'trainer/company/<int:company_id>/progress_courses', 
+        CompanyCourseListInProgress.as_view(), 
+        name='company-progress-course-trainer-list'
     ),
     path(
         'admin/company/<int:company_id>/courses/create', 
         CompanyCourseCreate.as_view(), 
         name='company-course-admin-create'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/publish', 
+        CompanyCoursePublish.as_view(), 
+        name='company-course-trainer-publish'
+    ),
+    path(
+        'admin/company/<int:company_id>/courses/<int:course_id>/approve', 
+        CompanyCourseApprove.as_view(), 
+        name='company-course-admin-approve'
+    ),
+    path(
+        'admin/company/<int:company_id>/pending_courses/<int:course_id>', 
+        CompanyCourseRetrievePending.as_view(), 
+        name='company-pending-course-admin-retrive'
+    ),
+    path(
+        'trainer/company/<int:company_id>/progress_courses/<int:course_id>', 
+        CompanyCourseRetrieveInProgress.as_view(), 
+        name='company-progress-course-trainer-retrive'
     ),
     path(
         'admin/company/<int:company_id>/courses/<int:course_id>', 
@@ -38,6 +73,31 @@ urlpatterns = [
         'trainee/company/<int:company_id>/courses/<int:course_id>', 
         CompanyCourseRetrieve.as_view(), 
         name='company-course-trainee-retrive'
+    ),
+    path(
+        'owner/company/<int:company_id>/courses/<int:course_id>', 
+        CompanyCourseRetrieve.as_view(), 
+        name='company-course-owner-retrive'
+    ),
+    path(
+        'owner/company/<int:company_id>/courses/<int:course_id>/set_trainer_leader',
+        CompanyCourseSetTrainerLeader.as_view(),
+        name='company-course-owner-set-leader'
+    ),
+    path(
+        'admin/company/<int:company_id>/courses/<int:course_id>/set_trainer_leader',
+        CompanyCourseSetTrainerLeader.as_view(),
+        name='company-course-admin-set-leader'
+    ),
+    path(
+        'admin/company/<int:company_id>/courses/<int:course_id>/part_not_part_users', 
+        CompanyCourseRetrievePartandNotPartUsers.as_view(), 
+        name='company-course-admin-retrive-part-not-part-users'
+    ),
+    path(
+        'owner/company/<int:company_id>/courses/<int:course_id>/part_not_part_users', 
+        CompanyCourseRetrievePartandNotPartUsers.as_view(), 
+        name='company-course-owner-retrive-part-not-part-users'
     ),
     path(
         'admin/company/<int:company_id>/courses/<int:course_id>/update', 
@@ -63,7 +123,7 @@ urlpatterns = [
         'trainer/company/<int:company_id>/courses/<int:course_id>/info',
         CompanyCourseRetriveInfo.as_view(),
         name='company-course-trainer-info'
-    ),
+    ),  
     path(
         'trainee/company/<int:company_id>/courses/<int:course_id>/info',
         CompanyCourseRetriveInfo.as_view(),

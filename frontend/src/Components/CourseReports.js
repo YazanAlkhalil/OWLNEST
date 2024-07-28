@@ -1,8 +1,11 @@
 import React from 'react'
 import ChartExample from './Chart'
 import Card from './Card'
+import { useSelector } from 'react-redux';
 
 function CourseReports({admin}) {
+  const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+
   return (
     <div className='flex flex-col'>
 
@@ -21,6 +24,8 @@ function CourseReports({admin}) {
     title: {
       text: "XP gains for trainees",
     },
+    theme: !isDarkMode ? 'ag-default-dark' : 'ag-default',
+
     data: [
         { month: "Jan", "XP gains": 200 },
         { month: "Feb", "XP gains": 210 },

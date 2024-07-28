@@ -74,10 +74,10 @@ export default function FormDialog({question,addQuestion}) {
                 <DialogContent >
                     <div className='flex'>
 
-                        <div className="flex w-min items-center border-b border-primary-500 py-2">
+                        <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
                             <input value={questionData.text} onChange={e => setQuestionData({...questionData,text:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Question" aria-label="question" />
                         </div>
-                        <div className="flex w-min items-center border-b border-primary-500 py-2">
+                        <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
                             <input value={questionData.grade} onChange={e => setQuestionData({...questionData,grade:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Grade" aria-label="grade" />
                         </div>
                     </div>

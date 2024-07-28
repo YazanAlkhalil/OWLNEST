@@ -1,8 +1,13 @@
 from django.db import models
-from system.models.Content import Content
+from ..models.Content import Content
+from ..models.Temp_Content import Temp_Content
 
 class Pdf(models.Model):
-  content = models.ForeignKey(Content, on_delete=models.CASCADE)
-  file_path = models.FileField()
-  def __str__(self):
-    return self.file_path
+    # file will be uploaded to MEDIA_ROOT/pdf_<pdf-id>/<filename>
+    def pdf_file_path(instance, filename):
+        return f'pdf_{instance.id}/{filename}'
+    content = models.OneToOneField(Content, on_delete=models.CASCADE, null=True)
+    temp_content = models.OneToOneField(Temp_Content, on_delete=models.CASCADE, null=True)
+    file_path = models.FileField(upload_to=pdf_file_path)
+    def __str__(self):
+        return self.file_path

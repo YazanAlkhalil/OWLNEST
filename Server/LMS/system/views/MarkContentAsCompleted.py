@@ -29,4 +29,10 @@ class MarkContentView(CreateAPIView):
           serialized_data = MarkContentSerializer(data = data)
           serialized_data.is_valid(raise_exception= True)
           serialized_data.save()
+          #return appropriate response if the enrollment passed 
+          if  enrollment.progress == 100 :
+               return Response({"message":"course completed"}, 200)
+          
+
+          
           return Response({"message":"the content marked as complete"},status.HTTP_200_OK)

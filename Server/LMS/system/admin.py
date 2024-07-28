@@ -1,18 +1,16 @@
 from django.contrib import admin
 from system.models.Admin import Admin
 from system.models.Admin_Contract import Admin_Contract
-from system.models.Admin_Notification import Admin_Notification
-from system.models.Owner import Owner
-from system.models.Owner_Notification import Owner_Notification
+from system.models.Notification import Notification
+from system.models.Owner import Owner 
 from system.models.Trainer import Trainer
-from system.models.Trainer_Contract import Trainer_Contract
-from system.models.Trainer_Notification import Trainer_Notfication
+from system.models.Trainer_Contract import Trainer_Contract 
 from system.models.Trainee import Trainee
-from system.models.Trainee_Contract import Trainee_Contract
-from system.models.Trainee_Notification import Trainee_Notification
+from system.models.Trainee_Contract import Trainee_Contract 
 from system.models.Company import Company
 from system.models.Planes import Planes
 from system.models.Company_Planes import Company_Planes
+from system.models.Courses_In_Plane import Courses_In_Plane
 from system.models.Deposit import Deposit
 from system.models.Wallet import Wallet
 from system.models.Withdraw import Withdraw
@@ -26,7 +24,9 @@ from system.models.Pdf import Pdf
 from system.models.Video import Video
 from system.models.Test import Test
 from system.models.Question import Question
-from system.models.Answer import Answer 
+from system.models.Answer import Answer
+from system.models.Temp_unit import Temp_Unit
+from system.models.Temp_Content import Temp_Content
 from system.models.Additional_Resources import Additional_Resources
 
 from system.models.Comment import Comment
@@ -44,15 +44,12 @@ from system.models.Skill import Skill
 # Register your models here.
 admin.site.register(Admin)
 admin.site.register(Admin_Contract)
-admin.site.register(Admin_Notification)
-admin.site.register(Owner)
-admin.site.register(Owner_Notification)
+admin.site.register(Notification)
+admin.site.register(Owner) 
 admin.site.register(Trainer)
-admin.site.register(Trainer_Contract)
-admin.site.register(Trainer_Notfication)
+admin.site.register(Trainer_Contract) 
 admin.site.register(Trainee)
-admin.site.register(Trainee_Contract)
-admin.site.register(Trainee_Notification)
+admin.site.register(Trainee_Contract) 
 admin.site.register(Company)
 admin.site.register(Company_Planes)
 admin.site.register(Planes)
@@ -65,7 +62,9 @@ admin.site.register(Pdf)
 admin.site.register(Video)
 admin.site.register(Test)
 admin.site.register(Question)
-admin.site.register(Answer) 
+admin.site.register(Answer)
+admin.site.register(Temp_Unit)
+admin.site.register(Temp_Content)
 admin.site.register(Additional_Resources)
 
 admin.site.register(Comment)

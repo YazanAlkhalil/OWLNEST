@@ -1,6 +1,6 @@
 import React from 'react'
 import BasicTable from './Table'
-import image from '../images/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.avif'
+import image from '../images/simple-user-default-icon-free-png.webp'
 function CourseTrainees() {
   return (
     <div className='text-2xl'>

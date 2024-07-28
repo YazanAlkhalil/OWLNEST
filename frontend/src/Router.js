@@ -32,6 +32,8 @@ import TraineePdf from "./Components/trainee/TraineePdf";
 import LandingPage from "./Pages/LandingPage";
 import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
 import NewPassword from "./Components/AuthComponents/NewPassword";
+import SettingsLayout from "./Components/SettingsLayout";
+import SettingGeneral from "./Pages/SettingGeneral";
 
 export default function Router() {
   return (
@@ -45,10 +47,13 @@ export default function Router() {
       <Route path="/company" element={<CompanyPage />} />
       <Route path="/forgetPassEmail" element={<FoegetPassEmail />} />
       <Route path="/newPassword/api/password_reset/:uuid/:token" element={<NewPassword />} />
+      {/* settings */}
+      <Route path="/settings" element={<SettingsLayout />} >
+        <Route path="/settings/general" element={<SettingGeneral />} />
+      </Route>
 
       <Route path="/trainee" element={<TraineeLayout />}>
         <Route path="/trainee/homePage" element={<TranieeDashboard />} />
-
         <Route path="/trainee/courses" element={<TraineeCourses />}>
         </Route>
         <Route path="/trainee/favorites" element={<TraineeFavorites />} />
@@ -60,12 +65,11 @@ export default function Router() {
       </Route>
 
       <Route path="/trainee/courses/:id" element={<CourseLayout />}>
-        <Route path="/trainee/courses/:id" element={<Navigate to="/trainee/courses/:id/content" replace />} />
-        <Route path="/trainee/courses/:id/content" element={<TraineeCourseDisplay />} />
-        <Route path="/trainee/courses/:id/content/lesson" element={<TraineeVideoLesson />} />
-        <Route path="/trainee/courses/:id/progress" element={<TraineeProgress />} />
-        <Route path="/trainee/courses/:id/discussion" element={<TraineeDiscussion />} />
-        <Route path="/trainee/courses/:id/Info" element={<TraineeInfor />} />
+        <Route path="content" element={<TraineeCourseDisplay />} />
+        <Route path="content/lesson" element={<TraineeVideoLesson />} />
+        <Route path="progress" element={<TraineeProgress />} />
+        <Route path="discussion" element={<TraineeDiscussion />} />
+        <Route path="Info" element={<TraineeInfor />} />
       </Route>
 
         <Route path="/trainee/courses/:id/content/quiz" element={<TraineeQuiz />} />
