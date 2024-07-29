@@ -54,18 +54,19 @@ class BuyPlane(APIView):
                 plane = Planes.objects.get(id=plane)
                 wallet = Wallet.objects.get(owner=owner)
                 if wallet.balance < plane.price:
-                    return Response({'message':'not enough balance'}, status = 403)
-                wallet.balance = decimal.Decimal(wallet.balance) - plane.price
-                wallet.save()
-                companyPlaneData = {
+                    return Response({'message':'you don\'t have enough money to buy this plan'}, status = 403)
+                if wallet.balance >= decimal.Decimal(wallet.balance) - plane.price:
+                    companyPlaneData = {
                     'plane': plane.id,
                     'company': company.id,
-                }
-                serializer = CompanyPlaneSerializer(data = companyPlaneData)
-                if serializer.is_valid(): 
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-                
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        }
+                    serializer = CompanyPlaneSerializer(data = companyPlaneData)
+                    if serializer.is_valid(): 
+                        serializer.save()
+                        wallet.balance = decimal.Decimal(wallet.balance) - plane.price
+                        wallet.save()
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message':'you don\'t have enough money to buy this plan'})
             return Response({'message':'you are not authorized to make this action'},status=403)
         return Response({'message':'user not found '}, status = 403)

@@ -11,7 +11,7 @@ class PlaneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Planes
-        fields = ('id', 'plane_name', 'subscription_term', 'courses_number', 'price', 'additional_course_price')
+        fields = ('id', 'plane_name', 'subscription_term', 'courses_number', 'price')
 
     def get_subscription_term(self, obj):
         # Assuming subscription_term is a timedelta object

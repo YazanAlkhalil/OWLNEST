@@ -59,11 +59,11 @@ urlpatterns = [
         AddAdmin.as_view(),
         name='add_admin'),
 
-    # path('planes/',
-    #     GetPlanes.as_view(),
-    #     name='planes'),
+    path('planes/',
+        GetPlanes.as_view(),
+        name='planes'),
 
-    # path('buyPlane/',
-    #     BuyPlane.as_view(),
-    #     name='buyPlane'),
+    path('buyPlane/',
+        BuyPlane.as_view(),
+        name='buyPlane'),
 ]
