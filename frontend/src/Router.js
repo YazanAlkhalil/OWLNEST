@@ -65,12 +65,11 @@ export default function Router() {
       </Route>
 
       <Route path="/trainee/courses/:id" element={<CourseLayout />}>
-        <Route path="/trainee/courses/:id" element={<Navigate to="/trainee/courses/:id/content" replace />} />
-        <Route path="/trainee/courses/:id/content" element={<TraineeCourseDisplay />} />
-        <Route path="/trainee/courses/:id/content/lesson" element={<TraineeVideoLesson />} />
-        <Route path="/trainee/courses/:id/progress" element={<TraineeProgress />} />
-        <Route path="/trainee/courses/:id/discussion" element={<TraineeDiscussion />} />
-        <Route path="/trainee/courses/:id/Info" element={<TraineeInfor />} />
+        <Route path="content" element={<TraineeCourseDisplay />} />
+        <Route path="content/lesson" element={<TraineeVideoLesson />} />
+        <Route path="progress" element={<TraineeProgress />} />
+        <Route path="discussion" element={<TraineeDiscussion />} />
+        <Route path="Info" element={<TraineeInfor />} />
       </Route>
 
         <Route path="/trainee/courses/:id/content/quiz" element={<TraineeQuiz />} />

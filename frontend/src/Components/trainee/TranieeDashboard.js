@@ -1,35 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../Card";
 import ChartExample from "../Chart";
 import SimpleCard from "../SimpleCard";
 import SkillesProgress from "../SkillesProgress";
+import useFetch from "../AuthComponents/UseFetch";
 import { useSelector } from "react-redux";
 
-const finshidCourse = {
-    id: 1,
-    title: "Finished Courses",
-    value: "5",
-}
-const inProgressCourse = {
-    id: 1,
-    title: "In Progress Courses",
-    value: "2",
-}
-const pendingCourse = {
-    id: 1,
-    title: "Pending Courses",
-    value: "3",
-}
 
 export default function TranieeDashboard() {
+  const { fetchData, resData } = useFetch();
+  const companyId = localStorage.getItem('companyId');
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+
+
+  useEffect(()=>{
+    async function getData() {
+      const res = await fetchData({ url: 'http://127.0.0.1:8000/api/trainee/company/'+companyId+'/dashboard', method: 'get' });
+      console.log(res);
+    }
+    getData();
+    },[])
 
   return (
     <>
       <div className="flex justify-evenly flex-wrap gap-7">
-        <Card title={'XP'} value={'246'} />
-        <Card title={'Training Time'} value={'1h 34m'} />
-        <Card title={'Rank'} value={'#5'} />
+        <Card title={'XP'} value={resData?.xp} />
+        <Card title={'Training Time'} value={resData?.training_time} />
+        <Card title={'Rank'} value={resData?.rank} />
       </div>
       <div className="mt-6">
         <ChartExample
@@ -39,16 +36,10 @@ export default function TranieeDashboard() {
               text: "Daily XP Gains",
             },
             theme: !isDarkMode ? 'ag-default-dark' : 'ag-default',
+            data: resData?.daily_xp.map((item)=>{
+              return { xp: item.day, Xp: item.xp }
 
-            data: [
-              { xp: "MON", Xp: 2000 },
-              { xp: "TUE", Xp: 1500 },
-              { xp: "WED", Xp: 1000 },
-              { xp: "THU", Xp: 500 },
-              { xp: "FRI", Xp: 600 },
-              { xp: "sat", Xp: 700 },
-              { xp: "sun", Xp: 800 },
-            ],
+            }),
             series: [
               {
                 type: "area",
@@ -61,9 +52,9 @@ export default function TranieeDashboard() {
         />
       </div>
       <div className="flex mt-20 justify-evenly flex-wrap gap-7">
-        <SimpleCard values={finshidCourse} />
-        <SimpleCard values={inProgressCourse} />
-        <SimpleCard values={pendingCourse} />
+        <SimpleCard title={"finished courses"} value={resData?.finished_courses} />
+        <SimpleCard title={"in progress courses"} value={resData?.in_progress_courses} />
+        <SimpleCard title={"pending courses"} value={resData?.pending_courses} />
       </div>
       <div className="mt-20 p-10">
         <h1 className="text-3xl font-black">Skills :</h1>

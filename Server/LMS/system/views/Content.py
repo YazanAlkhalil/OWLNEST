@@ -3,7 +3,6 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import get_object_or_404
 # models
 from ..models.Temp_unit import Temp_Unit
 from ..models.Temp_Content import Temp_Content
@@ -29,7 +28,7 @@ class ContentList(generics.ListAPIView):
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
     # set the lookup field to match the URL keyword argument
-    lookup_url_kwarg = 'content_id'
+    lookup_url_kwarg = 'unit_id'
     # Document the view
     # @swagger_auto_schema(
     #     operation_description='for presenting the list of courses for a specific company showing only the important data',
@@ -38,9 +37,12 @@ class ContentList(generics.ListAPIView):
     # def get(self, request, *args, **kwargs):
     #     return super().get(request, *args, **kwargs)
     def get_queryset(self):
-        course_id = self.kwargs['course_id']
-        content_id = self.kwargs['content_id']
-        return Content.objects.filter(id=content_id)
+        unit_id = self.kwargs['unit_id']
+        try:
+            content = Content.objects.filter(unit=unit_id)
+        except Content.DoesNotExist:
+            raise ValidationError('No content for this unit')
+        return content
 
 # GET: api/admin/company/:company_id/courses/:course_id/unit/:unit_id/contents
 # GET: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents
@@ -60,7 +62,11 @@ class ContentRetrieve(generics.RetrieveAPIView):
     #     return super().get(request, *args, **kwargs)
     def get_queryset(self):
         content_id = self.kwargs['content_id']
-        return Content.objects.get(id=content_id)
+        try:
+            content = Content.objects.filter(id=content_id)
+        except Content.DoesNotExist:
+            raise ValidationError('No such content for this unit')
+        return content
 
 # POST : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/content
 class ContentCreate(generics.CreateAPIView):

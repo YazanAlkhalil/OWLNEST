@@ -2,19 +2,8 @@
 from rest_framework import serializers
 # models
 from ..models.Trainer_Contract import Trainer_Contract
-from ..models.Trainer import Trainer
-from authentication.models.User import User
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username']
-
-class TrainerSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    class Meta:
-        model = Trainer
-        fields = '__all__'
+# serializer
+from .Course import TrainerSerializer
 
 class Trainer_Contract_Serializer(serializers.ModelSerializer):
     trainer = TrainerSerializer(read_only=True)

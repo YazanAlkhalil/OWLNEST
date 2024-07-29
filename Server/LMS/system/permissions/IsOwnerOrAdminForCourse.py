@@ -7,9 +7,7 @@ class IsOwnerOrAdminForCourse(BasePermission):
         # Get the course ID from the URL parameters
         course_id = view.kwargs.get('course_id')
         if request.user.is_admin:
-            return Admin_Contract.objects.filter(admin=request.user.admin, course=course_id).exists()
+            return Admin_Contract.objects.filter(admin=request.user.admin, course=course_id, employed=True).exists()
         elif request.user.is_owner:
-            course = Course.objects.filter(id=course_id)
-            return course.owner.user == request.user
-        else:
-            return False
+            return Course.objects.filter(id=course_id).owner.user == request.user
+        return False
