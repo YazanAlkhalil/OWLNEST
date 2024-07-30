@@ -215,7 +215,7 @@ class AddUser(APIView):
                         if Trainee_Contract.objects.filter(trainee= trainee ,company=company) :
                             contract = Trainee_Contract.objects.get(trainee=trainee,company=company.id)
                             if contract.employed is False:
-                                contract.employed=True
+                                contract.employed=Trueئ
                                 contract.save()
                                 user.is_trainee = True
                                 user.save()

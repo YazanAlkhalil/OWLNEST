@@ -5,6 +5,7 @@ from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings 
 from authentication.models import User 
+from authentication.models import User 
 from rest_framework.authentication import BaseAuthentication
 def createAccessToken(id):
     return jwt.encode({
@@ -55,6 +56,7 @@ class JWTAuthenticationBackEnd(BaseAuthentication):
             except User.DoesNotExist:
                 return None
         except jwt.ExpiredSignatureError:
+            print("EXPIRED")
             print("EXPIRED")
             return None
         except jwt.InvalidTokenError:

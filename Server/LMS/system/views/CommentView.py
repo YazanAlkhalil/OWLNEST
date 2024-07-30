@@ -1,5 +1,6 @@
 #DRF
 from rest_framework.generics import ListCreateAPIView , CreateAPIView
+from rest_framework.generics import ListCreateAPIView , CreateAPIView
 from rest_framework.response import Response
 #serializers
 from system.serializers.CommentSerializer import CommentSerializer
@@ -27,6 +28,5 @@ class ListCreateCommentView(ListCreateAPIView):
             }
             serialized_comment = CommentSerializer(data = data)
             serialized_comment.is_valid(raise_exception=True)
-            serialized_comment.save()
             return Response(serialized_comment.data) 
        

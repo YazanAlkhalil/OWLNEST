@@ -19,5 +19,5 @@ class NotificationList(APIView):
         for notification in notifications:
             notification.is_read = True
             notification.save()
-
+z 
         return response
