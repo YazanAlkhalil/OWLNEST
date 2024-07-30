@@ -58,6 +58,20 @@ class CreateCompanyView(APIView):
         return Response({'message': 'user not found'}, status=401)
 
 
+class GetCompanyData(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            user = request.user
+            if Owner.objects.filter(user=user).exists():
+                owner = Owner.objects.get(user=user)
+                company = Company.objects.get(owner=owner)
+                return Response( CompanySerializer(company).data)
+            else:
+                return Response({'message': 'User is not an owner'},status=401)
+        else:
+            return Response({'message': 'User is not authenticated'},status=403)
+
+
 class CompanyView(APIView):
     def get(self,request):
         if request.user.is_authenticated:
