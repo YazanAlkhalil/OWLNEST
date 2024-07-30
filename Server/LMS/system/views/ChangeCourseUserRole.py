@@ -35,7 +35,7 @@ class ChangeCourseUserRole(APIView):
               trainee_contract = course.trainees.filter(trainee__user = user)
               if trainee_contract:
                  trainer,_ = Trainer.objects.get_or_create(user = user)
-                 trainer_contract,_ = Trainer_Contract.objects.get_or_create(trainer = trainer , company = course.company)
+                 trainer_contract,_ = Trainer_Contract.objects.get_or_create(trainer = trainer , company = course.company, employed =True)
                  course.trainers.add(trainer_contract)
                  course.save()
                  user.is_trainer = True

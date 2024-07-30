@@ -47,7 +47,7 @@ class AddUserToCourse(CreateAPIView):
           course = get_object_or_404(Course,id = kwargs["id"])
           user = get_object_or_404(User, email = request.data['email']) 
           trainee , _ = Trainee.objects.get_or_create(user = user)
-          trainee_contract , _ = Trainee_Contract.objects.get_or_create(trainee = trainee , company = course.company)
+          trainee_contract , _ = Trainee_Contract.objects.get_or_create(trainee = trainee , company = course.company, employed =True)
           if not course.trainees.filter(id=trainee_contract.id).exists():
                 course.trainees.add(trainee_contract)
                 course.save()
@@ -77,7 +77,7 @@ class AddUserToCourse(CreateAPIView):
 
           if request.data["role"].lower() == 'trainer':
                 trainer,_ = Trainer.objects.get_or_create(user = user)
-                trainer_contract , _ = Trainer_Contract.objects.get_or_create(trainer = trainer , company = course.company)
+                trainer_contract , _ = Trainer_Contract.objects.get_or_create(trainer = trainer , company = course.company, employed =True)
                 if not course.trainers.filter(id=trainer_contract.id).exists():
                     course.trainers.add(trainer_contract)
                     course.save()#send notify for the trainee
@@ -89,7 +89,6 @@ class AddUserToCourse(CreateAPIView):
                     "message": f"Hi, {user.username} you have been TRAINER in course {course.name} by admin {request.user.username}",
                     "company":course.company.id
                 }
-
                 notification  = NotificationSerializer(data = data)
                 notification.is_valid(raise_exception= True)
                 notification.save()
