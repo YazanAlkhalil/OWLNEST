@@ -217,7 +217,7 @@ class AddUser(APIView):
                             if contract.employed is False:
                                 contract.employed=True
                                 contract.save()
-                                user.is_trainer = True
+                                user.is_trainee = True
                                 user.save()
                                 return Response({'message': 'User added successfully'}, status=201)
                             if contract.employed is True:
