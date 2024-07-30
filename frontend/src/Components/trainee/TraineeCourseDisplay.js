@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Content from '../Content';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const lessons = [
   {
@@ -41,6 +41,8 @@ const lessons2 = [
 
 export default function TraineeCourseDisplay() {
   const navigate = useNavigate();
+  const {id} = useParams();
+  console.log(id);
   const onGoBackClick = ()=>{
     navigate('/trainee/courses');
   }
