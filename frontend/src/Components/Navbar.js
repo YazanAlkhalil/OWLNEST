@@ -66,6 +66,9 @@ function NavBar({ highlight }) {
           localStorage.setItem('isOwner', true)
           res[ownerIndex] = 'admin'
         }
+        else{
+          localStorage.setItem('isOwner', false)
+        }
         if (res.length === 1) {
           let targetPath = `/${res[0]}`;
           if (!location.pathname.startsWith(targetPath) && !location.pathname.startsWith('/settings')) {

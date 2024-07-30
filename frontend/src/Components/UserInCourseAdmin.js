@@ -80,8 +80,8 @@ function UserInCourseAdmin({ user, index, fetchUsers, isOwner }) {
             <div className={`${index % 2 === 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'} p-2 rounded-r pl-0 flex items-center gap-6 justify-start`}>
                 <CgDetailsMore className='size-6 dark:hover:bg-transparent hover:bg-white hover:cursor-pointer rounded-full p-2 box-content' />
 
-                {isOwner && <MdClose onClick={deleteUser} className='size-6 dark:hover:bg-transparent hover:bg-white hover:cursor-pointer rounded-full p-2 box-content' />}
-                <button onClick={changeRole} className='border dark:border-gray-200 dark:hover:border-white hover:border-2 rounded p-2'>{!user.roles.includes("admin") ? "Make Admin" : "Remove Admin"}</button>
+                {isOwner =="true" && <MdClose onClick={deleteUser} className='size-6 dark:hover:bg-transparent hover:bg-white hover:cursor-pointer rounded-full p-2 box-content' />}
+                {isOwner =="true" && <button onClick={changeRole} className='border dark:border-gray-200 dark:hover:border-white hover:border-2 rounded p-2'>{!user.roles.includes("admin") ? "Make Admin" : "Remove Admin"}</button>}
             </div>
         </>
     );
