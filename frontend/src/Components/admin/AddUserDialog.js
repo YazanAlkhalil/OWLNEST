@@ -17,8 +17,8 @@ export default function FormDialog({fetchUsers}) {
     const [role, setRole] = useState('')
     const [open, setOpen] = useState(false)
     const {fetchData} = UseFetch()
+    const isOwner = localStorage.getItem('isOwner')
     const companyId = localStorage.getItem('companyId')
-    console.log(companyId);
     const handleChange = (event) => {
         setRole(event.target.value);
     };
@@ -41,7 +41,7 @@ export default function FormDialog({fetchUsers}) {
         reset()
         fetchUsers()
     }
-    console.log(role);
+
     return (
         <React.Fragment>
             <div onClick={handleClickOpen}
@@ -79,7 +79,7 @@ export default function FormDialog({fetchUsers}) {
                         >
                             <MenuItem value={"Trainee"}>Trainee</MenuItem>
                             <MenuItem value={"Trainer"}>Trainer</MenuItem>
-                            <MenuItem value={"Admin"}>Admin</MenuItem>
+                            {isOwner == 'true' && <MenuItem value={"Admin"}>Admin</MenuItem>}
                         </Select>
                     </FormControl>
                 </Box>

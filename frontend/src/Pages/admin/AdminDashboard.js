@@ -8,15 +8,16 @@ import { useSelector } from 'react-redux';
 
 
 function AdminDashboard() {
+  const isOwner = localStorage.getItem('isOwner')
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   return (
     <div className='flex flex-col h-full'>
         <div className='flex justify-between items-center'>
             <span className='text-xl '>Owner: yazan Alkhalil</span>
-            <div>
+            {isOwner === 'true' && <div>
                 <span className='text-lg mr-5'>Balance: 2345$</span>
                 <NavLink to={'/admin/buyCourse'} className='bg-accent text-white p-2 rounded hover:bg-[#dea01edd]'>Buy Courses</NavLink>
-            </div>
+            </div>}
         </div>
         <div className='flex justify-evenly flex-grow my-8'>
 

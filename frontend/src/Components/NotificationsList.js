@@ -37,7 +37,7 @@ const Notification = ({ notification }) => (
 
 const NotificationList = ({ notifications }) => {
     return (
-        <div className="bg-gray-300 px-4 py-2 rounded absolute right-10 max-h-[50vh] overflow-auto w-96 mx-auto mt-4">
+        <div className="bg-gray-300 px-4 z-30 py-2 rounded absolute right-10 max-h-[50vh] overflow-auto w-96 mx-auto mt-4">
             {notifications.map((notification) => (
                 <Notification key={notification.id} notification={notification} />
             ))}
