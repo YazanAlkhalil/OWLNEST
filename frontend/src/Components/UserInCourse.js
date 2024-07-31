@@ -20,11 +20,11 @@ function UserInCourse({ user, index,getUsers }) {
     const {fetchData}=useFetch()
     const {id} = useParams()
 
-    const handleChange = (event) => {
+    const handleChange = async (event) => {
         if(!user.is_participant)
             setRole(event.target.value);
         else{
-            fetchData({url:"http://127.0.0.1:8000/api/course/"+id+"/user/change-role",method:"POST",data:{user_id:user.id,role:event.target.value}})
+            await fetchData({url:"http://127.0.0.1:8000/api/course/"+id+"/user/change-role",method:"POST",data:{user_id:user.id,role:event.target.value}})
             getUsers()
         }
         

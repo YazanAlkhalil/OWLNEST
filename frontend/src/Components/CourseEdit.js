@@ -9,14 +9,14 @@ import AdditionalInfo from './AdditionalInfo';
 import UploadVideo from './UploadVideo';
 import UploadPDF from './UploadPDF';
 import CreateQuiz from './CreateQuiz';
-import { BiArrowBack } from "react-icons/bi";
+import { MdEdit } from 'react-icons/md';
 
 function CourseEdit() {
   const [isInfo, setIsInfo] = useState(false)
-  const [course,setCourse]=useState({
+  const [course, setCourse] = useState({
     image,
-    name:'www',
-    description:"sdfa"
+    name: 'www',
+    description: "sdfa"
   })
   const [isUploadingVideo, setIsUploadingVideo] = useState(false)
   const [isUploadingPDF, setIsUploadingPDF] = useState(false)
@@ -88,23 +88,29 @@ function CourseEdit() {
     <>
       <div className='flex justify-between '>
         <div className='flex w-full'>
-          <img className='mr-4 rounded w-2/6' src={course.image} />
+          <div className='group relative mr-4 rounded w-2/6'>
+            <img className='w-full' src={course.image} />
+            <input id='courseImage' type='file' className='hidden' />
+            <label htmlFor='courseImage'>
+              <MdEdit className='hidden group-hover:block absolute -right-5 -bottom-5 p-3 box-content rounded-full bg-secondary dark:bg-DarkSecondary size-6 hover:cursor-pointer dark:hover:bg-DarkGrayHover' />
+            </label>
+          </div>
           <div className='flex-grow'>
             <h1 className='text-xl font-bold'>{course.name}</h1>
             <p className='mt-4 text-md font-light'>{course.description} </p>
           </div>
         </div>
         <div>
-          <button className='text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={() => setIsInfo(true)}>
+          <button className='text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary dark:text-white hover:text-white rounded  text-secondary' onClick={() => setIsInfo(true)}>
             info
           </button>
         </div>
       </div>
       <div className='flex justify-end mb-4'>
-        <button className='mr-2 text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' >
+        <button className='mr-2 btn-inner text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' >
           {sortable ? 'save' : 'reorder'}
         </button>
-        <FormDialog addUnit={addUnit}/>
+        <FormDialog addUnit={addUnit} />
       </div>
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <div >
@@ -112,12 +118,12 @@ function CourseEdit() {
           <div >
             <SortableContext items={content} strategy={verticalListSortingStrategy}>
               {
-              content.map((item) => {
-                if (item.type == 'unit')
-                  return <Unit key={item.id} createQuiz={() => setCreateQuiz(true)} uploadVideo={() => setIsUploadingVideo(true)} uploadPDF={() => setIsUploadingPDF(true)} sortable={sortable} item={item} />
-                else
-                  return <Lesson sortable={sortable} key={item.id} item={item} />
-              })}
+                content.map((item) => {
+                  if (item.type == 'unit')
+                    return <Unit key={item.id} createQuiz={() => setCreateQuiz(true)} uploadVideo={() => setIsUploadingVideo(true)} uploadPDF={() => setIsUploadingPDF(true)} sortable={sortable} item={item} />
+                  else
+                    return <Lesson sortable={sortable} key={item.id} item={item} />
+                })}
             </SortableContext>
           </div>
         </div>
