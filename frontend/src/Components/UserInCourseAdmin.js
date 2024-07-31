@@ -10,7 +10,7 @@ function UserInCourseAdmin({ user, index, fetchUsers, isOwner }) {
     const { fetchData } = useFetch()
     async function deleteUser() {
         fetchData({ url: "http://127.0.0.1:8000/api/delete_user/" + user.id + "/", method: "POST" })
-        fetchUsers()
+        setTimeout(()=>{ fetchUsers()},1000)
     }
     async function changeRole() {
         if (user.roles.includes("admin")) {
