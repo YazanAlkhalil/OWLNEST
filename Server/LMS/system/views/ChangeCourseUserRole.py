@@ -26,10 +26,10 @@ class ChangeCourseUserRole(APIView):
              try:
                 trainer_contract  =  course.trainers.get(trainer__user = user)
                 course.trainers.remove(trainer_contract)
-                course.save()
                 if trainer_contract.trainer_contract_course_set.all().count() == 0 : 
-                        trainer.delete()
-             except:
+                        trainer_contract.delete()
+             except Exception as r:
+                  print(r)
                   raise ValidationError({"message":"user is already trainee"})
              
           #change  trainee to trainer
