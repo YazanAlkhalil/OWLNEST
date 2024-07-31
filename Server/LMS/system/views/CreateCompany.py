@@ -116,85 +116,60 @@ class DeleteOwnerView(APIView):
         else:
             return Response({'message': 'owner not found'}, status=404)
         
-
 class CompaniesView(APIView):
     def get(self, request):
-        if request.user.is_authenticated:
-            id = request.user.id
-            user = request.user
-            if user is None:
-                return Response({'message': 'user not found'}, status=404)
-            
-            companies = []
-            company_ids = set() 
-            
-            if Owner.objects.filter(user=user).exists():
-                owner = Owner.objects.get(user=user)
-                company_qs = Company.objects.filter(owner=owner)
-                for company in company_qs:
-                    if company.id not in company_ids:
-                        companies.append({
-                            'id': company.id,
-                            'name': company.name,
-                            'logo': company.logo.url,
-                            'owner':True
-                        })
-                        company_ids.add(company.id)
+        if not request.user.is_authenticated:
+            return Response({'message': 'User not authenticated'}, status=401)
 
-            if Admin.objects.filter(user=user).exists():
-                admin = Admin.objects.get(user=user)
-                contract_qs = Admin_Contract.objects.filter(admin=admin)
-                con = Admin_Contract.objects.get(admin=admin)
-                if con.employed is True:
-                    for contract in contract_qs:
-                        company = Company.objects.get(id=contract.company.id)
-                        if company.id not in company_ids:
-                            companies.append({
-                                'id': company.id,
-                                'name': company.name,
-                                'logo': company.logo.url
-                            })
-                            company_ids.add(company.id)
+        user = request.user
 
-            if Trainer.objects.filter(user=user).exists():
-                trainer = Trainer.objects.get(user=user)
-                contract_qs = Trainer_Contract.objects.filter(trainer=trainer)
-                con = Trainer_Contract.objects.get(trainer=trainer)
-                if con.employed is True:
-                    for contract in contract_qs:
-                        company = Company.objects.get(id=contract.company.id)
-                        if company.id not in company_ids:
-                            companies.append({
-                                'id': company.id,
-                                'name': company.name,
-                                'logo': company.logo.url
-                            })
-                            company_ids.add(company.id)
+       
+        company_ids = set()
+        companies = []
 
-            if Trainee.objects.filter(user=user).exists():
-                trainee = Trainee.objects.get(user=user)
-                contract_qs = Trainee_Contract.objects.filter(trainee=trainee)
-                con = Trainee_Contract.objects.get(trainee=trainee)
-                if con.employed is True:
-                    for contract in contract_qs:
-                        company = Company.objects.get(id=contract.company.id)
-                        if company.id not in company_ids:
-                            companies.append({
-                                'id': company.id,
-                                'name': company.name,
-                                'logo': company.logo.url
-                            })
-                            company_ids.add(company.id)
-            
-            response = Response()
-            response.data = {
-                'username': user.username,
-                'companies':companies,
-            }
+         
+        def add_company(company, role):
+            if company.id not in company_ids:
+                companies.append({
+                    'id': company.id,
+                    'name': company.name,
+                    'logo': company.logo.url,
+                    'role': role
+                })
+                company_ids.add(company.id)
 
-            return response
-        return Response({'message': 'user not found'}, status=401)
+         
+        owner = Owner.objects.filter(user=user).first()
+        if owner:
+            owner_companies = Company.objects.filter(owner=owner)
+            for company in owner_companies:
+                add_company(company, 'owner')
 
+         
+        admin = Admin.objects.filter(user=user).first()
+        if admin:
+            admin_contracts = Admin_Contract.objects.filter(admin=admin, employed=True)
+            for contract in admin_contracts:
+                add_company(contract.company, 'admin')
+
+ 
+        trainer = Trainer.objects.filter(user=user).first()
+        if trainer:
+            trainer_contracts = Trainer_Contract.objects.filter(trainer=trainer, employed=True)
+            for contract in trainer_contracts:
+                add_company(contract.company, 'trainer')
+
+         
+        trainee = Trainee.objects.filter(user=user).first()
+        if trainee:
+            trainee_contracts = Trainee_Contract.objects.filter(trainee=trainee, employed=True)
+            for contract in trainee_contracts:
+                add_company(contract.company, 'trainee')
+
+        return Response({
+            'username': user.username,
+            'companies': companies
+        })
 
 class CompanyUsers(APIView):
     def get(self, request,company_id):
