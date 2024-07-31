@@ -45,7 +45,6 @@ const useFetch = () => {
       if(response.data.message)
         toast.success(response.data.message)
       setResData(response.data);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {

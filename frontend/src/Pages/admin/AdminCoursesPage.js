@@ -16,7 +16,6 @@ function AdminCoursesPage() {
     useEffect(()=>{
         async function getCourses(){
             const res = await fetchData({url: 'http://127.0.0.1:8000/api/admin/company/'+companyId+'/courses'});
-            console.log(res,'res');
             if (Array.isArray(res)) {
                 setCourses(res)
                 

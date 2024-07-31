@@ -19,7 +19,6 @@ export default function FormDialog({fetchUsers}) {
     const {fetchData} = UseFetch()
     const isOwner = localStorage.getItem('isOwner')
     const companyId = localStorage.getItem('companyId')
-    console.log(companyId);
     const handleChange = (event) => {
         setRole(event.target.value);
     };

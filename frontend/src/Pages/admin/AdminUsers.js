@@ -14,6 +14,7 @@ function AdminUsers() {
 
   const fetchUsers = async () => {
     const data = await fetchData({ url: "http://127.0.0.1:8000/api/company_users/"+companyId });
+    console.log(data);
     setFilteredData(data);
   };
   useEffect(() => {
