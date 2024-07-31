@@ -27,7 +27,7 @@ class AddUser(APIView):
         if request.user.is_authenticated:
             id = request.user.id
             user = request.user
-            if user is None:
+            if user is None :
                 return Response({'message': 'user not found'}, status=404)
             
             data = request.data
@@ -63,7 +63,7 @@ class AddUser(APIView):
             if not re.match(email_pattern, email):
                 return Response({'message': 'Invalid email address. Only Gmail addresses are allowed.'}, status=400)
 
-            if User.objects.filter(email=email).exists():
+            if User.objects.filter(email=email, otp_verified = True).exists():
                 new_user = User.objects.get(email=email)
                 # if Admin.objects.filter(user=new_user).exists():
                 #     admin = Admin.objects.get(user=new_user)

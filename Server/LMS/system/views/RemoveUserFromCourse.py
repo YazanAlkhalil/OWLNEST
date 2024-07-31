@@ -25,6 +25,8 @@ class RemoveUserFromCourse(APIView):
                   trainee = course.trainees.get(trainee__user = user)
                   course.trainees.remove(trainee)
                   course.save()
+                  if trainee.enrollment_set.all().count() == 0 :
+                       trainee.delete()
              except : 
                   pass
 
@@ -32,8 +34,11 @@ class RemoveUserFromCourse(APIView):
               try:
                    trainer = course.trainers.get(trainer__user = user)
                    course.trainers.remove(trainer)
-                   course.save()
-              except:
-                  pass
+                   course.save()  
+                   if trainer.trainer_contract_course_set.all().count() == 0 : 
+                        
+                        trainer.delete()
+              except Exception as e:
+                  print(e)
           return Response({"message":"the user has been deleted from the course"})
                
