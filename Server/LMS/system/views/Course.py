@@ -834,14 +834,11 @@ class TraineeCourseList(generics.ListAPIView):
      
      
       def get_queryset(self):
-        user = self.request.user
-        company_id = self.kwargs.get('company_id')
-        print(user)
-        trainee_contracts = Trainee_Contract.objects.filter(trainee__user=user, employed=True, company_id=company_id)
-        courses = Course.objects.filter(
-            company__id=company_id,
-            trainees__in=trainee_contracts,
-            
-        ).distinct()
-
-        return courses
+          user = self.request.user
+          company_id = self.kwargs.get('company_id') 
+          trainee_contracts = Trainee_Contract.objects.filter(trainee__user=user, employed=True, company_id=company_id)
+          courses = Course.objects.filter(
+              company__id=company_id,
+              trainees__in=trainee_contracts,
+          ).distinct()
+          return courses
