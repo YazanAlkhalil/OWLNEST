@@ -19,15 +19,13 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ["id", "content", "replies", "likes", "dislikes"]
         extra_kwargs = {"likes": {"read_only": True}, "dislikes": {"read_only": True}}
 
-    def to_internal_value(self, data):
-        # Override to_internal_value to allow custom fields to pass through
+    def to_internal_value(self, data): 
         internal_value = super().to_internal_value(data)
         internal_value['course'] = data.get("course")
         internal_value['user'] = data.get("user")
         return internal_value
 
-    def to_representation(self, instance):
-        # Override to_representation to add custom fields to output
+    def to_representation(self, instance):  
         data = super().to_representation(instance)
         data["likes"] = instance.likes.count()
         data["dislikes"] = instance.dislikes.count()
