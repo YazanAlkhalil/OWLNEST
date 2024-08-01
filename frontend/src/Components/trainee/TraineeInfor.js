@@ -25,7 +25,7 @@ export default function TraineeInfor() {
           return <Instructor key={trai.id} name={trai.name} />;
         })}
       </div>
-      <div className="w-[200px] bg-slate-950 h-[3px] mx-auto my-8 "></div>
+      <div className="w-[200px] dark:bg-white bg-slate-950 h-[3px] mx-auto my-8 "></div>
       <div className="px-8">
         <h1 className="text-2xl font-black my-8">Description</h1>
         <h1 className="text-xl font-bold w-[90%] mx-auto ">
@@ -38,7 +38,7 @@ export default function TraineeInfor() {
           loremloremloremloremloremloremloremloremloremlorem
         </h1>
       </div>
-      <div className="w-[200px] bg-slate-950 h-[3px] mx-auto my-10"></div>
+      <div className="w-[200px] dark:bg-white bg-slate-950 h-[3px] mx-auto my-10"></div>
       <div className="px-8">
         <h1 className="text-2xl font-black my-8">Additional Resources</h1>
         <h1 className="text-xl font-bold w-[90%] mx-auto ">https://sdgdgsdf</h1>

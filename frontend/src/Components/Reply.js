@@ -62,18 +62,14 @@ export default function Reply({data}) {
             <div className='flex p-4'>
             <div
               onClick={() => handleReactionClick(1)}
-              className={`${
-                replyData?.reaction === 1 ? "bg-slate-200" : ""
-              } border-r-2 flex border-r-stone-950 px-10 py-1 cursor-pointer`}>
+              className={`border-r-2 flex border-r-stone-950 px-10 py-1 cursor-pointer`}>
               {replyData?.reaction === 1 ? <BiSolidLike style={{color: "#3F6188"}} size={"30"} /> : <BiLike size={"30"} />}
               <p className="ml-2 text-xl font-semibold">{replyData?.likes}</p>
             </div>
             <div
               onClick={() => handleReactionClick(-1)}
-              className={`${
-                replyData?.reaction === -1 ? "bg-slate-200" : ""
-              } px-10 py-1 flex cursor-pointer`}>
-              {replyData?.reaction === -1 ? <BiSolidDislike style={{color: "blue"}} size={"30"} /> : <BiDislike size={"30"} />}
+              className={` px-10 py-1 flex cursor-pointer`}>
+              {replyData?.reaction === -1 ? <BiSolidDislike style={{color: "#3F6188"}} size={"30"} /> : <BiDislike size={"30"} />}
               <p className="ml-2 text-xl font-semibold">
                 {replyData?.dislikes}
               </p>
