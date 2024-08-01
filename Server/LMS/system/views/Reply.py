@@ -15,7 +15,7 @@ from django.shortcuts import get_object_or_404
 
 class CreateReplyView(CreateAPIView):
       serializer_class = ReplySerializer 
-
+      
       def post(self, request, *args, **kwargs): 
             comment = get_object_or_404(Comment,id = request.data["comment"])
             

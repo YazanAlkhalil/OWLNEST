@@ -840,5 +840,6 @@ class TraineeCourseList(generics.ListAPIView):
           courses = Course.objects.filter(
               company__id=company_id,
               trainees__in=trainee_contracts,
+              published = True
           ).distinct()
-          return courses
+          return courses  
