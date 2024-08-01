@@ -39,6 +39,21 @@ from ..permissions.IsOwnerOrAdminForCourse import IsOwnerOrAdminForCourse
 from drf_yasg.utils import swagger_auto_schema
 from ..swagger.Course import course_create_request_body, course_list_response_body, course_retrive_response_body, course_retrive_info_response_body, course_delete_response_body, course_publish_approve_request_body
 
+
+
+
+
+#v2 imports 
+#serializers
+from system.serializers.AdminCourseListSerializer import AdminCourseListSerializer
+from system.serializers.TrainerCourseListSerializer import TrainerCourseListSerializer
+from system.serializers.TraineeCourseListSerializer import TraineeCourseListSerializer
+#permissions
+from system.permissions.IsAdmin import IsCompanyOwner,IsAdminInCompany ,IsAdminInCompanyOrOwner
+
+
+
+
 # GET : api/admin/company/:company-id/courses
 # GET : api/trainer/company/:company-id/courses
 # GET : api/trainee/company/:company-id/courses
@@ -774,3 +789,59 @@ class CompanyCourseRetriveInfo(generics.RetrieveAPIView):
         context = super().get_serializer_context()
         context['view_type'] = 'info'
         return context
+    
+
+
+
+
+
+
+
+
+
+
+
+class AdminCourseList(generics.ListAPIView):
+      serializer_class = AdminCourseListSerializer
+      permission_classes = [IsAuthenticated,IsAdminInCompanyOrOwner]
+      def get_queryset(self): 
+          return Course.objects.filter(company__id = self.kwargs["company_id"])
+      
+
+class TrainerPublishedCourseList(generics.ListAPIView):
+      serializer_class = TrainerCourseListSerializer
+      permission_classes = [IsAuthenticated]
+
+      def get_queryset(self):
+        user = self.request.user
+        company_id = self.kwargs.get('company_id')
+ 
+        trainer_contracts = Trainer_Contract.objects.filter(trainer__user=user, employed=True, company_id=company_id)
+
+     
+        courses = Course.objects.filter(
+            company_id=company_id,
+            trainers__in=trainer_contracts,
+            published=True
+        ).distinct()
+
+        return courses
+      
+
+class TraineeCourseList(generics.ListAPIView):
+      serializer_class = TraineeCourseListSerializer
+      permission_classes = [IsAuthenticated]
+     
+     
+      def get_queryset(self):
+        user = self.request.user
+        company_id = self.kwargs.get('company_id')
+        print(user)
+        trainee_contracts = Trainee_Contract.objects.filter(trainee__user=user, employed=True, company_id=company_id)
+        courses = Course.objects.filter(
+            company__id=company_id,
+            trainees__in=trainee_contracts,
+            
+        ).distinct()
+
+        return courses
