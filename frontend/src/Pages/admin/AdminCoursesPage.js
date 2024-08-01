@@ -13,20 +13,19 @@ function AdminCoursesPage() {
     const [courses,setCourses]= useState([])
     const companyId = localStorage.getItem('companyId')
     const {fetchData} = useFetch()
-    useEffect(()=>{
-        async function getCourses(){
-            const res = await fetchData({url: 'http://127.0.0.1:8000/api/admin/company/'+companyId+'/courses'});
-            console.log(res,'res');
-            if (Array.isArray(res)) {
-                setCourses(res)
-                
-            }
+    async function getCourses(){
+        const res = await fetchData({url: 'http://127.0.0.1:8000/api/admin/company/'+companyId+'/courses'});
+        if (Array.isArray(res)) {
+            setCourses(res)
+            
         }
+    }
+    useEffect(()=>{
         getCourses()  
     },[])
     return (
         <div className='flex flex-col'>
-        <FormDialog/>
+        <FormDialog getCourses={getCourses}/>
         <div className='grid grid-cols-3 gap-y-10'>
             {courses.map(course => (
                 <TrainerCourse key={course.id} id={course.id} image={course.image} name={course.name}/>

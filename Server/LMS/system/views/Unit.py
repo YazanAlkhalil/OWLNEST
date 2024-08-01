@@ -34,7 +34,11 @@ class UnitList(generics.ListAPIView):
     def get_queryset(self):
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
-        return Unit.objects.filter(course__id=course_id, course__company__id=company_id)
+        try:
+            units = Unit.objects.filter(course__id=course_id, course__company__id=company_id)
+        except Unit.DoesNotExist:
+            raise ValidationError('No units for this course')
+        return units
 
 # GET: api/admin/company/:company_id/courses/:course_id/unit/:unit_id
 # GET: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id
@@ -56,7 +60,11 @@ class UnitRetrieve(generics.RetrieveAPIView):
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
         unit_id = self.kwargs['unit_id']
-        return Unit.objects.filter(id=unit_id, course__id=course_id, course__company__id=company_id)
+        try:
+            unit =Unit.objects.filter(id=unit_id, course__id=course_id, course__company__id=company_id)
+        except Unit.DoesNotExist:
+            raise ValidationError('No such unit for this course')
+        return unit
 
 # POST : api/trainer/company/:company_id/courses/:course_id/unit
 class UnitCreate(generics.CreateAPIView):
@@ -99,7 +107,11 @@ class UnitUpdate(generics.UpdateAPIView):
     def get_queryset(self):
         course_id = self.kwargs['course_id']
         unit_id = self.kwargs['unit_id']
-        return Temp_Unit.objects.filter(id=unit_id, course=course_id)
+        try:
+            temp_unit = Temp_Unit.objects.filter(id=unit_id, course=course_id)
+        except Temp_Unit.DoesNotExist:
+            raise ValidationError('No such temp_unit for this course')
+        return temp_unit
     def perform_update(self, serializer):
         serializer.save(state='PR')
 
@@ -120,7 +132,11 @@ class UnitDelete(generics.DestroyAPIView):    # set the serializer class
     def get_queryset(self):
         course_id = self.kwargs['course_id']
         unit_id = self.kwargs['unit_id']
-        return Unit.objects.filter(id=unit_id, course=course_id)
+        try:
+            unit = Unit.objects.filter(id=unit_id, course=course_id)
+        except Unit.DoesNotExist:
+            raise ValidationError('No such unit for this course')
+        return unit
     def perform_destroy(self, instance):
         instance.state = 'DE'
         return Response({'message':'Unit set to delete state'}, status=204)

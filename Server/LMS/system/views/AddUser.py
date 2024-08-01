@@ -27,7 +27,7 @@ class AddUser(APIView):
         if request.user.is_authenticated:
             id = request.user.id
             user = request.user
-            if user is None:
+            if user is None :
                 return Response({'message': 'user not found'}, status=404)
             
             data = request.data
@@ -63,7 +63,7 @@ class AddUser(APIView):
             if not re.match(email_pattern, email):
                 return Response({'message': 'Invalid email address. Only Gmail addresses are allowed.'}, status=400)
 
-            if User.objects.filter(email=email).exists():
+            if User.objects.filter(email=email, otp_verified = True).exists():
                 new_user = User.objects.get(email=email)
                 # if Admin.objects.filter(user=new_user).exists():
                 #     admin = Admin.objects.get(user=new_user)
@@ -135,6 +135,26 @@ class AddUser(APIView):
                             if contract.employed is False:
                                 contract.employed=True
                                 contract.save()
+                                user.is_admin = True
+                                user.save()
+                                if Trainer.objects.filter(user=new_user).exists():
+                                    trainer = Trainer.objects.get(user=new_user)
+                                    if Trainer_Contract.objects.filter(company=company,trainer= trainer):
+                                        contract = Trainer_Contract.objects.get(trainer=trainer,company=company)
+                                        if contract.employed is False:
+                                            contract.employed=True
+                                            contract.save()
+                                            user.is_trainer = True
+                                            user.save()
+                                if Trainee.objects.filter(user=new_user).exists():
+                                    trainee = Trainee.objects.get(user=new_user)
+                                    if Trainee_Contract.objects.filter(trainee= trainee ,company=company) :
+                                        contract = Trainee_Contract.objects.get(trainee=trainee,company=company.id)
+                                        if contract.employed is False:
+                                            contract.employed=True
+                                            contract.save()
+                                            user.is_trainee = True
+                                            user.save()
                                 return Response({'message': 'User added successfully'}, status=201)
                             if contract.employed is True:
                                 return Response(
@@ -174,6 +194,26 @@ class AddUser(APIView):
                             if contract.employed is False:
                                 contract.employed=True
                                 contract.save()
+                                user.is_trainer = True
+                                user.save()
+                                if Admin.objects.filter(user=new_user).exists():
+                                    admin = Admin.objects.get(user=new_user)
+                                    if Admin_Contract.objects.filter(admin= admin ,company=company):
+                                        contract = Admin_Contract.objects.get(admin=admin,company=company)
+                                        if contract.employed is False:
+                                            contract.employed=True
+                                            contract.save()
+                                            user.is_admin = True
+                                            user.save()
+                                        if Trainee.objects.filter(user=new_user).exists():
+                                            trainee = Trainee.objects.get(user=new_user)
+                                            if Trainee_Contract.objects.filter(trainee= trainee ,company=company) :
+                                                contract = Trainee_Contract.objects.get(trainee=trainee,company=company.id)
+                                                if contract.employed is False:
+                                                    contract.employed=True
+                                                    contract.save()
+                                                    user.is_trainee = True
+                                                    user.save()
                                 return Response({'message': 'User added successfully'}, status=201)
                             if contract.employed is True:
                                 return Response(
@@ -213,6 +253,26 @@ class AddUser(APIView):
                             if contract.employed is False:
                                 contract.employed=True
                                 contract.save()
+                                user.is_trainee = True
+                                user.save()
+                                if Admin.objects.filter(user=new_user).exists():
+                                    admin = Admin.objects.get(user=new_user)
+                                    if Admin_Contract.objects.filter(admin= admin ,company=company):
+                                        contract = Admin_Contract.objects.get(admin=admin,company=company)
+                                        if contract.employed is False:
+                                            contract.employed=True
+                                            contract.save()
+                                            user.is_admin = True
+                                            user.save()
+                                if Trainer.objects.filter(user=new_user).exists():
+                                    trainer = Trainer.objects.get(user=new_user)
+                                    if Trainer_Contract.objects.filter(company=company,trainer= trainer):
+                                        contract = Trainer_Contract.objects.get(trainer=trainer,company=company)
+                                        if contract.employed is False:
+                                            contract.employed=True
+                                            contract.save()
+                                            user.is_trainer = True
+                                            user.save()
                                 return Response({'message': 'User added successfully'}, status=201)
                             if contract.employed is True:
                                 return Response(

@@ -20,7 +20,7 @@ export default function FormDialog() {
 
   return (
     <React.Fragment>
-      <button className='text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={handleClickOpen}>
+      <button className='text-xl btn-inner border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' onClick={handleClickOpen}>
         add unit
       </button>
       <Dialog

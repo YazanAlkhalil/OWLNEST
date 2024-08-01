@@ -10,7 +10,7 @@ import useFetch from '../AuthComponents/UseFetch';
 import { useSelector } from 'react-redux';
 
 
-export default function FormDialog() {
+export default function FormDialog({getCourses}) {
     const { fetchData } = useFetch()
     const companyId = localStorage.getItem('companyId')
     const isDarkMode = useSelector((state) => state.theme.isDarkMode);
@@ -48,10 +48,10 @@ export default function FormDialog() {
                     onSubmit: async (event) => {
                         event.preventDefault();
                         let res = await fetchData({ url: 'http://127.0.0.1:8000/api/admin/company/' + companyId + '/courses/create', method: 'POST', data: info })
-                        console.log(res, "res");
                         if (res?.id) {
                             toast.success('Course added successfully')
                             reset()
+                            getCourses()
                         }
                     },
                 }}
@@ -67,7 +67,7 @@ export default function FormDialog() {
                             }
                         }
                         }
-                            className="w-full appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Name" aria-label="Name" />
+                            className="w-full appearance-none bg-transparent border-none mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Name" aria-label="Name" />
                         <span className='ml-1 w-4'>{50 - info.name.length}</span>
                     </div>
                     <div className='flex items-end'>

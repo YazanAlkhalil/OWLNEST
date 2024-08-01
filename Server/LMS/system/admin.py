@@ -14,6 +14,7 @@ from system.models.Courses_In_Plane import Courses_In_Plane
 from system.models.Deposit import Deposit
 from system.models.Wallet import Wallet
 from system.models.Withdraw import Withdraw
+from system.models.Courses_In_Plane import Courses_In_Plane
 
 
 from system.models.Course import Course

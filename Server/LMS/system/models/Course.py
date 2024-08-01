@@ -16,6 +16,7 @@ class Course(models.Model):
     pref_description = models.TextField()
     description = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to=course_image_path, null=True, blank=True)
+    published = models.BooleanField(default= False)
     publish_date = models.DateField(auto_now_add=True)
     additional_resources = models.ManyToManyField(Additional_Resources)
     trainers = models.ManyToManyField(Trainer_Contract, through='system.Trainer_Contract_Course')

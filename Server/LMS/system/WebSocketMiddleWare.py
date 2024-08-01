@@ -20,7 +20,6 @@ class JWTAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         headers = dict(scope['headers']) 
         cookie_bytes = headers[b'cookie']
-        print(cookie_bytes)
         cookie_str = cookie_bytes.decode() 
         cookies = cookie_str.split('; ')  
         access_token = None 

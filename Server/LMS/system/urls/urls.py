@@ -21,6 +21,16 @@ urlpatterns = [
     path('course/<id>/report',CourseReportView.as_view()),
     path('course/<id>/users',AddUserToCourse.as_view()),
 
+    #get course users
+    path('course/<id>/all-users',GetCourseUsers.as_view()),
+
+
+    #change user role in course 
+    path('course/<id>/user/change-role',ChangeCourseUserRole.as_view()),
+
+    #delete user from course 
+    path('course/<id>/remove-user',RemoveUserFromCourse.as_view()),
+    
   #trainee
     #comments
     path('course/<int:id>/comments',ListCreateCommentView.as_view()),
@@ -47,15 +57,6 @@ urlpatterns = [
     path('user/company/<id>/notifications',NotificationList.as_view()),
 
 
-    #get course users
-    path('course/<id>/all-users',GetCourseUsers.as_view()),
-
-
-    #change user role in course 
-    path('course/<id>/user/change-role',ChangeCourseUserRole.as_view()),
-
-    #delete user from course 
-    path('course/<id>/remove-user',RemoveUserFromCourse.as_view())
 ]
 
  
