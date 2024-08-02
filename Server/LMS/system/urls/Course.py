@@ -3,25 +3,31 @@ from ..views.Course import CompanyCourseList, CompanyCourseListPending, CompanyC
 from django.conf import settings
 from django.conf.urls.static import static
 
+#v2 views
+from system.views.Course import (
+    AdminCourseList,
+    TrainerPublishedCourseList,
+    TraineeCourseList
+)
 urlpatterns = [
     path(
         'admin/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
+        AdminCourseList.as_view(), 
         name='company-course-admin-list'
     ),
     path(
         'trainer/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
+        TrainerPublishedCourseList.as_view(), 
         name='company-course-trainer-list'
     ),
     path(
         'trainee/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
+        TraineeCourseList.as_view(), 
         name='company-course-trainee-list'
     ),
     path(
         'owner/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
+        AdminCourseList.as_view(), 
         name='company-course-owner-list'
     ),
     path(

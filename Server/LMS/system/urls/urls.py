@@ -15,7 +15,9 @@ from system.views.GetCourseUsers import GetCourseUsers
 from system.views.ChangeCourseUserRole import ChangeCourseUserRole
 from system.views.RemoveUserFromCourse import RemoveUserFromCourse
 
-
+#Django 
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
   #admin
     path('course/<id>/report',CourseReportView.as_view()),
@@ -59,4 +61,5 @@ urlpatterns = [
 
 ]
 
- 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
