@@ -77,7 +77,7 @@ class CompanyCourseList(generics.ListAPIView):
         # get the admin courses
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -88,7 +88,7 @@ class CompanyCourseList(generics.ListAPIView):
         # get the trainer courses
         elif user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
                 raise ValidationError("Tranier contract does not exist for this user")
             try:
@@ -99,7 +99,7 @@ class CompanyCourseList(generics.ListAPIView):
         # get the trainee courses
         elif user.is_trainee:
             try:
-                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, employed=True)
+                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, company__id=company_id, employed=True)
             except Trainee_Contract.DoesNotExist:
                 raise ValidationError("Trainee contract does not exist for this user")
             try:
@@ -148,7 +148,7 @@ class CompanyCourseCreate(generics.CreateAPIView):
             raise ValidationError("Company does not exist")
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Valid admin contract does not exist for this user")
             serializer.save(company=company, admin_contract=admin_contract)
@@ -335,7 +335,7 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
         # retrive the course if the admin is whom created it
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -346,7 +346,7 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
         # retrive the course if the trainer is whom created it
         elif user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
                 raise ValidationError("Tranier contract does not exist for this user")            
             try:
@@ -357,7 +357,7 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
         # retrive the course if the trainee has already enrolled in it 
         elif user.is_trainee:
             try:
-                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, employed=True)
+                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, company__id=company_id, employed=True)
             except Trainee_Contract.DoesNotExist:
                 raise ValidationError("Trainee contract does not exist for this user")
             try:
@@ -392,24 +392,24 @@ class CompanyCourseRetrievePartandNotPartUsers(generics.ListAPIView):
         course_id = self.kwargs['course_id']
         result = []
         try:
-            part_admin_contracts = Admin_Contract.objects.filter(course=course_id, company=company_id, employed=True)
+            part_admin_contracts = Admin_Contract.objects.filter(course=course_id, company__id=company_id, employed=True)
             for admin_contract in part_admin_contracts:
                 result.append({'user': admin_contract.admin.user, 'is_participant': True})
-            part_trainer_contracts = Trainer_Contract.objects.filter(course=course_id, company=company_id, employed=True)
+            part_trainer_contracts = Trainer_Contract.objects.filter(course=course_id, company__id=company_id, employed=True)
             for trainer_contract in part_trainer_contracts:
                 result.append({'user': trainer_contract.trainer.user, 'is_participant': True})
-            part_trainee_contracts = Trainee_Contract.objects.filter(course=course_id, company=company_id, employed=True)
+            part_trainee_contracts = Trainee_Contract.objects.filter(course=course_id, company__id=company_id, employed=True)
             for trainee_contract in part_trainee_contracts:
                 result.append({'user': trainee_contract.trainee.user, 'is_participant': True})
-            admin_contracts = Admin_Contract.objects.filter(company=company_id, employed=True)
+            admin_contracts = Admin_Contract.objects.filter(company__id=company_id, employed=True)
             for admin_contract in admin_contracts:
                 if not any(res['user'] == admin_contract.admin.user for res in result):
                     result.append({'user': admin_contract.admin.user, 'is_participant': False})
-            trainer_contracts = Trainer_Contract.objects.filter(company=company_id, employed=True)
+            trainer_contracts = Trainer_Contract.objects.filter(company__id=company_id, employed=True)
             for trainer_contract in trainer_contracts:
                 if not any(res['user'] == trainer_contract.trainer.user for res in result):
                     result.append({'user': trainer_contract.trainer.user, 'is_participant': False})
-            trainee_contracts = Trainee_Contract.objects.filter(company=company_id, employed=True)
+            trainee_contracts = Trainee_Contract.objects.filter(company__id=company_id, employed=True)
             for trainee_contract in trainee_contracts:
                 if not any(res['user'] == trainee_contract.trainee.user for res in result):
                     result.append({'user': trainee_contract.trainee.user, 'is_participant': False})
@@ -437,7 +437,7 @@ class CompanyCourseSetTrainerLeader(generics.UpdateAPIView):
         trainer_contract = self.request.data.get('trainer_contract')
         result = []
         try:
-            trainer_contract = Trainer_Contract.objects.get(id=trainer_contract, employed=True)
+            trainer_contract = Trainer_Contract.objects.get(id=trainer_contract, company__id=company_id, employed=True)
         except Trainer_Contract.DoesNotExist:
             raise ValidationError({'message': 'There is no such trainer contract'})
         try:
@@ -476,7 +476,7 @@ class CompanyCourseListPending(generics.ListAPIView):
         # retrive the course if the admin is whom created it
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -524,7 +524,7 @@ class CompanyCourseRetrievePending(generics.RetrieveAPIView):
         # retrive the course if the admin is whom created it
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -565,7 +565,7 @@ class CompanyCourseListInProgress(generics.ListAPIView):
         # retrive the course if the admin is whom created it
         if user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -614,7 +614,7 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
         # retrive the course if the admin is whom created it
         if user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -664,7 +664,7 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
         # admin can edit only his courses
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -675,7 +675,7 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
         # trainer can edit only his courses
         elif user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
                 raise ValidationError("Tranier contract does not exist for this user")
             try:
@@ -711,7 +711,7 @@ class CompanyCourseDelete(generics.DestroyAPIView):
         # only admin can delete just the courses which he has created
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -752,7 +752,7 @@ class CompanyCourseRetriveInfo(generics.RetrieveAPIView):
         # get the admin courses
         if user.is_admin:
             try:
-                admin_contract = Admin_Contract.objects.get(admin=user.admin, employed=True)
+                admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -763,7 +763,7 @@ class CompanyCourseRetriveInfo(generics.RetrieveAPIView):
         # get the trainer courses
         elif user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
                 raise ValidationError("Tranier contract does not exist for this user")
             try:
@@ -774,7 +774,7 @@ class CompanyCourseRetriveInfo(generics.RetrieveAPIView):
         # get the trainee courses
         elif user.is_trainee:
             try:
-                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, employed=True)
+                trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, company__id=company_id, employed=True)
             except Trainee_Contract.DoesNotExist:
                 raise ValidationError("Trainee contract does not exist for this user")
             try:
