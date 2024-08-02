@@ -10,16 +10,17 @@ class IsCourseTrainer(permissions.BasePermission):
             return False
         return True
     def has_object_permission(self, request, view, obj):
+        company_id = view.kwargs.get('company_id')
         if isinstance(obj, Course):
             # Check if the user is a trainer of the course
             if request.user.is_trainer:
-                if Trainer_Contract.objects.get(trainer=request.user.trainer).employed:
+                if Trainer_Contract.objects.get(trainer=request.user.trainer, company__id=company_id).employed:
                     return obj.trainers.filter(trainer=request.user.trainer).exists()
             return False
         elif isinstance(obj, Unit) or isinstance(obj, Temp_Unit):
             # Check if the user is a trainer of the course
             if request.user.is_trainer:
-                if Trainer_Contract.objects.get(trainer=request.user.trainer).employed:
+                if Trainer_Contract.objects.get(trainer=request.user.trainer, company__id=company_id).employed:
                     return obj.course.trainers.filter(trainer=request.user.trainer).exists()
             return False
         return False

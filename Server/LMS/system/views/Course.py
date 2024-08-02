@@ -193,7 +193,6 @@ class CompanyCourseApprove(generics.CreateAPIView):
     serializer_class = Course_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseAdmin]
-
     @swagger_auto_schema(
         operation_description='Approve a specific course with all its units and contents',
         request_body=course_publish_approve_request_body,
@@ -210,12 +209,10 @@ class CompanyCourseApprove(generics.CreateAPIView):
                 course = Course.objects.get(id=course_id, company_id=company_id)
             except Course.DoesNotExist:
                 raise ValidationError({'message' : 'Course does not exist'})
-            course.published = True
-            course.save()
             # Check if all units and contents are in 'PE' state
             try:
                 temp_units = Temp_Unit.objects.filter(course=course_id, state='PE')
-            except Temp_Content.DoesNotExist:
+            except Temp_Unit.DoesNotExist:
                 raise ValidationError({'message': 'No units in pending or delete state'})
             with transaction.atomic():
                 for temp_unit in temp_units:
@@ -230,24 +227,17 @@ class CompanyCourseApprove(generics.CreateAPIView):
                             old_unit.delete()
                     elif temp_unit.state == 'PE':
                         if temp_unit.unit:
-                            new_unit = Unit.objects.update(
-                                id=temp_unit.unit.id,
-                                course=course,
-                                title=temp_unit.title,
-                                order=temp_unit.order,
-                                defaults={
-                                    'title': old_unit.title,
-                                    'order': old_unit.order,
-                                }
-                            )
+                            temp_unit.unit.course=course
+                            temp_unit.unit.title=temp_unit.title
+                            temp_unit.unit.order=temp_unit.order
                         else:
                             new_unit = Unit.objects.create(
                                 course=course,
                                 title=temp_unit.title,
                                 order=temp_unit.order,
                             )
-                        new_unit.save()
-                        temp_unit.unit = new_unit
+                            new_unit.save()
+                            temp_unit.unit = new_unit
                         temp_unit.state = 'PU'
                         temp_unit.save()
                         for temp_content in temp_contents:
@@ -261,54 +251,51 @@ class CompanyCourseApprove(generics.CreateAPIView):
                                     old_content.delete()
                             elif temp_content.state == 'PE':
                                 if temp_content.content:
-                                    new_content = Content.objects.update(
-                                    id=temp_content.content.id,
-                                    temp_unit=new_unit,
-                                    title=temp_content.title,
-                                    order=temp_content.order,
-                                    is_video=temp_content.is_video,
-                                    is_pdf=temp_content.is_pdf,
-                                    is_test=temp_content.is_test,
-                                    defaults={
-                                        'temp_unit': temp_content.temp_unit,
-                                        'title': temp_content.title,
-                                        'order': temp_content.order,
-                                        'is_video': temp_content.is_video,
-                                        'is_pdf': temp_content.is_pdf,
-                                        'is_test': temp_content.is_test,
-                                    },
-                                )
-                                # Move Temp_Content to Content and mark them as 'PU'
-                                new_content = Content.objects.create(
-                                    unit=new_unit,
-                                    title=temp_content.title,
-                                    order=temp_content.order,
-                                    is_video=temp_content.is_video,
-                                    is_pdf=temp_content.is_pdf,
-                                    is_test=temp_content.is_test
-                                )
-                                new_content.save()
-                                temp_content.content = new_content
+                                    temp_content.content.title = temp_content.title
+                                    temp_content.content.order = temp_content.order
+                                    temp_content.content.is_video = temp_content.is_video
+                                    temp_content.content.is_pdf = temp_content.is_pdf
+                                    temp_content.content.is_test = temp_content.is_test
+                                else:
+                                    new_content = Content.objects.create(
+                                        unit=new_unit,
+                                        title=temp_content.title,
+                                        order=temp_content.order,
+                                        is_video=temp_content.is_video,
+                                        is_pdf=temp_content.is_pdf,
+                                        is_test=temp_content.is_test
+                                    )
+                                    new_content.save()
+                                    temp_content.content = new_content
                                 temp_content.state = 'PU'
                                 temp_content.save()
                                 # Move specific content type (Pdf, Video, Test) to access it from the content table
                                 if temp_content.is_pdf:
-                                    pdf = Pdf.objects.get(temp_content=temp_content)
-                                    pdf.content = new_content
+                                    try:
+                                        pdf = Pdf.objects.get(temp_content=temp_content)
+                                    except Pdf.DoesNotExist:
+                                        raise ValidationError({'message': 'pdf does not exists'})
+                                    pdf.content = temp_content.content
                                     pdf.temp_content = None
                                     pdf.save()
                                 elif temp_content.is_video:
-                                    video = Video.objects.get(temp_content=temp_content)
-                                    video.content = new_content
+                                    try:
+                                        video = Video.objects.get(temp_content=temp_content)
+                                    except Video.DoesNotExist:
+                                        raise ValidationError({'message': 'video does not exists'})
+                                    video.content = temp_content.content
                                     video.temp_content = None
                                     video.save()
                                 elif temp_content.is_test:
-                                    test = Test.objects.get(temp_content=temp_content)
-                                    test.content = new_content
+                                    try:
+                                        test = Test.objects.get(temp_content=temp_content)
+                                    except Test.DoesNotExist:
+                                        raise ValidationError({'message': 'test does not exists'})
+                                    test.content = temp_content.content
                                     test.temp_content = None
                                     test.save()
                 # Change the course state to 'PU'
-                course.state = 'PU'
+                course.published = True
                 course.save()
         else:
             raise ValidationError({'message': 'Cannot perform this action'})
@@ -619,7 +606,7 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
         # retrive the course if the admin is whom created it
         if user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, trainer_contract_course__course=course_id, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
