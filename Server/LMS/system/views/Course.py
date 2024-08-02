@@ -210,6 +210,8 @@ class CompanyCourseApprove(generics.CreateAPIView):
                 course = Course.objects.get(id=course_id, company_id=company_id)
             except Course.DoesNotExist:
                 raise ValidationError({'message' : 'Course does not exist'})
+            course.published = True
+            course.save()
             # Check if all units and contents are in 'PE' state
             try:
                 temp_units = Temp_Unit.objects.filter(course=course_id, state='PE')
@@ -566,14 +568,17 @@ class CompanyCourseListInProgress(generics.ListAPIView):
         if user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
-            except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+            except Trainer_Contract.DoesNotExist:
+                raise ValidationError("Trainer contract does not exist for this user")
             try:
-                courses = Course.objects.filter(trainers=trainer_contract, company=company_id)
+                courses = Course.objects.filter(trainers__id=trainer_contract.id, company=company_id)
             except Course.DoesNotExist:
                 raise ValidationError({'message': 'did not find a course in progress for this trainer'})
             result_courses = []
             for course in courses:
+                if not course.published:
+                    result_courses.append(course)
+                    continue
                 for unit in Temp_Unit.objects.filter(course=course):
                     if unit.state == 'PR':
                         result_courses.append(course)
@@ -615,7 +620,7 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
         if user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
-            except Admin_Contract.DoesNotExist:
+            except Trainer_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
                 course = Course.objects.get(id=course_id, trainers=trainer_contract, company=company_id)
@@ -627,14 +632,12 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
                 for content in Temp_Content.objects.filter(temp_unit=unit):
                     if content.state == 'PR':
                         is_in_progress = True
+            if not course.published:
+                is_in_progress = True
+            print(is_in_progress)
             if is_in_progress:
-                try:
-                    course = Course.objects.filter(id=course.id)
-                except Course.DoesNotExist:
-                    raise ValidationError('No such course in progress')
+                print(course)
                 return course
-            else:
-                return Course.objects.none()
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['view_type'] = 'detail'

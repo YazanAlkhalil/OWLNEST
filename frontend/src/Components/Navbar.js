@@ -38,7 +38,7 @@ function NavBar({ highlight }) {
         message = null
       else {
         const audio = new Audio('/cute_notification.mp3');
-        audio.play();
+        // audio.play();
       }
       setNotifications(message)
     };
