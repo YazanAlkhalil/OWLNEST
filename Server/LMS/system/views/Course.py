@@ -117,7 +117,7 @@ class CompanyCourseList(generics.ListAPIView):
                 raise ValidationError('No courses for this owner in this company')
             return courses
         else:
-            return Response({'message': 'No Content'}, status=status.HTTP_204_NO_CONTENT)
+            raise ValidationError({'message': 'No Content'})
     # when listing the courses set the view_type as list, otherwise set it as detail
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -145,7 +145,7 @@ class CompanyCourseCreate(generics.CreateAPIView):
         try:
             company = Company.objects.get(id=company_id)
         except Company.DoesNotExist:
-            raise ValidationError("Company does not exist")
+            raise ValidationError({'message': 'Company does not exist'})
         if user.is_admin:
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
@@ -153,7 +153,7 @@ class CompanyCourseCreate(generics.CreateAPIView):
                 raise ValidationError("Valid admin contract does not exist for this user")
             serializer.save(company=company, admin_contract=admin_contract)
         else:
-            raise ValidationError("Only admins can create courses")
+            raise ValidationError({'message': 'Only admins can create courses'})
 
 # POST: api/trainer/company/:company_id/courses/:course_id/publish
 class CompanyCoursePublish(generics.UpdateAPIView):
