@@ -38,7 +38,7 @@ function NavBar({ highlight }) {
         message = null
       else {
         const audio = new Audio('/cute_notification.mp3');
-        // audio.play();
+        audio.play();
       }
       setNotifications(message)
     };
@@ -56,27 +56,27 @@ function NavBar({ highlight }) {
 
 
 
-  useEffect(() => {
-    async function getRoles() {
-      const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + companyId + '/roles/', method: 'get' });
-      if (Array.isArray(res)) {
-        const ownerIndex = res.findIndex(item => item === 'owner')
-        if (ownerIndex != -1) {
-          localStorage.setItem('isOwner', true)
-          res[ownerIndex] = 'admin'
-        }
-        else{
-          localStorage.setItem('isOwner', false)
-        }
-        if (res.length === 1) {
-          let targetPath = `/${res[0]}`;
-          if (!location.pathname.startsWith(targetPath) && !location.pathname.startsWith('/settings')) {
-            navigate(targetPath);
-          }
-        }
-        localStorage.setItem('roles', res)
+  async function getRoles() {
+    const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + companyId + '/roles/', method: 'get' });
+    if (Array.isArray(res)) {
+      const ownerIndex = res.findIndex(item => item === 'owner')
+      if (ownerIndex != -1) {
+        localStorage.setItem('isOwner', true)
+        res[ownerIndex] = 'admin'
       }
+      else{
+        localStorage.setItem('isOwner', false)
+      }
+      if (res.length === 1) {
+        let targetPath = `/${res[0]}`;
+        if (!location.pathname.startsWith(targetPath) && !location.pathname.startsWith('/settings')) {
+          navigate(targetPath);
+        }
+      }
+      localStorage.setItem('roles', res)
     }
+  }
+  useEffect(() => {
     getRoles();
   }, [navigate, location.pathname]);
 

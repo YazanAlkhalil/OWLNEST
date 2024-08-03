@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import Unit from './Unit';
@@ -10,6 +10,8 @@ import UploadVideo from './UploadVideo';
 import UploadPDF from './UploadPDF';
 import CreateQuiz from './CreateQuiz';
 import { MdEdit } from 'react-icons/md';
+import useFetch from '../Components/AuthComponents/UseFetch'
+import { useParams } from 'react-router-dom';
 
 function CourseEdit() {
   const [isInfo, setIsInfo] = useState(false)
@@ -22,6 +24,9 @@ function CourseEdit() {
   const [isUploadingPDF, setIsUploadingPDF] = useState(false)
   const [createQuiz, setCreateQuiz] = useState(false)
   const [sortable, setSortable] = useState(false)
+  const {fetchData} = useFetch()
+  const companyId = localStorage.getItem('companyId')
+  const {id}= useParams()
   const [content, setContent] = useState([
     {
       type: "unit",
@@ -61,6 +66,14 @@ function CourseEdit() {
 
   ])
 
+  useEffect((
+  ) => {
+    const getInfo = async () => {
+      const res = await fetchData({url:"http://127.0.0.1:8000/api/trainer/company/"+companyId+"/progress_courses/"+id})
+      console.log(res);
+    }
+    getInfo()
+  }, [])
   if (isInfo)
     return <AdditionalInfo close={() => setIsInfo(false)} />
 
@@ -107,7 +120,7 @@ function CourseEdit() {
         </div>
       </div>
       <div className='flex justify-end mb-4'>
-        <button className='mr-2 btn-inner text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' >
+        <button onClick={() => setSortable(!sortable)} className='mr-2 btn-inner text-xl border border-solid border-secondary px-3 py-2 hover:bg-secondary hover:text-white rounded  text-secondary' >
           {sortable ? 'save' : 'reorder'}
         </button>
         <FormDialog addUnit={addUnit} />

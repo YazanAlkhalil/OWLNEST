@@ -212,8 +212,6 @@ class CompanyCourseApprove(generics.CreateAPIView):
                 raise ValidationError({'message' : 'Course does not exist'})
             course.published = True
             course.save()
-            course.published = True
-            course.save()
             # Check if all units and contents are in 'PE' state
             try:
                 temp_units = Temp_Unit.objects.filter(course=course_id, state='PE')
@@ -570,10 +568,10 @@ class CompanyCourseListInProgress(generics.ListAPIView):
         if user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
-            except Trainer_Contract.DoesNotExist:
-                raise ValidationError("Trainer contract does not exist for this user")
+            except Admin_Contract.DoesNotExist:
+                raise ValidationError("Admin contract does not exist for this user")
             try:
-                courses = Course.objects.filter(trainers__id=trainer_contract.id, company=company_id)
+                courses = Course.objects.filter(trainers=trainer_contract, company=company_id)
             except Course.DoesNotExist:
                 raise ValidationError({'message': 'did not find a course in progress for this trainer'})
             result_courses = []
@@ -621,7 +619,7 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
         # retrive the course if the admin is whom created it
         if user.is_trainer:
             try:
-                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
+                trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, trainer_contract_course__course_id=course_id, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
@@ -636,12 +634,16 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
                         is_in_progress = True
             if not course.published:
                 is_in_progress = True
-            if not course.published:
-                is_in_progress = True
-            print(is_in_progress)
             if is_in_progress:
+                try:
+                    course = Course.objects.filter(id=course.id)
+                except Course.DoesNotExist:
+                    raise ValidationError('No such course in progress')
                 print(course)
+                
                 return course
+            else:
+                return Course.objects.none()
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['view_type'] = 'detail'
