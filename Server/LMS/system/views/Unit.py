@@ -2,7 +2,9 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 # models
 from ..models.Unit import Unit
 from ..models.Temp_unit import Temp_Unit
@@ -48,7 +50,7 @@ class UnitRetrieve(generics.RetrieveAPIView):
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
     # set the lookup field to match the URL keyword argument
-    lookup_url_kwarg = 'unit_id'
+    lookup_field = 'unit_id'
     # Document the view
     @swagger_auto_schema(
         operation_description='for presenting a specific course from a specific company showing only the important data',
@@ -97,7 +99,7 @@ class UnitUpdate(generics.UpdateAPIView):
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
-    lookup_url_kwarg = 'unit_id'
+    lookup_field = 'unit_id'
     @swagger_auto_schema(
         operation_description='for updating a specific unit',
         responses={200: unit_retrive_list_response_body}
@@ -115,28 +117,52 @@ class UnitUpdate(generics.UpdateAPIView):
     def perform_update(self, serializer):
         serializer.save(state='PR')
 
-# DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id
-class UnitDelete(generics.DestroyAPIView):    # set the serializer class
+# DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/delete
+class UnitDelete(generics.DestroyAPIView):    
+    # set the serializer class
     serializer_class = Temp_Unit_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
-    lookup_url_kwarg = 'unit_id'
+    lookup_field = 'unit_id'
     # Document the endpoint
     @swagger_auto_schema(
         operation_description='obviously for deleteing a specific unit',
-        responses={200: 'Unit set to delete state'}
+        responses={204}
     )
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
     def get_queryset(self):
         course_id = self.kwargs['course_id']
         unit_id = self.kwargs['unit_id']
-        try:
-            unit = Unit.objects.filter(id=unit_id, course=course_id)
-        except Unit.DoesNotExist:
-            raise ValidationError('No such unit for this course')
-        return unit
+        unit = get_object_or_404(Unit, id=unit_id, course=course_id)
+        temp_unit = get_object_or_404(Temp_Unit, unit=unit)
+        return temp_unit
     def perform_destroy(self, instance):
         instance.state = 'DE'
-        return Response({'message':'Unit set to delete state'}, status=204)
+        instance.save()
+
+# POST: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/restore
+class UnitRestore(generics.UpdateAPIView):    
+    # set the serializer class
+    serializer_class = Temp_Unit_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    # set the lookup field to match the URL keyword argument
+    lookup_field = 'unit_id'
+    # Document the endpoint
+    @swagger_auto_schema(
+        operation_description='obviously for restoring some deleted unit',
+        responses={200: 'Unit set to InProgress state (restored)'}
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']
+        unit_id = self.kwargs['unit_id']
+        unit = get_object_or_404(Unit, id=unit_id, course=course_id)
+        temp_unit = get_object_or_404(Temp_Unit, unit=unit)
+        return temp_unit
+    def perform_destroy(self, instance):
+        instance.state = 'PR'
+        instance.save()

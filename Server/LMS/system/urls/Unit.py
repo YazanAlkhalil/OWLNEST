@@ -1,5 +1,5 @@
 from django.urls import path
-from ..views.Unit import UnitList, UnitRetrieve, UnitCreate, UnitUpdate, UnitDelete
+from ..views.Unit import UnitList, UnitRestore, UnitRetrieve, UnitCreate, UnitUpdate, UnitDelete
 
 urlpatterns = [
     # path(
@@ -36,5 +36,10 @@ urlpatterns = [
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/delete', 
         UnitDelete.as_view(), 
         name='unit-trainer-delete'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/restore', 
+        UnitRestore.as_view(), 
+        name='unit-trainer-restore'
     ),
 ]

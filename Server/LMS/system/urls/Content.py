@@ -1,5 +1,5 @@
 from django.urls import path
-from ..views.Content import ContentCreate, ContentList, ContentRetrieve, ContentUpdate, ContentDelete
+from ..views.Content import ContentCreate, ContentRestore, ContentList, ContentRetrieve, ContentUpdate, ContentDelete
 
 urlpatterns = [
     # path(
@@ -36,5 +36,10 @@ urlpatterns = [
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>/delete', 
         ContentDelete.as_view(), 
         name='content-trainer-delete'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>/restore', 
+        ContentRestore.as_view(), 
+        name='content-trainer-restore'
     ),
 ]

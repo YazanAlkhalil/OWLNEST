@@ -211,7 +211,7 @@ class CompanyCourseApprove(generics.CreateAPIView):
                 raise ValidationError({'message' : 'Course does not exist'})
             # Check if all units and contents are in 'PE' state
             try:
-                temp_units = Temp_Unit.objects.filter(course=course_id, state='PE')
+                temp_units = Temp_Unit.objects.filter(course=course_id)
             except Temp_Unit.DoesNotExist:
                 raise ValidationError({'message': 'No units in pending or delete state'})
             with transaction.atomic():
@@ -567,10 +567,10 @@ class CompanyCourseListInProgress(generics.ListAPIView):
                     result_courses.append(course)
                     continue
                 for unit in Temp_Unit.objects.filter(course=course):
-                    if unit.state == 'PR':
+                    if unit.state == 'PR' or unit.state == 'DE':
                         result_courses.append(course)
                     for content in Temp_Content.objects.filter(temp_unit=unit):
-                        if content.state == 'PR':
+                        if content.state == 'PR' or content.state == 'DE':
                             result_courses.append(course)
             try:
                 courses = Course.objects.filter(id__in=[course.id for course in result_courses])
@@ -614,10 +614,10 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
             except Course.DoesNotExist:
                 raise ValidationError({'message': 'did not find a course in progress for this trainer'})
             for unit in Temp_Unit.objects.filter(course=course):
-                if unit.state == 'PR':
+                if unit.state == 'PR' or unit.state == 'DE':
                     is_in_progress = True
                 for content in Temp_Content.objects.filter(temp_unit=unit):
-                    if content.state == 'PR':
+                    if content.state == 'PR' or content.state == 'DE':
                         is_in_progress = True
             if not course.published:
                 is_in_progress = True
@@ -628,7 +628,7 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
                     raise ValidationError('No such course in progress')
                 return course
             else:
-                return Course.objects.none()
+                raise ValidationError({'message': 'No Contect'})
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['view_type'] = 'detail'
@@ -649,7 +649,7 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
         request_body=Course_Serializer,
         responses={200: course_retrive_response_body}
     )
-    def put(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
     def get_queryset(self):
         user = self.request.user
