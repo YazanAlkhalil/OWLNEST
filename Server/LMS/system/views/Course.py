@@ -212,6 +212,8 @@ class CompanyCourseApprove(generics.CreateAPIView):
                 raise ValidationError({'message' : 'Course does not exist'})
             course.published = True
             course.save()
+            course.published = True
+            course.save()
             # Check if all units and contents are in 'PE' state
             try:
                 temp_units = Temp_Unit.objects.filter(course=course_id, state='PE')
@@ -632,6 +634,8 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
                 for content in Temp_Content.objects.filter(temp_unit=unit):
                     if content.state == 'PR':
                         is_in_progress = True
+            if not course.published:
+                is_in_progress = True
             if not course.published:
                 is_in_progress = True
             print(is_in_progress)
