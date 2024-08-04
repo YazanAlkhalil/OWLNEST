@@ -469,7 +469,7 @@ class CompanyCourseListPending(generics.ListAPIView):
             except Admin_Contract.DoesNotExist:
                 raise ValidationError("Admin contract does not exist for this user")
             try:
-                courses = Course.objects.get(admin_contract=admin_contract, company=company_id)
+                courses = Course.objects.filter(admin_contract=admin_contract, company=company_id)
             except Course.DoesNotExist:
                 raise ValidationError({'message': 'pending course for this admin not found'})
             result_courses = []

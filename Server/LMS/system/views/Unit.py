@@ -50,7 +50,7 @@ class UnitRetrieve(generics.RetrieveAPIView):
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
     # set the lookup field to match the URL keyword argument
-    lookup_field = 'unit_id'
+    lookup_url_kwarg = 'unit_id'
     # Document the view
     @swagger_auto_schema(
         operation_description='for presenting a specific course from a specific company showing only the important data',
@@ -137,12 +137,12 @@ class UnitDelete(generics.DestroyAPIView):
         unit_id = self.kwargs['unit_id']
         unit = get_object_or_404(Unit, id=unit_id, course=course_id)
         temp_unit = get_object_or_404(Temp_Unit, unit=unit)
-        return temp_unit
+        return Temp_Unit.objects.filter(id=temp_unit.id)
     def perform_destroy(self, instance):
         instance.state = 'DE'
         instance.save()
 
-# POST: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/restore
+# PATCH: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/restore
 class UnitRestore(generics.UpdateAPIView):    
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
@@ -155,14 +155,16 @@ class UnitRestore(generics.UpdateAPIView):
         operation_description='obviously for restoring some deleted unit',
         responses={200: 'Unit set to InProgress state (restored)'}
     )
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
     def get_queryset(self):
         course_id = self.kwargs['course_id']
         unit_id = self.kwargs['unit_id']
         unit = get_object_or_404(Unit, id=unit_id, course=course_id)
         temp_unit = get_object_or_404(Temp_Unit, unit=unit)
-        return temp_unit
-    def perform_destroy(self, instance):
-        instance.state = 'PR'
-        instance.save()
+        return Temp_Unit.objects.filter(id=temp_unit.id)
+    def perform_update(self, serializer):
+        temp_unit = serializer.instance
+        temp_unit.state = 'PR'
+        temp_unit.save()
+        return Response({'message': f'resored {temp_unit.title} succesfully'}, status=status.HTTP_200_OK)

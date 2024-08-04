@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
+from rest_framework import status
 # models
 from ..models.Temp_unit import Temp_Unit
 from ..models.Temp_Content import Temp_Content
@@ -190,13 +191,13 @@ class ContentDelete(generics.DestroyAPIView):
         content_id = self.kwargs['content_id']
         content = get_object_or_404(Content, id=content_id, unit__id=unit_id)
         temp_content = get_object_or_404(Temp_Content, content=content)
-        return temp_content
+        return Temp_Content.objects.filter(id=temp_content.id)
     def perform_destroy(self, instance):
         instance.state = 'DE'
         instance.save()
 
-# DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/restore
-class ContentRestore(generics.DestroyAPIView):    
+# PATCH : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/restore
+class ContentRestore(generics.UpdateAPIView):    
     # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
@@ -209,14 +210,16 @@ class ContentRestore(generics.DestroyAPIView):
         operation_description='obviously for restoring a deleted content',
         responses={200: 'Content set to InProgress state'}
     )
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
     def get_queryset(self):
         unit_id = self.kwargs['unit_id']
         content_id = self.kwargs['content_id']
         content = get_object_or_404(Content, id=content_id, unit__id=unit_id)
         temp_content = get_object_or_404(Temp_Content, content=content)
-        return temp_content
-    def perform_destroy(self, instance):
-        instance.state = 'PR'
-        instance.save()
+        return Temp_Content.objects.filter(id=temp_content.id)
+    def perform_update(self, serializer):
+        temp_content = serializer.instance
+        temp_content.state = 'PR'
+        temp_content.save()
+        return Response({'message': f'restored {temp_content.title} sucessfully'}, status=status.HTTP_200_OK)

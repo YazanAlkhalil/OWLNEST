@@ -17,11 +17,11 @@ urlpatterns = [
     #     UnitRetrieve.as_view(),
     #     name='unit-admin-retrive'
     # ),
-    # path(
-    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
-    #     UnitRetrieve.as_view(),
-    #     name='unit-trainer-retrive'
-    # ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
+        UnitRetrieve.as_view(),
+        name='unit-trainer-retrive'
+    ),
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/create', 
         UnitCreate.as_view(), 
