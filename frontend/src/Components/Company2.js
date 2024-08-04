@@ -1,7 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useFetch from "./AuthComponents/UseFetch";
 
 export default function Company({image,id,name}) {
+  const {fetchData} = useFetch()
+  const companyId = localStorage.getItem('companyId');
   async function getRoles() {
     const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + companyId + '/roles/', method: 'get' });
     if (Array.isArray(res)) {
@@ -12,15 +15,10 @@ export default function Company({image,id,name}) {
       }
       else{
         localStorage.setItem('isOwner', false)
-      }
-      if (res.length === 1) {
-        let targetPath = `/${res[0]}`;
-        if (!location.pathname.startsWith(targetPath) && !location.pathname.startsWith('/settings')) {
-          navigate(targetPath);
-        }
-      }
+      }   
       localStorage.setItem('roles', res)
-    }
+      navigate(`/${res[0]}`)
+      }
   }
 
     const navigate = useNavigate();
