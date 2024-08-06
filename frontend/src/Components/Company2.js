@@ -1,11 +1,30 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useFetch from "./AuthComponents/UseFetch";
 
 export default function Company({image,id,name}) {
+  const {fetchData} = useFetch()
+  const companyId = localStorage.getItem('companyId');
+  async function getRoles() {
+    const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + companyId + '/roles/', method: 'get' });
+    if (Array.isArray(res)) {
+      const ownerIndex = res.findIndex(item => item === 'owner')
+      if (ownerIndex != -1) {
+        localStorage.setItem('isOwner', true)
+        res[ownerIndex] = 'admin'
+      }
+      else{
+        localStorage.setItem('isOwner', false)
+      }   
+      localStorage.setItem('roles', res)
+      navigate(`/${res[0]}`)
+      }
+  }
+
     const navigate = useNavigate();
     function handleCompanyClick() {
+        getRoles()
         localStorage.setItem('companyId',id)
-        navigate('/trainee');
     }
     
   return (

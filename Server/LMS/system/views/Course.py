@@ -626,6 +626,8 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
                     course = Course.objects.filter(id=course.id)
                 except Course.DoesNotExist:
                     raise ValidationError('No such course in progress')
+                print(course)
+                
                 return course
             else:
                 raise ValidationError({'message': 'No Contect'})
