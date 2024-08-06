@@ -168,3 +168,27 @@ class UnitRestore(generics.UpdateAPIView):
         temp_unit.state = 'PR'
         temp_unit.save()
         return Response({'message': f'resored {temp_unit.title} succesfully'}, status=status.HTTP_200_OK)
+    
+
+# DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/not_published/delete
+class TempUnitDelete(generics.DestroyAPIView):    
+    # set the serializer class
+    serializer_class = Temp_Unit_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    # set the lookup field to match the URL keyword argument
+    lookup_field = 'unit_id'
+    # Document the endpoint
+    @swagger_auto_schema(
+        operation_description='obviously for deleteing a specific unit',
+        responses={204}
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']
+        unit_id = self.kwargs['unit_id']
+        return get_object_or_404(Temp_Unit, id=unit_id, course__id=course_id)
+    def perform_destroy(self, instance):
+        instance.delete()
+        return Response({'message':'Unit Deleted'}, status=204)

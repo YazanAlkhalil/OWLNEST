@@ -182,7 +182,7 @@ class ContentDelete(generics.DestroyAPIView):
     # Document the endpoint
     @swagger_auto_schema(
         operation_description='obviously for deleteing a specific content',
-        responses={200: 'Content set to delete state'}
+        responses={204: 'Content set to delete state'}
     )
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
@@ -223,3 +223,26 @@ class ContentRestore(generics.UpdateAPIView):
         temp_content.state = 'PR'
         temp_content.save()
         return Response({'message': f'restored {temp_content.title} sucessfully'}, status=status.HTTP_200_OK)
+
+# DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/not_published/delete
+class TempContentDelete(generics.DestroyAPIView):    
+    # set the serializer class
+    serializer_class = Temp_Content_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    # set the lookup field to match the URL keyword argument
+    lookup_url_kwarg = 'content_id'
+    lookup_field = 'content_id'
+    # Document the endpoint
+    @swagger_auto_schema(
+        operation_description='obviously for deleteing a specific content',
+        responses={204: 'Content set to delete state'}
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+    def get_queryset(self):
+        content_id = self.kwargs['content_id']
+        return get_object_or_404(Temp_Content, id=content_id)
+    def perform_destroy(self, instance):
+        instance.delete()
+        return Response({'message':'Unit Deleted'}, status=204)
