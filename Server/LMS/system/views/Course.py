@@ -451,7 +451,7 @@ class CompanyCourseListPending(generics.ListAPIView):
     # set the serializer class
     serializer_class = Course_Pending_Progress_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseAdmin]
+    permission_classes = [IsAuthenticated]
     # Document the view
     @swagger_auto_schema(
         operation_description='for presenting all the pended course details (all the main course data)',
@@ -496,7 +496,7 @@ class CompanyCourseRetrievePending(generics.RetrieveAPIView):
     # set the serializer class
     serializer_class = Course_Pending_Progress_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseAdmin]
+    permission_classes = [IsAuthenticated]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'course_id'
     # Document the view
