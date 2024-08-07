@@ -96,7 +96,7 @@ class ContentCreate(generics.CreateAPIView):
         content_type = self.request.data.get('content_type')
         if content_type == 'pdf':
             file_path = self.request.data.get('file_path')
-            if description is None or file_path is None:
+            if file_path is None:
                 raise ValidationError({'message': 'The "file_path" field is required for pdf content.'})
             temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_pdf=True)
             Pdf.objects.create(

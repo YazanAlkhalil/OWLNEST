@@ -1,4 +1,5 @@
 # rest_framework
+from django.http import Http404
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -136,8 +137,10 @@ class UnitDelete(generics.DestroyAPIView):
         course_id = self.kwargs['course_id']
         unit_id = self.kwargs['unit_id']
         unit = get_object_or_404(Unit, id=unit_id, course=course_id)
-        temp_unit = get_object_or_404(Temp_Unit, unit=unit)
-        return Temp_Unit.objects.filter(id=temp_unit.id)
+        if unit.published:
+            temp_unit = get_object_or_404(Temp_Unit, unit=unit)
+            return Temp_Unit.objects.filter(id=temp_unit.id)
+        raise ValidationError({'message': 'this unit has not been published yet'})
     def perform_destroy(self, instance):
         instance.state = 'DE'
         instance.save()
@@ -171,13 +174,14 @@ class UnitRestore(generics.UpdateAPIView):
     
 
 # DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/not_published/delete
-class TempUnitDelete(generics.DestroyAPIView):    
+class TempUnitDelete(generics.DestroyAPIView):
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
-    lookup_field = 'unit_id'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'unit_id'
     # Document the endpoint
     @swagger_auto_schema(
         operation_description='obviously for deleteing a specific unit',
@@ -187,8 +191,10 @@ class TempUnitDelete(generics.DestroyAPIView):
         return super().delete(request, *args, **kwargs)
     def get_queryset(self):
         course_id = self.kwargs['course_id']
-        unit_id = self.kwargs['unit_id']
-        return get_object_or_404(Temp_Unit, id=unit_id, course__id=course_id)
+        try:
+            return Temp_Unit.objects.filter(course__id=course_id)
+        except Temp_Unit.DoesNotExist:
+            raise Http404("Temp_Unit not found")
     def perform_destroy(self, instance):
         instance.delete()
-        return Response({'message':'Unit Deleted'}, status=204)
+        return Response({'message': 'Unit Deleted'}, status=status.HTTP_204_NO_CONTENT)

@@ -26,7 +26,7 @@ from ..models.Test import Test
 from ..models.Favorite import Favorite
 # serialzers
 from ..serializers.Course import Course_Serializer
-from ..serializers.Course_Pending import Course_Pending_Progress_Serializer
+from ..serializers.Course_Pending_InProgress import Course_Pending_Progress_Serializer
 from ..serializers.User_Result import User_Result_Serializer
 from ..serializers.Trainer_Contract_Course_Leader import Trainer_Contract_Course_Leader_Serializer
 # permissions
@@ -234,6 +234,7 @@ class CompanyCourseApprove(generics.CreateAPIView):
                             new_unit = Unit.objects.create(
                                 course=course,
                                 title=temp_unit.title,
+                                published=True,
                                 order=temp_unit.order,
                             )
                             new_unit.save()
@@ -261,6 +262,7 @@ class CompanyCourseApprove(generics.CreateAPIView):
                                         unit=new_unit,
                                         title=temp_content.title,
                                         order=temp_content.order,
+                                        published=True,
                                         is_video=temp_content.is_video,
                                         is_pdf=temp_content.is_pdf,
                                         is_test=temp_content.is_test
@@ -555,8 +557,8 @@ class CompanyCourseListInProgress(generics.ListAPIView):
         if user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
-            except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+            except Trainer_Contract.DoesNotExist:
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 courses = Course.objects.filter(trainers=trainer_contract, company=company_id)
             except Course.DoesNotExist:
@@ -607,8 +609,8 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
         if user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, trainer_contract_course__course=course_id, company__id=company_id, employed=True)
-            except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+            except Trainer_Contract.DoesNotExist:
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 course = Course.objects.get(id=course_id, trainers=trainer_contract, company=company_id)
             except Course.DoesNotExist:
@@ -625,9 +627,7 @@ class CompanyCourseRetrieveInProgress(generics.RetrieveAPIView):
                 try:
                     course = Course.objects.filter(id=course.id)
                 except Course.DoesNotExist:
-                    raise ValidationError('No such course in progress')
-                print(course)
-                
+                    raise ValidationError({'message': 'No such course in progress'})
                 return course
             else:
                 raise ValidationError({'message': 'No Contect'})
