@@ -7,8 +7,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function FormDialog() {
+export default function FormDialog({addUnit}) {
   const [open, setOpen] = React.useState(false);
+  const [text,setText] = React.useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,9 +31,7 @@ export default function FormDialog() {
           component: 'form',
           onSubmit: (event) => {
             event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
+            addUnit(text)
             handleClose();
           },
         }}
@@ -44,7 +43,6 @@ export default function FormDialog() {
           </DialogContentText>
           <TextField
             autoFocus
-            required
             margin="dense"
             id="name"
             name="email"
@@ -52,6 +50,8 @@ export default function FormDialog() {
             type="text"
             fullWidth
             variant="standard"
+            value={text}
+            onChange={e=>setText(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

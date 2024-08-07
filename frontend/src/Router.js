@@ -79,8 +79,10 @@ export default function Router() {
 
 
       <Route path="/trainer" element={<TrainerLayout />}>
-        <Route path="/trainer/courses/:id" element={<CreateCoursePage />} />
-        <Route path="/trainer/courses" element={<TrainerCoursesPage />} />
+        <Route path="/trainer/courses/:id" element={<CreateCoursePage inprogress={false}/>} />
+        <Route path="/trainer/inprogress/:id" element={<CreateCoursePage inprogress={true}/>} />
+        <Route path="/trainer/inprogress/" element={<TrainerCoursesPage inprogress={true}/>} />
+        <Route path="/trainer/courses" element={<TrainerCoursesPage inprogress={false}/>} />
         <Route
           path="/trainer"
           element={<Navigate to="/trainer/courses" replace />}

@@ -2,8 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ProgressBar from './ProgressBar';
 
-const VideoDropzone = ({ type }) => {
-    const [uploadedFile, setUploadedFile] = useState(null);
+const VideoDropzone = ({ uploadedFile,type,setUploadedFile}) => {
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [fileRejectionMessage, setFileRejectionMessage] = useState('');
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -56,7 +55,7 @@ const VideoDropzone = ({ type }) => {
         <div className="flex flex-col items-center justify-center">
             <div
                 {...getRootProps()}
-                className={`dropzone mx-auto mt-8 w-full max-w-lg rounded-md border-2 border-dashed py-12 px-6 text-center transition-colors ${isDragActive
+                className={`dropzone mx-auto mt-8 w-full max-w-lg rounded-md border-2 border-dashed py-12 px-6 text-center dark:bg-DarkGray transition-colors ${isDragActive
                     ? 'border-green-500 bg-green-100'
                     : isDragReject
                         ? 'border-red-500 bg-red-100'

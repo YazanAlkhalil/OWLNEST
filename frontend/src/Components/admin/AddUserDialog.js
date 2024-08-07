@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import UseFetch from '../AuthComponents/UseFetch';
+import toast from 'react-hot-toast';
 
 export default function FormDialog({fetchUsers}) {
     const [email, setEmail] = useState('')
@@ -36,10 +37,15 @@ export default function FormDialog({fetchUsers}) {
         handleClose()
     }
     async function handleSubmit() {
-        await fetchData({url:'/add_user/?company_id='+companyId,data :{email,role},method:'POST'}) 
-        handleClose() 
-        reset()
-        fetchUsers()
+        if(email,role){
+            await fetchData({url:'/add_user/?company_id='+companyId,data :{email,role},method:'POST'}) 
+            handleClose() 
+            reset()
+            fetchUsers()
+        }
+        else{
+            toast.error('please fill in all fields')
+        }
     }
 
     return (
