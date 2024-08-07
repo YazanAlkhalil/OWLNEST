@@ -9,16 +9,36 @@ import { BiSearch } from 'react-icons/bi';
 import { FormControlLabel, Switch } from '@mui/material';
 import UserInCourse from './UserInCourse';
 import useFetch from '../Components/AuthComponents/UseFetch'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 function AdminCourseUsers() {
   const { fetchData } = useFetch()
   const { id } = useParams()
+  const companyId = localStorage.getItem('companyId');
+
+  async function getRoles() {
+    const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + companyId + '/roles/', method: 'get' });
+    if (Array.isArray(res)) {
+      const ownerIndex = res.findIndex(item => item === 'owner')
+      if (ownerIndex != -1) {
+        localStorage.setItem('isOwner', true)
+        res[ownerIndex] = 'admin'
+      }
+      else{
+        localStorage.setItem('isOwner', false)
+      }   
+      localStorage.setItem('roles', res)
+      window.dispatchEvent(new Event('localStorageChange'));
+      }
+  }
   const getUsers = async () => {
     const res = await fetchData({ url: 'http://127.0.0.1:8000/api/course/' + id + '/all-users' })
     setFilteredData(res)
     setData(res)
+    // update roles whenever we modify the roles
+    getRoles()
+    
   }
   React.useEffect(() => {
     getUsers()

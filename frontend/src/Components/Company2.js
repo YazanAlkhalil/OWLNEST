@@ -5,6 +5,7 @@ import useFetch from "./AuthComponents/UseFetch";
 export default function Company({image,id,name}) {
   const {fetchData} = useFetch()
   const companyId = localStorage.getItem('companyId');
+  const navigate = useNavigate();
   async function getRoles() {
     const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + companyId + '/roles/', method: 'get' });
     if (Array.isArray(res)) {
@@ -21,7 +22,6 @@ export default function Company({image,id,name}) {
       }
   }
 
-    const navigate = useNavigate();
     function handleCompanyClick() {
         getRoles()
         localStorage.setItem('companyId',id)

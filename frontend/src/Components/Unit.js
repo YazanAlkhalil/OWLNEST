@@ -5,8 +5,10 @@ import { FaPlay } from "react-icons/fa";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { PiExam } from "react-icons/pi";
-function Unit({ item, sortable, uploadVideo, uploadPDF, createQuiz }) {
+import useFetch from "./AuthComponents/UseFetch";
+function Unit({ item, sortable, uploadVideo, uploadPDF, createQuiz,isDisplayOnly }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
+  const {fetchData} = useFetch()
   const overlayRef = useRef(null);
 
   const toggleOverlay = () => {
@@ -30,7 +32,9 @@ function Unit({ item, sortable, uploadVideo, uploadPDF, createQuiz }) {
     transform: CSS.Transform.toString(transform),
   };
 
-
+  const deleteUnit = async () => {
+    const res = await fetchData({url:""})
+  }
 
 
   if (!sortable) {
@@ -40,17 +44,16 @@ function Unit({ item, sortable, uploadVideo, uploadPDF, createQuiz }) {
 
           <span className="text-2xl">{item.title} </span>
         </div>
-        <div className="flex items-center">
-
+        {!isDisplayOnly && <div className="flex items-center">
           <button
             onClick={toggleOverlay}
             className="btn-inner h-18 p-2 "
           >
             add lesson
           </button>
-          <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-red-500 rounded-full  ' />
-        </div>
-        <div
+          <MdDelete onClick={deleteUnit} className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-red-500 rounded-full  ' />
+        </div>}
+        {!isDisplayOnly && <div
           ref={overlayRef}
           className={`${isOverlayVisible ? "block" : "hidden"
             } rounded z-10 bg-white dark:bg-DarkGray shadow-xl border border-slate-50  absolute top-12 right-28`}
@@ -88,7 +91,7 @@ function Unit({ item, sortable, uploadVideo, uploadPDF, createQuiz }) {
             <PiExam />
             Quiz
           </div>
-        </div>
+        </div>}
       </div>
     );
   }

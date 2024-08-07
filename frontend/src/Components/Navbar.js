@@ -26,8 +26,7 @@ function NavBar({ highlight }) {
   const [notifications, setNotifications] = useState(0)
   const audioRef = useRef(null);
   const lastNotificationRef = localStorage.getItem('lastNotificationRef');
-  const roles = localStorage.getItem('roles');
-
+  const [roles,setRoles] = useState("")
 
   useEffect(() => {
     const ws = new WebSocket('ws://127.0.0.1:8000/ws/company/' + companyId + '/notification/')
@@ -41,8 +40,6 @@ function NavBar({ highlight }) {
       if (message === "0") {
         message = null;
       } else {
-        console.log(message);
-        console.log(lastNotificationRef);
         if (lastNotificationRef != message) {
           if (!audioRef.current) {
             audioRef.current = new Audio('/cute_notification.mp3');
@@ -80,6 +77,7 @@ function NavBar({ highlight }) {
   const handleChangeCompanyClick = () => {
     navigate('/company', { replace: true });
   }
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -87,6 +85,24 @@ function NavBar({ highlight }) {
     };
   }, []);
 
+
+  useEffect(() => {
+    const getUserRoles = () => {
+      const storedRoles = localStorage.getItem('roles');
+      console.log(storedRoles,"roles");
+      setRoles(storedRoles);
+    };
+
+    getUserRoles();
+
+    window.addEventListener('storage', getUserRoles);
+    window.addEventListener('localStorageChange', getUserRoles);
+
+    return () => {
+      window.removeEventListener('storage', getUserRoles);
+      window.removeEventListener('localStorageChange', getUserRoles);
+    };
+  }, []);
 
 
   async function toggleNotifications() {

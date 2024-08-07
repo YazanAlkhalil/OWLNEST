@@ -17,7 +17,7 @@ function UploadPDF({ submit }) {
     formData.append("content_type","pdf")
     formData.append("title",name)
     formData.append("file_path",uploadedFile)
-    fetchData({url:"http://127.0.0.1:8000/api/trainer/company/"+companyId+"/courses/"+id+"/unit/"+unitId+"/content/create",method:"POST",data:formData})
+    await fetchData({url:"http://127.0.0.1:8000/api/trainer/company/"+companyId+"/courses/"+id+"/unit/"+unitId+"/content/create",method:"POST",data:formData})
     submit()
   }
 

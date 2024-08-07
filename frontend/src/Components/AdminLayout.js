@@ -8,6 +8,7 @@ const AdminLayout = () => {
       <Sidebar  links={[
         { name: "home", url: "/admin/dashboard" },
         { name: "courses", url: "/admin/courses" },
+        { name: "pending", url: "/admin/pending" },
         { name: "users", url: "/admin/users" },
       ]} />
       <div className="dark:bg-Gray dark:text-white h-screen col-span-5 flex flex-col grow-[24]">
