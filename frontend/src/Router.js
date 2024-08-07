@@ -34,6 +34,7 @@ import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
 import NewPassword from "./Components/AuthComponents/NewPassword";
 import SettingsLayout from "./Components/SettingsLayout";
 import SettingGeneral from "./Pages/SettingGeneral";
+import PendingCourseDetails from "./Components/admin/PendingCourseDetails";
 
 export default function Router() {
   return (
@@ -93,8 +94,10 @@ export default function Router() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/buyCourse" element={<Plane />} />
         <Route path="/admin/courses/:id" element={<AdminCourseDetails />} />
-        <Route path="/admin/courses" element={<AdminCoursesPage />} />
+        <Route path="/admin/courses" element={<AdminCoursesPage pending={false}/>} />
         <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/pending" element={<AdminCoursesPage pending={true}/>} />
+        <Route path="/admin/pending/:id" element={<PendingCourseDetails />} />
         {/* <Route path='/admin/users/:id' element={<AdminCoursesPage />} /> */}
         <Route
           path="/admin"

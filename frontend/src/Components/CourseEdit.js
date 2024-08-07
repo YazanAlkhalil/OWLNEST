@@ -59,7 +59,7 @@ function CourseEdit() {
           else if (lesson.is_video)
             content = "video"
           else
-          content = 'quiz'
+            content = 'quiz'
           console.log(content);
           tempContent.push({
             type: "lesson",
@@ -77,14 +77,14 @@ function CourseEdit() {
     getInfo()
   }, [])
   if (isInfo)
-    return <AdditionalInfo close={() => {setIsInfo(false);getInfo()}} />
+    return <AdditionalInfo close={() => { setIsInfo(false); getInfo() }} />
 
   if (isUploadingVideo)
-    return <UploadVideo submit={() => {setIsUploadingVideo(false); getInfo()}} />
+    return <UploadVideo submit={() => { setIsUploadingVideo(false); getInfo() }} />
   if (isUploadingPDF)
-    return <UploadPDF submit={() => {setIsUploadingPDF(false);getInfo()}} />
+    return <UploadPDF submit={() => { setIsUploadingPDF(false); getInfo() }} />
   if (createQuiz)
-    return <CreateQuiz submit={() => {setCreateQuiz(false);getInfo()}} />
+    return <CreateQuiz submit={() => { setCreateQuiz(false); getInfo() }} />
 
   function handleDragEnd(e) {
     const { active, over } = e
@@ -97,9 +97,12 @@ function CourseEdit() {
     }
   }
   async function addUnit(name) {
-    await fetchData({url:"http://127.0.0.1:8000/api/trainer/company/"+companyId+"/courses/"+id+"/unit/create",method:"POST",data:{title:name}})
+    await fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/courses/" + id + "/unit/create", method: "POST", data: { title: name } })
     getInfo()
 
+  }
+  async function publish() {
+    const res = fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/courses/" + id + "/publish", method: "POST" })
   }
   return (
     <>
@@ -145,6 +148,10 @@ function CourseEdit() {
           </div>
         </div>
       </DndContext>
+      <div className='flex justify-end mt-10'>
+
+        <button onClick={publish} className='p-2 bg-accent rounded text-xl ml-auto'>Submit</button>
+      </div>
     </>
   )
 }

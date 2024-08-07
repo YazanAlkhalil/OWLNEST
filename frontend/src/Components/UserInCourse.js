@@ -43,7 +43,6 @@ function UserInCourse({ user, index,getUsers }) {
         else
             toast.error('Choose a role')
     }
-    console.log(user.role ? user.role : role,"role");
     return (
         <>
             <div className={`${index % 2 == 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-900'}  p-2 rounded-l flex items-center`}>{user.username}</div>

@@ -14,7 +14,7 @@ function getIcon(icon) {
     return <PiExam />
 }
 
-function Lesson({ item, sortable }) {
+function Lesson({ item, sortable,isDisplayOnly }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
   const style = {
     transition,
@@ -22,7 +22,7 @@ function Lesson({ item, sortable }) {
   }
   if (!sortable) {
     return <div
-      className='group dark:bg-DarkSecondary dark:hover:bg-DarkGrayHover dark:text-white bg-gray-50 hover:cursor-pointer hover:bg-gray-200 text-black border flex justify-between items-center mb-2 p-2 rounded'>
+      className={`${isDisplayOnly ? "" :"group"} dark:bg-DarkSecondary dark:hover:bg-DarkGrayHover dark:text-white bg-gray-50 hover:cursor-pointer hover:bg-gray-200 text-black border flex justify-between items-center mb-2 p-2 rounded`}>
       <div className="flex items-center">
         {getIcon(item.content)}
         <h4 className='ml-2 text-xl'>{item.title}</h4>
