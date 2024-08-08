@@ -12,17 +12,23 @@ function TrainerCoursesPage({ inprogress }) {
   const companyId = localStorage.getItem('companyId')
   const { fetchData } = useFetch()
 
-  useEffect(() => {
-    const getInprogressCourses = async () => {
-      const res = await fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/progress_courses" })
-      if (Array.isArray(res)) {
-        setCourses(res)
-      }
+  const getInprogressCourses = async () => {
+    const res = await fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/progress_courses" })
+    if (Array.isArray(res)) {
+      setCourses(res)
     }
+  }
+  const getCourses = async () => {
+    const res = await fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/courses" })
+    if (Array.isArray(res)) {
+      setCourses(res)
+    }
+  }
+  useEffect(() => {
     if (inprogress)
       getInprogressCourses()
     else
-      setCourses([])
+      getCourses()
   }, [inprogress])
 
   return (
@@ -38,7 +44,7 @@ function TrainerCoursesPage({ inprogress }) {
             }
           </div>)
           :
-          <NoCourses/>
+          <NoCourses />
       }
     </>
   )
