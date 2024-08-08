@@ -68,6 +68,7 @@ function PendingCourseDetails() {
     }, [])
 
     async function approve(){
+        const res = await fetchData({url:"http://127.0.0.1:8000/api/admin/company/"+companyId+"/courses/"+id+"/approve",method:"POST"})
         
     }
     async function disapprove(){
