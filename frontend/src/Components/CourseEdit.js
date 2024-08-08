@@ -13,6 +13,7 @@ import { MdEdit } from 'react-icons/md';
 import useFetch from '../Components/AuthComponents/UseFetch'
 import { useParams } from 'react-router-dom';
 import def from '../images/default-course-thumbnail.png'
+import toast from 'react-hot-toast';
 
 function CourseEdit() {
   const [isInfo, setIsInfo] = useState(false)
@@ -103,6 +104,7 @@ function CourseEdit() {
   }
   async function publish() {
     const res = fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/courses/" + id + "/publish", method: "POST" })
+    toast.success('course published successfully wait for admins approval')
   }
   return (
     <>
