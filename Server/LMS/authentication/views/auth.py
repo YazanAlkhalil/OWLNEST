@@ -145,21 +145,18 @@ class DeleteUserView(APIView):
         
 
 class EditProfielView(APIView):
-    def patch(self,request):
+    def patch(self, request):
         if request.user.is_authenticated:
             id = request.user.id
             user = request.user
-            password = user.password
-            if User is None:
-                return Response({'message': 'user not found'}, status=404)
             user_data = request.data
-            old_password = user_data['old_password']
-            if not user.check_password(old_password):
-            # if not old_password == password:
-                return Response({'message': 'old password is not correct'}, status=400)
-            new_password = user_data['new_password']
-            user.set_password(new_password)  # <--- Use set_password to hash the new password
-            user.save()
+            if 'old_password' in user_data:
+                old_password = user_data['old_password']
+                if not user.check_password(old_password):
+                    return Response({'message': 'old password is not correct'}, status=400)
+                new_password = user_data['new_password']
+                user.set_password(new_password)  # <--- Use set_password to hash the new password
+                user.save()
             serializer = UserSerializer(user, data=user_data, partial=True)
             if serializer.is_valid(): 
                 serializer.save()
@@ -167,7 +164,6 @@ class EditProfielView(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'user not found'}, status=404)
-
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     
