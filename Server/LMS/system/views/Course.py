@@ -37,22 +37,14 @@ from ..permissions.IsAdmin import IsAdmin
 from ..permissions.IsOwnerOrAdminForCourse import IsOwnerOrAdminForCourse
 # swagger
 from drf_yasg.utils import swagger_auto_schema
-from ..swagger.Course import course_create_request_body, course_list_response_body, course_retrive_response_body, course_retrive_info_response_body, course_delete_response_body, course_publish_approve_request_body
-
-
-
-
-
-#v2 imports 
-#serializers
-from system.serializers.AdminCourseListSerializer import AdminCourseListSerializer
-from system.serializers.TrainerCourseListSerializer import TrainerCourseListSerializer
-from system.serializers.TraineeCourseListSerializer import TraineeCourseListSerializer
-#permissions
-from system.permissions.IsAdmin import IsCompanyOwner,IsAdminInCompany ,IsAdminInCompanyOrOwner
-
-
-
+from ..swagger.Course import (
+    course_create_request_body, 
+    course_list_response_body, 
+    course_retrive_response_body, 
+    course_retrive_info_response_body, 
+    course_delete_response_body, 
+    course_publish_approve_request_body
+)
 
 # GET : api/admin/company/:company-id/courses
 # GET : api/trainer/company/:company-id/courses
@@ -79,36 +71,36 @@ class CompanyCourseList(generics.ListAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 courses = Course.objects.filter(company_id=company_id, admin_contract=admin_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No courses for this admin in this company')
+                raise ValidationError({'message': 'No courses for this admin in this company'})
             return courses
         # get the trainer courses
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
-                raise ValidationError("Tranier contract does not exist for this user")
+                raise ValidationError({'message': "Tranier contract does not exist for this user"})
             try:
                 courses = Course.objects.filter(company_id=company_id, trainer_contract_course__trainer_contract=trainer_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No courses for this trainer in this company')
+                raise ValidationError({'message': 'No courses for this trainer in this company'})
             return courses
         # get the trainee courses
         elif user.is_trainee:
             try:
                 trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, company__id=company_id, employed=True)
             except Trainee_Contract.DoesNotExist:
-                raise ValidationError("Trainee contract does not exist for this user")
+                raise ValidationError({'message': "Trainee contract does not exist for this user"})
             try:
                 courses = Course.objects.filter(enrollment__trainee_contract=trainee_contract, company=company_id).annotate(
                     progress=F('enrollment__progress'),
                     is_favorite=Exists(Favorite.objects.filter(enrollment__course=OuterRef('pk'), trainee_contract=trainee_contract))
                 )
             except Course.DoesNotExist:
-                raise ValidationError('No courses for this trainee in this company')
+                raise ValidationError({'message': 'No courses for this trainee in this company'})
             return courses
         elif user.is_owner:
             try:
@@ -150,7 +142,7 @@ class CompanyCourseCreate(generics.CreateAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Valid admin contract does not exist for this user")
+                raise ValidationError({'message': "Valid admin contract does not exist for this user"})
             serializer.save(company=company, admin_contract=admin_contract)
         else:
             raise ValidationError({'message': 'Only admins can create courses'})
@@ -174,13 +166,13 @@ class CompanyCoursePublish(generics.UpdateAPIView):
         if self.request.user.is_trainer:
             for temp_unit in temp_units:
                 # pend all units but the in delete state (to be deleted later in the approve)
-                if not temp_unit.state == 'DE':
+                if temp_unit.state == 'PR':
                     temp_unit.state = 'PE'
                     temp_unit.save()
                     temp_contents = Temp_Content.objects.filter(temp_unit=temp_unit)
                     # pend all the contetnts but the in delete state (to be deleted later in the approve)
                     for temp_content in temp_contents:
-                        if not temp_content.state == 'DE':
+                        if temp_content.state == 'PR':
                             temp_content.state = 'PE'
                             temp_content.save()
             return Response({'status': 'Published'}, status=status.HTTP_200_OK)
@@ -211,7 +203,7 @@ class CompanyCourseApprove(generics.CreateAPIView):
                 raise ValidationError({'message' : 'Course does not exist'})
             # Check if all units and contents are in 'PE' state
             try:
-                temp_units = Temp_Unit.objects.filter(course=course_id)
+                temp_units = Temp_Unit.objects.filter(course=course)
             except Temp_Unit.DoesNotExist:
                 raise ValidationError({'message': 'No units in pending or delete state'})
             with transaction.atomic():
@@ -259,7 +251,7 @@ class CompanyCourseApprove(generics.CreateAPIView):
                                     temp_content.content.is_test = temp_content.is_test
                                 else:
                                     new_content = Content.objects.create(
-                                        unit=new_unit,
+                                        unit=temp_unit.unit,
                                         title=temp_content.title,
                                         order=temp_content.order,
                                         published=True,
@@ -276,7 +268,10 @@ class CompanyCourseApprove(generics.CreateAPIView):
                                     try:
                                         pdf = Pdf.objects.get(temp_content=temp_content)
                                     except Pdf.DoesNotExist:
-                                        raise ValidationError({'message': 'pdf does not exists'})
+                                        try:
+                                            pdf = Pdf.objects.get(content=temp_content.content)
+                                        except Pdf.DoesNotExist:
+                                            raise ValidationError({'message': 'pdf does not exists'})
                                     pdf.content = temp_content.content
                                     pdf.temp_content = None
                                     pdf.save()
@@ -284,7 +279,10 @@ class CompanyCourseApprove(generics.CreateAPIView):
                                     try:
                                         video = Video.objects.get(temp_content=temp_content)
                                     except Video.DoesNotExist:
-                                        raise ValidationError({'message': 'video does not exists'})
+                                        try:
+                                            video = Video.objects.get(content=temp_content.content)
+                                        except Video.DoesNotExist:
+                                            raise ValidationError({'message': 'video does not exists'})
                                     video.content = temp_content.content
                                     video.temp_content = None
                                     video.save()
@@ -292,7 +290,10 @@ class CompanyCourseApprove(generics.CreateAPIView):
                                     try:
                                         test = Test.objects.get(temp_content=temp_content)
                                     except Test.DoesNotExist:
-                                        raise ValidationError({'message': 'test does not exists'})
+                                        try:
+                                            test = Test.objects.get(content=temp_content.content)
+                                        except Test.DoesNotExist:
+                                            raise ValidationError({'message': 'test does not exists'})
                                     test.content = temp_content.content
                                     test.temp_content = None
                                     test.save()
@@ -301,6 +302,103 @@ class CompanyCourseApprove(generics.CreateAPIView):
                 course.save()
         else:
             raise ValidationError({'message': 'Cannot perform this action'})
+
+# POST: api/admin/company/:company_id/courses/:course_id/disapprove
+class CompanyCourseDisapprove(generics.CreateAPIView):
+    # set the serializer class
+    serializer_class = Course_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseAdmin]
+    @swagger_auto_schema(
+        operation_description='Disapprove a specific course with all its units and contents',
+        request_body=course_publish_approve_request_body,
+        responses={200: 'Disapproved'}
+    )
+    def post(self, request, *args, **kwargs):
+        self.perform_create(self.get_serializer())
+        return Response({'status': 'Disapproved'}, status=status.HTTP_200_OK)
+    def perform_create(self, serializer):
+        company_id = self.kwargs['company_id']
+        course_id = self.kwargs['course_id']
+        if self.request.user.is_admin:
+            try:
+                course = Course.objects.get(id=course_id, company_id=company_id)
+            except Course.DoesNotExist:
+                raise ValidationError({'message' : 'Course does not exist'})
+            # Check if all units and contents are in 'PE' state
+            try:
+                temp_units = Temp_Unit.objects.filter(course=course)
+            except Temp_Unit.DoesNotExist:
+                raise ValidationError({'message': 'No units in pending or delete state'})
+            with transaction.atomic():
+                for temp_unit in temp_units:
+                    temp_contents = Temp_Content.objects.filter(temp_unit=temp_unit)
+                    # get the original unit if there where a one 
+                    if temp_unit.unit:
+                        old_unit = Unit.objects.get(id=temp_unit.unit.id)
+                    # If unit in state delete then delete it from the temp_unit
+                    if temp_unit.state == 'DE':
+                        temp_unit.delete()
+                        if temp_unit.unit:
+                            old_unit.delete()
+                    elif temp_unit.state == 'PE':
+                        if temp_unit.unit:
+                            temp_unit.state='PR'
+                            temp_unit.save()
+                        else:
+                            temp_unit.delete()
+                        for temp_content in temp_contents:
+                            # get the old content if there were a one
+                            if temp_content.content:
+                                old_content = Content.objects.get(id=temp_content.content.id)
+                            # If content in delete then delete it from the temp_content
+                            if temp_content.state == 'DE':
+                                temp_content.delete()
+                                if temp_content.content:
+                                    old_content.delete()
+                            elif temp_content.state == 'PE':
+                                if temp_content.content:
+                                    temp_content.state='PR'
+                                    temp_content.save()
+                                else:
+                                    temp_content.delete()
+                                # Move specific content type (Pdf, Video, Test) to access it from the content table
+                                if temp_content.is_pdf:
+                                    if temp_content.content:    
+                                        try:
+                                            pdf = Pdf.objects.get(temp_content=temp_content)
+                                        except Pdf.DoesNotExist:
+                                            raise ValidationError({'message': 'pdf does not exists'})
+                                        pdf.content = temp_content.content
+                                        pdf.temp_content = None
+                                        pdf.save()
+                                    else:
+                                        pdf.delete()
+                                elif temp_content.is_video:
+                                    if temp_content.content:
+                                        try:
+                                            video = Video.objects.get(temp_content=temp_content)
+                                        except Video.DoesNotExist:    
+                                            raise ValidationError({'message': 'video does not exists'})
+                                        video.content = temp_content.content
+                                        video.temp_content = None
+                                        video.save()
+                                    else:
+                                        video.delete()
+                                elif temp_content.is_test:
+                                    if temp_content.content:
+                                        try:
+                                            test = Test.objects.get(temp_content=temp_content)
+                                        except Test.DoesNotExist:
+                                            raise ValidationError({'message': 'test does not exists'})
+                                        test.content = temp_content.content
+                                        test.temp_content = None
+                                        test.save()
+                                    else:
+                                        test.delete()
+        else:
+            raise ValidationError({'message': 'Cannot perform this action'})
+
 
 # GET   : api/admin/company/:company-id/courses/course-id
 # GET   : api/trainer/company/:company-id/courses/course-id
@@ -328,39 +426,39 @@ class CompanyCourseRetrieve(generics.RetrieveAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, admin_contract=admin_contract, company=company_id)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this admin in this company')
+                raise ValidationError({'message': 'No such course for this admin in this company'})
             return course
         # retrive the course if the trainer is whom created it
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
-                raise ValidationError("Tranier contract does not exist for this user")            
+                raise ValidationError({'message': "Tranier contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, company=company_id, trainer_contract_course__trainer_contract=trainer_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this trainer in this company')
+                raise ValidationError({'message': 'No such course for this trainer in this company'})
             return course
         # retrive the course if the trainee has already enrolled in it 
         elif user.is_trainee:
             try:
                 trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, company__id=company_id, employed=True)
             except Trainee_Contract.DoesNotExist:
-                raise ValidationError("Trainee contract does not exist for this user")
+                raise ValidationError({'message': "Trainee contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, enrollment__trainee_contract=trainee_contract, company=company_id)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this trainee in this company')
+                raise ValidationError({'message': 'No such course for this trainee in this company'})
             return course
         elif user.is_owner:
             try:
                 course = Course.objects.filter(id=course_id, company__owner=user.owner)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this owner in this company')
+                raise ValidationError({'message': 'No such course for this owner in this company'})
             return course
         else:
             return Response({'message': 'No Content'}, status=status.HTTP_204_NO_CONTENT)
@@ -469,7 +567,7 @@ class CompanyCourseListPending(generics.ListAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 courses = Course.objects.filter(admin_contract=admin_contract, company=company_id)
             except Course.DoesNotExist:
@@ -485,7 +583,7 @@ class CompanyCourseListPending(generics.ListAPIView):
             try:
                 courses = Course.objects.filter(id__in=[course.id for course in result_courses])
             except Course.DoesNotExist:
-                raise ValidationError('No pending courses')
+                raise ValidationError({'message': 'No pending courses'})
             return courses
     # when listing the courses set the view_type as list, otherwise set it as detail
     def get_serializer_context(self):
@@ -517,7 +615,7 @@ class CompanyCourseRetrievePending(generics.RetrieveAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 course = Course.objects.get(id=course_id, admin_contract=admin_contract, company=company_id)
             except Course.DoesNotExist:
@@ -528,7 +626,7 @@ class CompanyCourseRetrievePending(generics.RetrieveAPIView):
                 try:
                     course = Course.objects.filter(id=course.id)
                 except Course.DoesNotExist:
-                    raise ValidationError('No such pending course')
+                    raise ValidationError({'message': 'No such pending course'})
                 return course
             else:
                 return Course.objects.none()
@@ -577,7 +675,7 @@ class CompanyCourseListInProgress(generics.ListAPIView):
             try:
                 courses = Course.objects.filter(id__in=[course.id for course in result_courses])
             except Course.DoesNotExist:
-                raise ValidationError('No courses in progress')
+                raise ValidationError({'message': 'No courses in progress'})
             return courses
     # when listing the courses set the view_type as list, otherwise set it as detail
     def get_serializer_context(self):
@@ -662,25 +760,25 @@ class CompanyCourseUpdate(generics.UpdateAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this admin in this company')
+                raise ValidationError({'message': 'No such course for this admin in this company'})
             return course
         # trainer can edit only his courses
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
-                raise ValidationError("Tranier contract does not exist for this user")
+                raise ValidationError({'message': "Tranier contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, company=company_id, trainer_contract=trainer_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this trainer in this company')
+                raise ValidationError({'message': 'No such course for this trainer in this company'})
             return course
         else:
-            raise PermissionDenied("You do not have permission to edit courses")
+            raise PermissionDenied({'message': "You do not have permission to edit courses"})
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['view_type'] = 'detail'
@@ -709,18 +807,18 @@ class CompanyCourseDelete(generics.DestroyAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this admin')
+                raise ValidationError({'message': 'No such course for this admin'})
             return course
         else:
-            raise PermissionDenied("You do not have permission to delete courses")
+            raise PermissionDenied({'message': "You do not have permission to delete courses"})
     def perform_destroy(self, instance):
         user = self.request.user
         if user.is_trainer or user.is_trainee:
-            raise PermissionDenied("You do not have permission to delete courses")
+            raise PermissionDenied({'message': "You do not have permission to delete courses"})
         instance.delete()
         return Response({'message':'Course Deleted'}, status=204)
 
@@ -750,92 +848,81 @@ class CompanyCourseRetriveInfo(generics.RetrieveAPIView):
             try:
                 admin_contract = Admin_Contract.objects.get(admin=user.admin, company__id=company_id, employed=True)
             except Admin_Contract.DoesNotExist:
-                raise ValidationError("Admin contract does not exist for this user")
+                raise ValidationError({'message': "Admin contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, company=company_id, admin_contract=admin_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this admin')
+                raise ValidationError({'message': 'No such course for this admin'})
             return course
         # get the trainer courses
         elif user.is_trainer:
             try:
                 trainer_contract = Trainer_Contract.objects.get(trainer=user.trainer, company__id=company_id, employed=True)
             except Trainer_Contract.DoesNotExist:
-                raise ValidationError("Tranier contract does not exist for this user")
+                raise ValidationError({'message': "Tranier contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, company=company_id, trainer_contract=trainer_contract)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this trainer')
+                raise ValidationError({'message': 'No such course for this trainer'})
             return course
         # get the trainee courses
         elif user.is_trainee:
             try:
                 trainee_contract = Trainee_Contract.objects.get(trainee=user.trainee, company__id=company_id, employed=True)
             except Trainee_Contract.DoesNotExist:
-                raise ValidationError("Trainee contract does not exist for this user")
+                raise ValidationError({'message': "Trainee contract does not exist for this user"})
             try:
                 course = Course.objects.filter(id=course_id, enrollment__Trainer_Contract=trainee_contract, company=company_id)
             except Course.DoesNotExist:
-                raise ValidationError('No such course for this trainee')
+                raise ValidationError({'message': 'No such course for this trainee'})
             return course
         else:
-            raise PermissionDenied("You do not have permission to view this course")
+            raise PermissionDenied({'message': "You do not have permission to view this course"})
     # set the view_type to info (for sending all of the fields)
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['view_type'] = 'info'
         return context
-    
 
 
 
+# class AdminCourseList(generics.ListAPIView):
+#       serializer_class = AdminCourseListSerializer
+#       permission_classes = [IsAuthenticated,IsAdminInCompanyOrOwner]
+#       def get_queryset(self): 
+#           return Course.objects.filter(company__id = self.kwargs["company_id"])
 
 
+# class TrainerPublishedCourseList(generics.ListAPIView):
+#       serializer_class = TrainerCourseListSerializer
+#       permission_classes = [IsAuthenticated]
 
-
-
-
-
-
-class AdminCourseList(generics.ListAPIView):
-      serializer_class = AdminCourseListSerializer
-      permission_classes = [IsAuthenticated,IsAdminInCompanyOrOwner]
-      def get_queryset(self): 
-          return Course.objects.filter(company__id = self.kwargs["company_id"])
-      
-
-class TrainerPublishedCourseList(generics.ListAPIView):
-      serializer_class = TrainerCourseListSerializer
-      permission_classes = [IsAuthenticated]
-
-      def get_queryset(self):
-        user = self.request.user
-        company_id = self.kwargs.get('company_id')
+#       def get_queryset(self):
+#         user = self.request.user
+#         company_id = self.kwargs.get('company_id')
  
-        trainer_contracts = Trainer_Contract.objects.filter(trainer__user=user, employed=True, company_id=company_id)
+#         trainer_contracts = Trainer_Contract.objects.filter(trainer__user=user, employed=True, company_id=company_id)
 
      
-        courses = Course.objects.filter(
-            company_id=company_id,
-            trainers__in=trainer_contracts,
-            published=True
-        ).distinct()
+#         courses = Course.objects.filter(
+#             company_id=company_id,
+#             trainers__in=trainer_contracts,
+#             published=True
+#         ).distinct()
 
-        return courses
-      
+#         return courses
 
-class TraineeCourseList(generics.ListAPIView):
-      serializer_class = TraineeCourseListSerializer
-      permission_classes = [IsAuthenticated]
-     
-     
-      def get_queryset(self):
-          user = self.request.user
-          company_id = self.kwargs.get('company_id') 
-          trainee_contracts = Trainee_Contract.objects.filter(trainee__user=user, employed=True, company_id=company_id)
-          courses = Course.objects.filter(
-              company__id=company_id,
-              trainees__in=trainee_contracts,
-              published = True
-          ).distinct()
-          return courses  
+# class TraineeCourseList(generics.ListAPIView):
+#       serializer_class = TraineeCourseListSerializer
+#       permission_classes = [IsAuthenticated]
+
+#       def get_queryset(self):
+#           user = self.request.user
+#           company_id = self.kwargs.get('company_id') 
+#           trainee_contracts = Trainee_Contract.objects.filter(trainee__user=user, employed=True, company_id=company_id)
+#           courses = Course.objects.filter(
+#               company__id=company_id,
+#               trainees__in=trainee_contracts,
+#               published = True
+#           ).distinct()
+#           return courses  

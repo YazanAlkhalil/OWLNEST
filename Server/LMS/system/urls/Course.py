@@ -1,33 +1,43 @@
 from django.urls import path
-from ..views.Course import CompanyCourseList, CompanyCourseListPending, CompanyCourseListInProgress, CompanyCourseRetrieveInProgress, CompanyCourseCreate, CompanyCoursePublish, CompanyCourseApprove, CompanyCourseRetrieve, CompanyCourseSetTrainerLeader, CompanyCourseRetrievePartandNotPartUsers, CompanyCourseUpdate, CompanyCourseDelete, CompanyCourseRetriveInfo, CompanyCourseRetrievePending
 from django.conf import settings
 from django.conf.urls.static import static
-
-#v2 views
-from system.views.Course import (
-    AdminCourseList,
-    TrainerPublishedCourseList,
-    TraineeCourseList
+from ..views.Course import (
+    CompanyCourseList, 
+    CompanyCourseListPending, 
+    CompanyCourseListInProgress, 
+    CompanyCourseRetrieveInProgress, 
+    CompanyCourseCreate, 
+    CompanyCoursePublish, 
+    CompanyCourseApprove,
+    CompanyCourseDisapprove, 
+    CompanyCourseRetrieve, 
+    CompanyCourseSetTrainerLeader, 
+    CompanyCourseRetrievePartandNotPartUsers, 
+    CompanyCourseUpdate, 
+    CompanyCourseDelete, 
+    CompanyCourseRetriveInfo, 
+    CompanyCourseRetrievePending
 )
+
 urlpatterns = [
     path(
         'admin/company/<int:company_id>/courses', 
-        AdminCourseList.as_view(), 
+        CompanyCourseList.as_view(), 
         name='company-course-admin-list'
     ),
     path(
         'trainer/company/<int:company_id>/courses', 
-        TrainerPublishedCourseList.as_view(), 
+        CompanyCourseList.as_view(), 
         name='company-course-trainer-list'
     ),
     path(
         'trainee/company/<int:company_id>/courses', 
-        TraineeCourseList.as_view(), 
+        CompanyCourseList.as_view(), 
         name='company-course-trainee-list'
     ),
     path(
         'owner/company/<int:company_id>/courses', 
-        AdminCourseList.as_view(), 
+        CompanyCourseList.as_view(), 
         name='company-course-owner-list'
     ),
     path(
@@ -59,6 +69,11 @@ urlpatterns = [
         'admin/company/<int:company_id>/courses/<int:course_id>/approve', 
         CompanyCourseApprove.as_view(), 
         name='company-course-admin-approve'
+    ),
+    path(
+        'admin/company/<int:company_id>/courses/<int:course_id>/disapprove', 
+        CompanyCourseDisapprove.as_view(), 
+        name='company-course-admin-disapprove'
     ),
     path(
         'admin/company/<int:company_id>/pending_courses/<int:course_id>', 
