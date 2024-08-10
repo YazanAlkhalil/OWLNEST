@@ -9,7 +9,7 @@ from ..models.Trainer_Contract_Course import Trainer_Contract_Course
 from ..models.Company import Company
 from ..models.Course import Course
 # serializers
-from ..serializers.Temp_Unit import Temp_Unit_Serializer
+from .Temp_Unit import Temp_Unit_Serializer
 
 class Company_Name_Logo_Serializer(serializers.ModelSerializer):
     class Meta:

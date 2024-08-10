@@ -14,8 +14,10 @@ from system.views.NotificationView import NotificationList
 from system.views.GetCourseUsers import GetCourseUsers
 from system.views.ChangeCourseUserRole import ChangeCourseUserRole
 from system.views.RemoveUserFromCourse import RemoveUserFromCourse
-
-
+from system.views.TraineesInCourse import TraineesInCoursView
+#Django 
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
   #admin
     path('course/<id>/report',CourseReportView.as_view()),
@@ -56,7 +58,11 @@ urlpatterns = [
     #Noitification
     path('user/company/<id>/notifications',NotificationList.as_view()),
 
+    #get users in course for trainer
+    path('trainer/course/<id>/users',TraineesInCoursView.as_view())
+
 
 ]
 
- 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

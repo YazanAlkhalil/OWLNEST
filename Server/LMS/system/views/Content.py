@@ -3,6 +3,8 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+from rest_framework import status
 # models
 from ..models.Temp_unit import Temp_Unit
 from ..models.Temp_Content import Temp_Content
@@ -92,26 +94,37 @@ class ContentCreate(generics.CreateAPIView):
             raise ValidationError({'message': 'Unit does not exists'})
         # Check the type of content and save accordingly
         content_type = self.request.data.get('content_type')
-        if not content_type == None:
-            if content_type == 'pdf':
-                temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_pdf=True)
-                Pdf.objects.create(temp_content=temp_content, file_path=self.request.data.get('file_path'))
-                temp_unit.state = 'PR'
-                temp_unit.save()
-            elif content_type == 'video':
-                temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_video=True)
-                Video.objects.create(temp_content=temp_content, file_path=self.request.data.get('file_path'), description=self.request.data.get('description'))
-                temp_unit.state = 'PR'
-                temp_unit.save()
-            elif content_type == 'test':
-                temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_test=True)
-                Test.objects.create(temp_content=temp_content, full_mark=self.request.data.get('full_mark'))
-                temp_unit.state = 'PR'
-                temp_unit.save()
-            else:
-                raise ValidationError({'message':'did not provide a valid content type'})
+        if content_type == 'pdf':
+            file_path = self.request.data.get('file_path')
+            if file_path is None:
+                raise ValidationError({'message': 'The "file_path" field is required for pdf content.'})
+            temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_pdf=True)
+            Pdf.objects.create(
+                temp_content=temp_content, 
+                file_path=file_path
+            )
+        elif content_type == 'video':
+            description = self.request.data.get('description')
+            file_path = self.request.data.get('file_path')
+            if description is None or file_path is None:
+                raise ValidationError({'message': 'The "description" and "file_path" field is required for video content.'})
+            temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_video=True)
+            Video.objects.create(
+                temp_content=temp_content, 
+                file_path=file_path,
+                description=description
+            )
+        elif content_type == 'test':
+            temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_test=True)
+            Test.objects.create(
+                temp_content=temp_content, 
+                full_mark=self.request.data.get('full_mark')
+            )
         else:
-            raise ValidationError({'message':'did not provide a content type'})
+            raise ValidationError({'message': 'Invalid content type'})
+        # Update temp_unit state
+        temp_unit.state = 'PR'
+        temp_unit.save()
 
 # PUT : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/content/:content_id/update
 class ContentUpdate(generics.UpdateAPIView):
@@ -158,23 +171,78 @@ class ContentUpdate(generics.UpdateAPIView):
             raise ValidationError({'message':'did not provide a content type'})
 
 # DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/delete
-class ContentDelete(generics.DestroyAPIView):    # set the serializer class
+class ContentDelete(generics.DestroyAPIView):    
+    # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
     permission_classes = [IsAuthenticated, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
+    lookup_field = 'content_id'
     # Document the endpoint
     @swagger_auto_schema(
         operation_description='obviously for deleteing a specific content',
-        responses={200: 'Content set to delete state'}
+        responses={204: 'Content set to delete state'}
     )
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
     def get_queryset(self):
         unit_id = self.kwargs['unit_id']
         content_id = self.kwargs['content_id']
-        return Content.objects.filter(id=content_id, unit=unit_id)
+        content = get_object_or_404(Content, id=content_id, unit__id=unit_id)
+        temp_content = get_object_or_404(Temp_Content, content=content)
+        return Temp_Content.objects.filter(id=temp_content.id)
     def perform_destroy(self, instance):
         instance.state = 'DE'
-        return Response({'message':'Content set to delete state'}, status=204)
+        instance.save()
+
+# PATCH : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/restore
+class ContentRestore(generics.UpdateAPIView):    
+    # set the serializer class
+    serializer_class = Content_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    # set the lookup field to match the URL keyword argument
+    lookup_url_kwarg = 'content_id'
+    lookup_field = 'content_id'
+    # Document the endpoint
+    @swagger_auto_schema(
+        operation_description='obviously for restoring a deleted content',
+        responses={200: 'Content set to InProgress state'}
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+    def get_queryset(self):
+        unit_id = self.kwargs['unit_id']
+        content_id = self.kwargs['content_id']
+        content = get_object_or_404(Content, id=content_id, unit__id=unit_id)
+        temp_content = get_object_or_404(Temp_Content, content=content)
+        return Temp_Content.objects.filter(id=temp_content.id)
+    def perform_update(self, serializer):
+        temp_content = serializer.instance
+        temp_content.state = 'PR'
+        temp_content.save()
+        return Response({'message': f'restored {temp_content.title} sucessfully'}, status=status.HTTP_200_OK)
+
+# DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/not_published/delete
+class TempContentDelete(generics.DestroyAPIView):    
+    # set the serializer class
+    serializer_class = Temp_Content_Serializer
+    # set the permission class
+    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    # set the lookup field to match the URL keyword argument
+    lookup_url_kwarg = 'content_id'
+    lookup_field = 'content_id'
+    # Document the endpoint
+    @swagger_auto_schema(
+        operation_description='obviously for deleteing a specific content',
+        responses={204: 'Content set to delete state'}
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+    def get_queryset(self):
+        content_id = self.kwargs['content_id']
+        return get_object_or_404(Temp_Content, id=content_id)
+    def perform_destroy(self, instance):
+        instance.delete()
+        return Response({'message':'Unit Deleted'}, status=204)

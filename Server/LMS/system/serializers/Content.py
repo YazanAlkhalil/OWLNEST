@@ -12,4 +12,4 @@ class Content_Serializer(serializers.ModelSerializer):
     test = Test_Serializer(read_only=True)
     class Meta:
         model = Content
-        fields = ['id', 'title', 'order', 'is_video', 'is_pdf', 'is_test', 'pdf', 'video', 'test']
+        fields = ['id', 'title', 'order', 'published', 'is_video', 'is_pdf', 'is_test', 'pdf', 'video', 'test']

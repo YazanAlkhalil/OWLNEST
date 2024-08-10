@@ -1,5 +1,5 @@
 from django.urls import path
-from ..views.Unit import UnitList, UnitRetrieve, UnitCreate, UnitUpdate, UnitDelete
+from ..views.Unit import UnitList, UnitRestore, UnitRetrieve, UnitCreate, UnitUpdate, UnitDelete, TempUnitDelete
 
 urlpatterns = [
     # path(
@@ -17,11 +17,11 @@ urlpatterns = [
     #     UnitRetrieve.as_view(),
     #     name='unit-admin-retrive'
     # ),
-    # path(
-    #     'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
-    #     UnitRetrieve.as_view(),
-    #     name='unit-trainer-retrive'
-    # ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>',
+        UnitRetrieve.as_view(),
+        name='unit-trainer-retrive'
+    ),
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/create', 
         UnitCreate.as_view(), 
@@ -36,5 +36,15 @@ urlpatterns = [
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/delete', 
         UnitDelete.as_view(), 
         name='unit-trainer-delete'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/restore', 
+        UnitRestore.as_view(), 
+        name='unit-trainer-restore'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/not_published/delete', 
+        TempUnitDelete.as_view(), 
+        name='unit-trainer-not-published-delete'
     ),
 ]

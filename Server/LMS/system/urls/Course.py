@@ -36,6 +36,11 @@ urlpatterns = [
         name='company-pending-course-admin-list'
     ),
     path(
+        'trainer/company/<int:company_id>/pending_courses', 
+        CompanyCourseListPending.as_view(), 
+        name='company-pending-course-trainer-list'
+    ),
+    path(
         'trainer/company/<int:company_id>/progress_courses', 
         CompanyCourseListInProgress.as_view(), 
         name='company-progress-course-trainer-list'
@@ -57,6 +62,11 @@ urlpatterns = [
     ),
     path(
         'admin/company/<int:company_id>/pending_courses/<int:course_id>', 
+        CompanyCourseRetrievePending.as_view(), 
+        name='company-pending-course-admin-retrive'
+    ),
+    path(
+        'trainer/company/<int:company_id>/pending_courses/<int:course_id>', 
         CompanyCourseRetrievePending.as_view(), 
         name='company-pending-course-admin-retrive'
     ),

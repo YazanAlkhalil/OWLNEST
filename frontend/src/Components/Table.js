@@ -39,9 +39,9 @@ export default function BasicTable({heading,data}) {
                 {row.name}
               </TableCell>
               <TableCell align="right">{row.progress}</TableCell>
-              <TableCell align="right">{row.xp}</TableCell>
-              <TableCell align="right">{row.grades}</TableCell>
-              <TableCell align="right">{row.completed ? row.completed : '_'}</TableCell>
+              <TableCell align="right">{row.total_xp}</TableCell>
+              <TableCell align="right">{row.avg_grade ? row.avg_grade : 0}</TableCell>
+              <TableCell align="right">{row.completed_at ? row.completed_at : '_'}</TableCell>
             </TableRow>
           ))}
         </TableBody>
