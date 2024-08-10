@@ -13,8 +13,9 @@ import { MdEdit } from 'react-icons/md';
 import useFetch from '../Components/AuthComponents/UseFetch'
 import { useParams } from 'react-router-dom';
 import def from '../images/default-course-thumbnail.png'
+import toast from 'react-hot-toast';
 
-function CourseEdit() {
+function CourseEdit({ inprogress }) {
   const [isInfo, setIsInfo] = useState(false)
   const [course, setCourse] = useState({
     image,
@@ -31,17 +32,19 @@ function CourseEdit() {
   const [content, setContent] = useState([])
 
   const getInfo = async () => {
-    const res = await fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/progress_courses/" + id })
+    let res
+    if (inprogress)
+      res = await fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/progress_courses/" + id })
+    else
+      res = await fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/courses/" + id })
+
     console.log(res);
     if (res.id) {
-
       setCourse({
         name: res.name,
         image: res.image,
         description: res.pref_description
       })
-
-
       // get the content in a different format for reordering
       const tempContent = []
       res.units.forEach(unit => {
@@ -103,6 +106,7 @@ function CourseEdit() {
   }
   async function publish() {
     const res = fetchData({ url: "http://127.0.0.1:8000/api/trainer/company/" + companyId + "/courses/" + id + "/publish", method: "POST" })
+    toast.success('course published successfully wait for admins approval')
   }
   return (
     <>

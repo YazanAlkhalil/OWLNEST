@@ -25,7 +25,7 @@ function CreateCoursePage({ inprogress }) {
         <NavButton name={'Trainees'} highlight={content === 'trainees'} handleClick={() => setContent('trainees')} />
       </div>
       <div className='pt-10'>
-        {content === "edit" && <CourseEdit />}
+        {content === "edit" && <CourseEdit inprogress={inprogress} />}
         {content === "reports" && <CourseReports admin={true} />}
         {content === "trainees" && <CourseTrainees />}
       </div>

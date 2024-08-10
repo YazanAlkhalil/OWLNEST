@@ -10,6 +10,7 @@ export default function TraineeDiscussion() {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
+    console.log(id);
     const getComments = async () => {
       const res = await fetchData({ url: 'http://127.0.0.1:8000/api/course/' + id + '/comments', method: 'get' });
       setComments(res);
