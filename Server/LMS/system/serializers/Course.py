@@ -66,10 +66,11 @@ class Course_Serializer(serializers.ModelSerializer):
     trainers = TrainerContractCourseSerializer(source='trainer_contract_course_set', many=True, read_only=True)
     progress = serializers.SerializerMethodField()
     is_favorite = serializers.SerializerMethodField()
+    leader = serializers.SerializerMethodField()
     # sepcify the model for the serializer and the required fields
     class Meta:
         model = Course
-        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'additional_resources', 'trainers', 'units', 'progress', 'is_favorite']
+        fields = ['id', 'company', 'admin_contract', 'name', 'image', 'pref_description', 'description', 'additional_resources', 'trainers', 'units', 'progress', 'is_favorite', 'leader']
         extra_kwargs = {
             'company': {
                 'required': False
@@ -106,17 +107,39 @@ class Course_Serializer(serializers.ModelSerializer):
             except (Enrollment.DoesNotExist, Trainee_Contract.DoesNotExist):
                 return False
         return False
+    def get_leader(self, obj):
+        user = self.context['request'].user
+        if user.is_trainee:
+            try:
+                leader = Course.objects.get(id=obj.id).trainers.filter(trainer_contract_course__is_leader=True).first()
+            except Course.DoesNotExist or leader == None:
+                return None
+            try:
+                leader_user = Trainer_Contract.objects.get(id=leader.id).trainer.user
+            except Trainer_Contract.DoesNotExist or leader_user == None:
+                return None
+            return {
+                'username': leader_user.username
+            }
     # when the view_type is list send only the specified fields not all of them
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         if self.context.get('view_type') == 'list':
-            return {
-                'id': representation['id'],
-                'name': representation['name'],
-                'image': representation['image'],
-                'progress': representation.get('progress') if self.context['request'].user.is_trainee else None,
-                'is_favorite': representation.get('is_favorite') if self.context['request'].user.is_trainee else None
-            }
+            if self.context['request'].user.is_trainee:
+                return {
+                    'id': representation['id'],
+                    'name': representation['name'],
+                    'image': representation['image'],
+                    'progress': representation.get('progress'),
+                    'is_favorite': representation.get('is_favorite'),
+                    'leader': representation.get('leader')
+                }
+            else:
+                return {
+                    'id': representation['id'],
+                    'name': representation['name'],
+                    'image': representation['image'],
+                }
         if self.context.get('view_type') == 'detail':
             return {
                 'id': representation['id'],
