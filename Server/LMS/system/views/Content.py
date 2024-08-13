@@ -15,9 +15,9 @@ from ..models.Test import Test
 # serialzers
 from ..serializers.Temp_Content import Temp_Content_Serializer
 from ..serializers.Content import Content_Serializer
+from ..serializers.Test import TestSerializer
 # permissions
-from ..permissions.IsCourseTrainer import IsCourseTrainer
-from ..permissions.IsCourseAdminOrTrainer import IsCourseAdminOrTrainer
+from ..permissions.Trainer import IsTrainer, IsCompanyTrainer, IsCourseTrainer
 # swagger
 from drf_yasg.utils import swagger_auto_schema
 from ..swagger.Content import content_create_request_body
@@ -28,7 +28,7 @@ class ContentList(generics.ListAPIView):
     # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
+    permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'unit_id'
     # Document the view
@@ -52,7 +52,7 @@ class ContentRetrieve(generics.RetrieveAPIView):
     # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
+    permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
     # Document the view
@@ -75,21 +75,21 @@ class ContentCreate(generics.CreateAPIView):
     # set the serializer class
     serializer_class = Temp_Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # Document the view
     @swagger_auto_schema(
         operation_description='for creating a new unit to a specific course',
         request_body=content_create_request_body,
-        responses={200: content_create_request_body}
+        responses={201: content_create_request_body}
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
     # save the cours to the temp_content
     def perform_create(self, serializer):
         course_id = self.kwargs['course_id']
-        temp_unit_id = self.kwargs['unit_id']
+        unit_id = self.kwargs['unit_id']
         try:
-            temp_unit = Temp_Unit.objects.get(id=temp_unit_id, course__id=course_id)
+            temp_unit = Temp_Unit.objects.get(unit__id=unit_id, course__id=course_id)
         except Temp_Unit.DoesNotExist:
             raise ValidationError({'message': 'Unit does not exists'})
         # Check the type of content and save accordingly
@@ -115,23 +115,26 @@ class ContentCreate(generics.CreateAPIView):
                 description=description
             )
         elif content_type == 'test':
-            temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_test=True)
-            Test.objects.create(
-                temp_content=temp_content, 
-                full_mark=self.request.data.get('full_mark')
-            )
+            test_data = self.request.data.get('test')
+            test_serializer = TestSerializer(data=test_data)
+            if test_serializer.is_valid():
+                test = test_serializer.save()
+                temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_test=True)
+                test.temp_content = temp_content
+                test.save()
         else:
             raise ValidationError({'message': 'Invalid content type'})
-        # Update temp_unit state
+        # set the temp_unit as in progress
         temp_unit.state = 'PR'
         temp_unit.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # PUT : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/content/:content_id/update
 class ContentUpdate(generics.UpdateAPIView):
     # set the serializer class
     serializer_class = Temp_Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, ]
     @swagger_auto_schema(
         operation_description='for updating a specific content',
         # responses={200: content_retrive_list_response_body}
@@ -160,11 +163,11 @@ class ContentUpdate(generics.UpdateAPIView):
                 # Set state to 'PR' (in progress)
                 temp_content.state = 'PR'  
                 serializer.save()
-            elif content_type == 'test':
-                Test.objects.create(temp_content=temp_content, defaults={'full_mark': self.request.data.get('full_mark')})
-                # Set state to 'PR' (in progress)
-                temp_content.state = 'PR'  
-                serializer.save()
+            # elif content_type == 'test':
+            #     Test.objects.create(temp_content=temp_content, defaults={'full_mark': self.request.data.get('full_mark')})
+            #     # Set state to 'PR' (in progress)
+            #     temp_content.state = 'PR'  
+            #     serializer.save()
             else:
                 raise ValidationError({'message':'did not provide a valid content type'})
         else:
@@ -175,7 +178,7 @@ class ContentDelete(generics.DestroyAPIView):
     # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
     lookup_field = 'content_id'
@@ -201,7 +204,7 @@ class ContentRestore(generics.UpdateAPIView):
     # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
     lookup_field = 'content_id'
@@ -229,7 +232,7 @@ class TempContentDelete(generics.DestroyAPIView):
     # set the serializer class
     serializer_class = Temp_Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
     lookup_field = 'content_id'

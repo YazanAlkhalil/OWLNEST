@@ -2,14 +2,14 @@ from rest_framework import serializers
 # models
 from ..models.Content import Content
 # serializers
-from ..serializers.Pdf import Pdf_Serializer
-from ..serializers.Video import Video_Serializer
-from ..serializers.Test import Test_Serializer
+from ..serializers.Pdf import PdfSerializer
+from ..serializers.Video import VideoSerializer
+from ..serializers.Test import TestSerializer
 
 class Content_Serializer(serializers.ModelSerializer):
-    pdf = Pdf_Serializer(read_only=True)
-    video = Video_Serializer(read_only=True)
-    test = Test_Serializer(read_only=True)
+    pdf = PdfSerializer(read_only=True)
+    video = VideoSerializer(read_only=True)
+    test = TestSerializer(read_only=True)
     class Meta:
         model = Content
         fields = ['id', 'title', 'order', 'published', 'is_video', 'is_pdf', 'is_test', 'pdf', 'video', 'test']
