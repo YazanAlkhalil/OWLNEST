@@ -108,15 +108,18 @@ class Course_Serializer(serializers.ModelSerializer):
                 return False
         return False
     def get_leader(self, obj):
-        user = self.context['request'].user
-        if user.is_trainee:
+        if self.context.get('view_type') == 'list' or self.context.get('view_type') == 'detail' or self.context.get('view_type') == 'info':
             try:
                 leader = Course.objects.get(id=obj.id).trainers.filter(trainer_contract_course__is_leader=True).first()
-            except Course.DoesNotExist or leader == None:
+            except Course.DoesNotExist:
+                return None
+            if leader == None:
                 return None
             try:
-                leader_user = Trainer_Contract.objects.get(id=leader.id).trainer.user
-            except Trainer_Contract.DoesNotExist or leader_user == None:
+                    leader_user = Trainer_Contract.objects.get(id=leader.id).trainer.user
+            except Trainer_Contract.DoesNotExist:
+                return None
+            if leader_user == None:
                 return None
             return {
                 'username': leader_user.username
@@ -124,8 +127,10 @@ class Course_Serializer(serializers.ModelSerializer):
     # when the view_type is list send only the specified fields not all of them
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        if self.context.get('view_type') == 'list':
-            if self.context['request'].user.is_trainee:
+        user_type = self.context.get('user_type')
+        view_type = self.context.get('view_type')
+        if view_type == 'list':
+            if user_type == 'trainee':
                 return {
                     'id': representation['id'],
                     'name': representation['name'],
@@ -139,20 +144,66 @@ class Course_Serializer(serializers.ModelSerializer):
                     'id': representation['id'],
                     'name': representation['name'],
                     'image': representation['image'],
+                    'leader': representation.get('leader')
                 }
-        if self.context.get('view_type') == 'detail':
-            return {
-                'id': representation['id'],
-                'company': representation['company'],
-                'admin_contract': representation['admin_contract'],
-                'name': representation['name'],
-                'image': representation['image'],
-                'pref_description': representation['pref_description'],
-                'trainers': representation['trainers'],
-                'units': representation['units'],
-                'progress': representation.get('progress') if self.context['request'].user.is_trainee else None,
-                'is_favorite': representation.get('is_favorite') if self.context['request'].user.is_trainee else None
-            }
+        elif view_type == 'detail':
+            if user_type == 'trainee':
+                return {
+                    'id': representation['id'],
+                    'company': representation['company'],
+                    'admin_contract': representation['admin_contract'],
+                    'name': representation['name'],
+                    'image': representation['image'],
+                    'pref_description': representation['pref_description'],
+                    'trainers': representation['trainers'],
+                    'units': representation['units'],
+                    'leader': representation.get('leader'),
+                    'progress': representation.get('progress') if self.context['request'].user.is_trainee else None,
+                    'is_favorite': representation.get('is_favorite') if self.context['request'].user.is_trainee else None
+                }
+            else:
+                return {
+                    'id': representation['id'],
+                    'company': representation['company'],
+                    'admin_contract': representation['admin_contract'],
+                    'name': representation['name'],
+                    'image': representation['image'],
+                    'pref_description': representation['pref_description'],
+                    'trainers': representation['trainers'],
+                    'units': representation['units'],
+                    'leader': representation.get('leader')
+                }
+        elif view_type == 'info':
+            if user_type == 'trainee':
+                return {
+                    'id': representation['id'],
+                    'company': representation['company'],
+                    'admin_contract': representation['admin_contract'],
+                    'name': representation['name'],
+                    'image': representation['image'],
+                    'pref_description': representation['pref_description'],
+                    'description': representation['description'], 
+                    'additional_resources': representation['additional_resources'],
+                    'trainers': representation['trainers'],
+                    'units': representation['units'],
+                    'leader': representation.get('leader'),
+                    'progress': representation.get('progress') if self.context['request'].user.is_trainee else None,
+                    'is_favorite': representation.get('is_favorite') if self.context['request'].user.is_trainee else None
+                }
+            else:
+                return {
+                    'id': representation['id'],
+                    'company': representation['company'],
+                    'admin_contract': representation['admin_contract'],
+                    'name': representation['name'],
+                    'image': representation['image'],
+                    'pref_description': representation['pref_description'],                    
+                    'description': representation['description'], 
+                    'additional_resources': representation['additional_resources'],
+                    'trainers': representation['trainers'],
+                    'units': representation['units'],
+                    'leader': representation.get('leader')
+                }
         return representation
     # when create a new course add the trainers for this course
     def create(self, validated_data):

@@ -2,114 +2,160 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from ..views.Course import (
-    CompanyCourseList, 
-    CompanyCourseListPending, 
+    OwnerCourseList,
+    AdminCourseList,
+    TrainerCourseList,
+    TraineeCourseList,
+    OwnerCourseRetrieve,
+    AdminCourseRetrieve,
+    TrainerCourseRetrieve,
+    TraineeCourseRetrieve,
+    CompanyCourseCreate, 
     CompanyCourseListInProgress, 
     CompanyCourseRetrieveInProgress, 
-    CompanyCourseCreate, 
     CompanyCoursePublish, 
+    CompanyCourseListPending, 
+    CompanyCourseRetrievePending,
     CompanyCourseApprove,
     CompanyCourseDisapprove, 
-    CompanyCourseRetrieve, 
-    CompanyCourseSetTrainerLeader, 
     CompanyCourseRetrievePartandNotPartUsers, 
-    CompanyCourseUpdate, 
+    CompanyCourseSetTrainerLeader, 
+    CompanyCourseUpdateAdmin, 
+    CompanyCourseUpdateTrainer,
     CompanyCourseDelete, 
-    CompanyCourseRetriveInfo, 
-    CompanyCourseRetrievePending
+    OwnerCourseRetriveInfo,
+    AdminCourseRetriveInfo,
+    TrainerCourseRetriveInfo,
+    TraineeCourseRetriveInfo
 )
 
 urlpatterns = [
+    ##############
+    #    List    #
+    ##############
+    path(
+        'owner/company/<int:company_id>/courses', 
+        OwnerCourseList.as_view(), 
+        name='company-course-owner-list'
+    ),
     path(
         'admin/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
+        AdminCourseList.as_view(), 
         name='company-course-admin-list'
     ),
     path(
         'trainer/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
+        TrainerCourseList.as_view(), 
         name='company-course-trainer-list'
     ),
     path(
         'trainee/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
+        TraineeCourseList.as_view(), 
         name='company-course-trainee-list'
     ),
+    ##############
+    #  Retrieve  #
+    ##############
     path(
-        'owner/company/<int:company_id>/courses', 
-        CompanyCourseList.as_view(), 
-        name='company-course-owner-list'
+        'owner/company/<int:company_id>/courses/<int:course_id>', 
+        OwnerCourseRetrieve.as_view(), 
+        name='company-course-owner-retrive'
     ),
     path(
-        'admin/company/<int:company_id>/pending_courses', 
-        CompanyCourseListPending.as_view(), 
-        name='company-pending-course-admin-list'
+        'admin/company/<int:company_id>/courses/<int:course_id>', 
+        AdminCourseRetrieve.as_view(), 
+        name='company-course-admin-retrive'
     ),
     path(
-        'trainer/company/<int:company_id>/pending_courses', 
-        CompanyCourseListPending.as_view(), 
-        name='company-pending-course-trainer-list'
+        'trainer/company/<int:company_id>/courses/<int:course_id>', 
+        TrainerCourseRetrieve.as_view(), 
+        name='company-course-trainer-retrive'
     ),
+    path(
+        'trainee/company/<int:company_id>/courses/<int:course_id>', 
+        TraineeCourseRetrieve.as_view(), 
+        name='company-course-trainee-retrive'
+    ),
+    #######################
+    #   List InProgress   #
+    #######################
     path(
         'trainer/company/<int:company_id>/progress_courses', 
         CompanyCourseListInProgress.as_view(), 
         name='company-progress-course-trainer-list'
     ),
-    path(
-        'admin/company/<int:company_id>/courses/create', 
-        CompanyCourseCreate.as_view(), 
-        name='company-course-admin-create'
-    ),
-    path(
-        'trainer/company/<int:company_id>/courses/<int:course_id>/publish', 
-        CompanyCoursePublish.as_view(), 
-        name='company-course-trainer-publish'
-    ),
-    path(
-        'admin/company/<int:company_id>/courses/<int:course_id>/approve', 
-        CompanyCourseApprove.as_view(), 
-        name='company-course-admin-approve'
-    ),
-    path(
-        'admin/company/<int:company_id>/courses/<int:course_id>/disapprove', 
-        CompanyCourseDisapprove.as_view(), 
-        name='company-course-admin-disapprove'
-    ),
-    path(
-        'admin/company/<int:company_id>/pending_courses/<int:course_id>', 
-        CompanyCourseRetrievePending.as_view(), 
-        name='company-pending-course-admin-retrive'
-    ),
-    path(
-        'trainer/company/<int:company_id>/pending_courses/<int:course_id>', 
-        CompanyCourseRetrievePending.as_view(), 
-        name='company-pending-course-admin-retrive'
-    ),
+    ##########################
+    #   Retrieve InProgress  #
+    ##########################
     path(
         'trainer/company/<int:company_id>/progress_courses/<int:course_id>', 
         CompanyCourseRetrieveInProgress.as_view(), 
         name='company-progress-course-trainer-retrive'
     ),
+    ####################
+    #   List Pending   #
+    ####################
     path(
-        'admin/company/<int:company_id>/courses/<int:course_id>', 
-        CompanyCourseRetrieve.as_view(), 
-        name='company-course-admin-retrive'
+        'admin/company/<int:company_id>/pending_courses', 
+        CompanyCourseListPending.as_view(), 
+        name='company-pending-course-admin-list'
+    ),
+    ########################
+    #   Retrieve Pending   #
+    ########################
+    path(
+        'admin/company/<int:company_id>/pending_courses/<int:course_id>', 
+        CompanyCourseRetrievePending.as_view(), 
+        name='company-pending-course-admin-retrive'
+    ),
+    ##############
+    #   Create   #
+    ##############
+    path(
+        'admin/company/<int:company_id>/courses/create', 
+        CompanyCourseCreate.as_view(), 
+        name='company-course-admin-create'
+    ),
+    ###############
+    #   Publish   #
+    ###############
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/publish', 
+        CompanyCoursePublish.as_view(), 
+        name='company-course-trainer-publish'
+    ),
+    ###############
+    #   Approve   #
+    ###############
+    path(
+        'admin/company/<int:company_id>/courses/<int:course_id>/approve', 
+        CompanyCourseApprove.as_view(), 
+        name='company-course-admin-approve'
+    ),
+    ##################
+    #   Disapprove   #
+    ##################
+    path(
+        'admin/company/<int:company_id>/courses/<int:course_id>/disapprove', 
+        CompanyCourseDisapprove.as_view(), 
+        name='company-course-admin-disapprove'
+    ),
+    ########################################################
+    #   Part And Not Part Users From Company In A Course   #
+    ########################################################
+    path(
+        'owner/company/<int:company_id>/courses/<int:course_id>/part_not_part_users', 
+        CompanyCourseRetrievePartandNotPartUsers.as_view(), 
+        name='company-course-owner-retrive-part-not-part-users'
     ),
     path(
-        'trainer/company/<int:company_id>/courses/<int:course_id>', 
-        CompanyCourseRetrieve.as_view(), 
-        name='company-course-trainer-retrive'
+        'admin/company/<int:company_id>/courses/<int:course_id>/part_not_part_users', 
+        CompanyCourseRetrievePartandNotPartUsers.as_view(), 
+        name='company-course-admin-retrive-part-not-part-users'
     ),
-    path(
-        'trainee/company/<int:company_id>/courses/<int:course_id>', 
-        CompanyCourseRetrieve.as_view(), 
-        name='company-course-trainee-retrive'
-    ),
-    path(
-        'owner/company/<int:company_id>/courses/<int:course_id>', 
-        CompanyCourseRetrieve.as_view(), 
-        name='company-course-owner-retrive'
-    ),
+    ###############################
+    #   Set Leader For A Course   #
+    ###############################
     path(
         'owner/company/<int:company_id>/courses/<int:course_id>/set_trainer_leader',
         CompanyCourseSetTrainerLeader.as_view(),
@@ -120,44 +166,48 @@ urlpatterns = [
         CompanyCourseSetTrainerLeader.as_view(),
         name='company-course-admin-set-leader'
     ),
-    path(
-        'admin/company/<int:company_id>/courses/<int:course_id>/part_not_part_users', 
-        CompanyCourseRetrievePartandNotPartUsers.as_view(), 
-        name='company-course-admin-retrive-part-not-part-users'
-    ),
-    path(
-        'owner/company/<int:company_id>/courses/<int:course_id>/part_not_part_users', 
-        CompanyCourseRetrievePartandNotPartUsers.as_view(), 
-        name='company-course-owner-retrive-part-not-part-users'
-    ),
+    ##############
+    #   Update   #
+    ##############
     path(
         'admin/company/<int:company_id>/courses/<int:course_id>/update', 
-        CompanyCourseUpdate.as_view(), 
+        CompanyCourseUpdateAdmin.as_view(), 
         name='company-course-admin-update'
     ),
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/update', 
-        CompanyCourseUpdate.as_view(), 
+        CompanyCourseUpdateTrainer.as_view(), 
         name='company-course-trainer-update'
     ),
+    ##############
+    #   Delete   #
+    ##############
     path(
         'admin/company/<int:company_id>/courses/<int:course_id>/delete',
         CompanyCourseDelete.as_view(),
         name='company-course-admin-delete'
     ),
+    ################################
+    #   Retrive Course Full Info   #
+    ################################
+    path(
+        'owner/company/<int:company_id>/courses/<int:course_id>/info',
+        OwnerCourseRetriveInfo.as_view(),
+        name='company-course-admin-info'
+    ),
     path(
         'admin/company/<int:company_id>/courses/<int:course_id>/info',
-        CompanyCourseRetriveInfo.as_view(),
+        AdminCourseRetriveInfo.as_view(),
         name='company-course-admin-info'
     ),
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/info',
-        CompanyCourseRetriveInfo.as_view(),
+        TrainerCourseRetriveInfo.as_view(),
         name='company-course-trainer-info'
     ),  
     path(
         'trainee/company/<int:company_id>/courses/<int:course_id>/info',
-        CompanyCourseRetriveInfo.as_view(),
+        TraineeCourseRetriveInfo.as_view(),
         name='company-course-trainee-info'
     ),
 ]
