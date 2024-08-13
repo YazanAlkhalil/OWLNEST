@@ -14,11 +14,14 @@ from ..models.Course import Course
 from ..serializers.Unit import Unit_Serializer
 from ..serializers.Temp_Unit import Temp_Unit_Serializer
 # permissions
-from ..permissions.Admin import IsAdmin, IsCompanyAdmin, IsCourseAdmin
 from ..permissions.Trainer import IsTrainer, IsCompanyTrainer, IsCourseTrainer
 # swagger
 from drf_yasg.utils import swagger_auto_schema
-from ..swagger.Unit import unit_retrive_list_response_body, unit_create_request_body, unit_create_respons_body
+from ..swagger.Unit import (
+    unit_retrive_list_response_body, 
+    unit_create_request_body, 
+    unit_create_respons_body
+)
 
 #############################################################
 #                                                           #
