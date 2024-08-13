@@ -1,6 +1,9 @@
 from django.urls import path
 from ..views.Content import ContentCreate, ContentRestore, ContentList, ContentRetrieve, ContentUpdate, ContentDelete, TempContentDelete
 
+
+#views  
+from system.views.AddContentToUnit import AddContentToUnit
 urlpatterns = [
     # path(
     #     'admin/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content',
@@ -24,7 +27,7 @@ urlpatterns = [
     # ),
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/create', 
-        ContentCreate.as_view(), 
+        AddContentToUnit.as_view(), 
         name='content-trainer-create'
     ),
     path(

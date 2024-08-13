@@ -18,3 +18,5 @@ class Temp_Unit(models.Model):
 
     class Meta:
         ordering = ['order']
+        unique_together = ['unit','order']
+        

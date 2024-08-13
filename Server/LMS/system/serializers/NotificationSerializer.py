@@ -38,3 +38,5 @@ class NotificationSerializer(serializers.ModelSerializer):
               return f"{minutes} minutes"
           else:
               return f"{seconds} seconds"
+          
+ 
