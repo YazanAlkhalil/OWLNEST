@@ -38,7 +38,7 @@ function AdminCoursesPage({ pending }) {
 
             {!pending && <FormDialog getCourses={getCourses} />}
             {
-                courses.length > 1 ?
+                courses.length >= 1 ?
                     <div className='grid grid-cols-3 gap-y-10'>
                         {courses.map(course => (
                             <TrainerCourse key={course.id} id={course.id} image={course.image} name={course.name} />

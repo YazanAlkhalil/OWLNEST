@@ -19,7 +19,7 @@ class TrainerInProgressCourseDetailsView(generics.RetrieveAPIView):
 
       def retrieve(self, request, *args, **kwargs):
           course = get_object_or_404(Course , id = kwargs['course_id'])
-          serialized_course = TrainerInProgressCourseDetailsSerializer(course)
+          serialized_course = TrainerInProgressCourseDetailsSerializer(course,context={'request': request})
           return Response(serialized_course.data,200)
       
       

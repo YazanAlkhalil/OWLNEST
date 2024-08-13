@@ -11,7 +11,7 @@ class NotificationList(APIView):
 
       def get(self, request, *args, **kwargs):
         notifications = Notification.objects.filter(to_user=request.user, company__id=kwargs['id'])
-        serialized_notify = NotificationSerializer(notifications, many=True)
+        serialized_notify = NotificationSerializer(notifications,context = {"request":request}, many=True)
 
         response = Response(serialized_notify.data, status=200)
 

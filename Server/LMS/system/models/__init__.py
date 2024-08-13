@@ -7,3 +7,6 @@ from .DraftTest import DraftTest
 
 from .DraftQuestion import DraftQuestion
 from .DraftAnswer import DraftAnswer
+
+from .DraftSkill import DraftSkill
+from .DraftAdditionalResources import DraftAdditionalResources

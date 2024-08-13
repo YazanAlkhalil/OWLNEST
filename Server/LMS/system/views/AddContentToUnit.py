@@ -87,10 +87,3 @@ class AddContentToUnit(CreateAPIView):
                      serialized_answer.save(question = question_obj)
              return Response({"message":"the quizz added to the course"})
           return Response({"message":"please add Video , PDF or Test"})
-
-                 
-
-
-             
-               
-
