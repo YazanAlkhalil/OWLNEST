@@ -41,7 +41,31 @@ from system.models.Trainer_Contract_Course import Trainer_Contract_Course
 from system.models.Trainee_skills import Trainee_Skills
 from system.models.Skill import Skill
 
+
+
+from system.models.DraftAdditionalResources import DraftAdditionalResources
+from system.models.DraftAnswer import DraftAnswer
+from system.models.DraftContent import DraftContent
+from system.models.DraftPDF import DraftPDF
+from system.models.DraftVideo import DraftVideo
+from system.models.DraftTest import DraftTest
+from system.models.DraftQuestion import DraftTest
+from system.models.DraftAnswer import DraftAnswer
+from system.models.DraftSkill import DraftSkill
+from system.models.DraftQuestion import DraftQuestion
+from system.models.DraftUnit import DraftUnit
 # Register your models here.
+admin.site.register(DraftUnit)
+admin.site.register(DraftAdditionalResources)
+admin.site.register(DraftAnswer)
+admin.site.register(DraftContent)
+admin.site.register(DraftPDF)
+admin.site.register(DraftVideo)
+admin.site.register(DraftTest)
+admin.site.register(DraftSkill)
+admin.site.register(DraftQuestion)
+
+
 admin.site.register(Admin)
 admin.site.register(Admin_Contract)
 admin.site.register(Notification)

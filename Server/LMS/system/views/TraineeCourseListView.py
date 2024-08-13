@@ -14,7 +14,7 @@ from system.serializers.TraineeCourseListSerializer import TraineeCourseListSeri
  
  
 
-class TraineeCourseList(generics.ListAPIView):
+class TraineeCourseListView(generics.ListAPIView):
       serializer_class = TraineeCourseListSerializer
       permission_classes = [IsAuthenticated]
 

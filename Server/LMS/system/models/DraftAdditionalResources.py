@@ -4,7 +4,7 @@ from django.db import models
 from system.models.Course import Course 
 
 class DraftAdditionalResources(models.Model):
-      course = models.ForeignKey(Course , on_delete=models.CASCADE)
+      course = models.OneToOneField(Course , on_delete=models.CASCADE)
       text = models.TextField()
 
       

@@ -46,15 +46,18 @@ class AddContentToUnit(CreateAPIView):
              return Response({"message":"the pdf uploaded successfully"},201)
           
           if type.lower() == "video":
+             if not "description" in request.data.keys():
+                 return Response({"message":"add description field to the video"},400) 
              serialized_content = DraftContentserializer(data = data)
              serialized_content.is_valid(raise_exception=True)
              content = serialized_content.save(unit = unit,is_video = True)
-             pdf_data = {
-                  "file":request.data["file"]
+             video_data = {
+                  "file":request.data["file"],
+                  "description":request.data["description"]
              }
-             serialized_pdf = DraftVideoSerializer(data = pdf_data)
-             serialized_pdf.is_valid(raise_exception=True)
-             serialized_pdf.save(content = content)
+             serialized_video = DraftVideoSerializer(data = video_data)
+             serialized_video.is_valid(raise_exception=True)
+             serialized_video.save(content = content)
              return Response({"message":"the video uploaded successfully"},201)
           if type.lower() == "quizz":
              serialized_content = DraftContentserializer(data = data)
@@ -68,6 +71,7 @@ class AddContentToUnit(CreateAPIView):
              questions = request.data["questions"]
              
              for question in questions:
+                 print(question["question"])
                  question_data = {
                      "question": question["question"],
                      "feedback": question["feedback"],

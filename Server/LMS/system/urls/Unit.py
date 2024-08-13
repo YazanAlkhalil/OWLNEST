@@ -1,7 +1,5 @@
 from django.urls import path
-from ..views.Unit import UnitList, UnitRestore, UnitRetrieve, UnitCreate, UnitUpdate, UnitDelete, TempUnitDelete
-
-
+                    
 #views 
 from system.views.AddUnitToCourseView import AddUnitToCourse
 urlpatterns = [

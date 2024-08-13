@@ -10,5 +10,5 @@ class DraftQuestionSerializer(ModelSerializer):
       answers = DraftAnswerSerializer(source = "answer_set",many = True,read_only = True)
       class Meta:
             model = DraftQuestion
-            fields = ["id","answers","mark"]
+            fields = ["id","question","feedback","answers","mark"]
            

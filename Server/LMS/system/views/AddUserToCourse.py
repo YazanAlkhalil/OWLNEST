@@ -25,7 +25,8 @@ from system.permissions.IsAdminCourse import IsAdminCourse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-
+#utils 
+from system.utils import send_notification
 '''
 to create a trainee:
 1) get trainee or craete it
@@ -54,27 +55,9 @@ class AddUserToCourse(CreateAPIView):
           trainee.user.is_trainee = True
           trainee.user.save()
 
-          #send notify for the trainee
-          data =  {
-               "from_user":request.user.id,
-               "to_user": user.id,
-               "message": f"Hello {user.username}, you have been successfully enrolled in the course '{course.name}' by admin {request.user.username}. Welcome aboard!",
-               "company":course.company.id
-          }
-
-          notification  = NotificationSerializer(data = data)
-          notification.is_valid(raise_exception= True)
-          notification.save()
-          # Send notification via WebSocket
-          channel_layer = get_channel_layer()
-          async_to_sync(channel_layer.group_send)(
-                f'user_{user.id}',
-                  {
-                      'type': 'send_notification',
-                      'message': Notification.objects.filter(to_user=user , company = course.company , is_read = False).count()
-                  }
-              )
-
+           
+          message = f"Hello {user.username}, you have been successfully enrolled in the course '{course.name}' by admin {request.user.username}. Welcome aboard!"
+          send_notification(request.user,user,message,course.company)
           if request.data["role"].lower() == 'trainer':
                 trainer,_ = Trainer.objects.get_or_create(user = user)
                 trainer_contract , _ = Trainer_Contract.objects.get_or_create(trainer = trainer , company = course.company, employed =True)
@@ -83,22 +66,7 @@ class AddUserToCourse(CreateAPIView):
                     course.save()#send notify for the trainee
                 trainer.user.is_trainer = True
                 trainer.user.save()
-                data =  {
-                    "from_user":request.user.id,
-                    "to_user": user.id,
-                    "message": f"Hello {user.username}, you have been assigned as the Trainer for the course '{course.name}' by admin {request.user.username}. Congratulations and best of luck!",
-                    "company":course.company.id
-                }
-                notification  = NotificationSerializer(data = data)
-                notification.is_valid(raise_exception= True)
-                notification.save()
-                # Send notification via WebSocket
-                channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.group_send)(
-                      f'user_{user.id}',
-                        {
-                            'type': 'send_notification',
-                            'message': Notification.objects.filter(to_user=user , company = course.company ,is_read = False).count()
-                        }
-                    )
+                 
+                message = f"Hello {user.username}, you have been assigned as the Trainer for the course '{course.name}' by admin {request.user.username}. Congratulations and best of luck!"
+                send_notification(request.user,user,message,course.company)
           return Response({"message":"the "+request.data["role"] +" " + user.username+" added to the course"} , status.HTTP_201_CREATED)

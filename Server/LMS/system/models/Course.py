@@ -1,7 +1,6 @@
 from django.db import models
 from system.models.Company import Company
-from system.models.Admin_Contract import Admin_Contract
-from system.models.Additional_Resources import Additional_Resources
+from system.models.Admin_Contract import Admin_Contract 
 from system.models.Trainer_Contract import Trainer_Contract
 from system.models.Trainee_Contract import Trainee_Contract
 
@@ -17,8 +16,7 @@ class Course(models.Model):
     description = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to=course_image_path, null=True, blank=True)
     published = models.BooleanField(default= False)
-    publish_date = models.DateField(auto_now_add=True)
-    additional_resources = models.ManyToManyField(Additional_Resources)
+    publish_date = models.DateField(auto_now_add=True) 
     trainers = models.ManyToManyField(Trainer_Contract, through='system.Trainer_Contract_Course')
     trainees = models.ManyToManyField(Trainee_Contract,through='system.Enrollment')
     # when call an instance show just its name

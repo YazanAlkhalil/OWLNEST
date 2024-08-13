@@ -24,8 +24,11 @@ class AddSkillToCourse(ListCreateAPIView):
           if not( "rate" in request.data.keys()):
                raise ValidationError({"message":"Please Enter the skill rate"}) 
           course =get_object_or_404(Course,id =  kwargs["id"])
+          if request.data["skill"].lower() in [ skill.skill.lower() for skill in course.draftskill_set.all()]:
+               return Response({"message":"the skill added before"},200)
+          
           skill_data = {
-               "skill":request.data.get('skill'),
+               "skill":request.data.get('skill').upper(),
                "rate":request.data.get('rate')
           }
 

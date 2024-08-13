@@ -7,9 +7,10 @@ from system.models.Enrollment import Enrollment
 from system.models.Trainer_Contract_Course import Trainer_Contract_Course
 from system.models.Trainee_Contract import Trainee_Contract
 from system.models.Favorite import Favorite
+
+
 class TraineeCourseListSerializer(serializers.ModelSerializer):
       
-
       progress = serializers.SerializerMethodField()
       leader = serializers.SerializerMethodField()
       is_favourite = serializers.SerializerMethodField()

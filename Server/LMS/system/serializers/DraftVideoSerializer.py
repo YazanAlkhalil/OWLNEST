@@ -6,7 +6,7 @@ from system.models.DraftVideo import DraftVideo
 class DraftVideoSerializer(ModelSerializer): 
       class Meta:
             model = DraftVideo
-            fields = ["id","file"]
+            fields = ["id","file","description"]
             extra_kwargs = {
                   "file":{
                         "write_only":True
