@@ -9,6 +9,9 @@ from system.models.DraftUnit import DraftUnit
 from system.serializers.DraftContentSerializer import DraftContentserializer
 from system.serializers.DraftPDFSerializer import DraftPDFSerializer
 from system.serializers.DraftVideoSerializer import DraftVideoSerializer
+from system.serializers.DraftTestSerializer import DraftTestSerializer
+from system.serializers.DraftAnswerSerializer import DraftAnswerSerializer
+from system.serializers.DraftQuestionSerializer import DraftQuestionSerializer
 #django 
 from django.shortcuts import get_object_or_404
 
@@ -53,8 +56,40 @@ class AddContentToUnit(CreateAPIView):
              serialized_pdf.is_valid(raise_exception=True)
              serialized_pdf.save(content = content)
              return Response({"message":"the video uploaded successfully"},201)
-          if type.lower() == "test":
-              pass
+          if type.lower() == "quizz":
+             serialized_content = DraftContentserializer(data = data)
+             serialized_content.is_valid(raise_exception=True)
+             content = serialized_content.save(unit = unit,is_test = True)
+            
+             serialized_test = DraftTestSerializer(data = {})
+             serialized_test.is_valid(raise_exception=True)
+             test = serialized_test.save(content = content)
+
+             questions = request.data["questions"]
+             
+             for question in questions:
+                 question_data = {
+                     "question": question["question"],
+                     "feedback": question["feedback"],
+                     "mark": question["mark"],
+                 }
+                 serialized_question = DraftQuestionSerializer(data = question_data)
+                 serialized_question.is_valid(raise_exception= True)
+                 question_obj = serialized_question.save(quizz = test)
+                 
+                 for answer in question["answers"]:
+                     answer_data = {
+                         "answer":answer["answer"],
+                         "is_correct":answer["is_correct"]
+                     }
+                     serialized_answer = DraftAnswerSerializer(data = answer_data)
+                     serialized_answer.is_valid(raise_exception=True)
+                     serialized_answer.save(question = question_obj)
+             return Response({"message":"the quizz added to the course"})
+          return Response({"message":"please add Video , PDF or Test"})
+
+                 
+
 
              
                

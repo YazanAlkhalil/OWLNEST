@@ -12,8 +12,7 @@ class ReorderCourseView(APIView):
           for unit in units :
               obj = DraftUnit.objects.get(id=unit["id"])
               obj.order = unit["order"]
-              obj.save()
-              
+              obj.save() 
               for content in unit["contents"]:
                   obj_content = DraftContent.objects.get(id=content["id"])
                   if obj_content.unit != obj:
