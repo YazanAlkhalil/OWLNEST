@@ -11,7 +11,6 @@ from ..models.Temp_Content import Temp_Content
 from ..models.Content import Content
 from ..models.Pdf import Pdf
 from ..models.Video import Video
-from ..models.Test import Test
 # serialzers
 from ..serializers.Temp_Content import Temp_Content_Serializer
 from ..serializers.Content import Content_Serializer
@@ -22,8 +21,15 @@ from ..permissions.Trainer import IsTrainer, IsCompanyTrainer, IsCourseTrainer
 from drf_yasg.utils import swagger_auto_schema
 from ..swagger.Content import content_create_request_body
 
-# GET : api/admin/company/:company_id/courses/:course_id/unit/:unit_id/contents
-# GET : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents
+#############################################################
+#                                                           #
+#                                                           #
+#              UnAvailabel (just for testing purpose)       #
+#                                                           #
+#                                                           #
+#############################################################
+
+# GET : api/whatever/company/:company_id/courses/:course_id/unit/:unit_id/contents
 class ContentList(generics.ListAPIView):
     # set the serializer class
     serializer_class = Content_Serializer
@@ -31,13 +37,6 @@ class ContentList(generics.ListAPIView):
     permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'unit_id'
-    # Document the view
-    # @swagger_auto_schema(
-    #     operation_description='for presenting the list of courses for a specific company showing only the important data',
-    #     responses={200: unit_retrive_list_response_body}
-    # )
-    # def get(self, request, *args, **kwargs):
-    #     return super().get(request, *args, **kwargs)
     def get_queryset(self):
         unit_id = self.kwargs['unit_id']
         try:
@@ -46,8 +45,7 @@ class ContentList(generics.ListAPIView):
             raise ValidationError('No content for this unit')
         return content
 
-# GET: api/admin/company/:company_id/courses/:course_id/unit/:unit_id/contents
-# GET: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents
+# GET: api/whatever/company/:company_id/courses/:course_id/unit/:unit_id/contents/content_id
 class ContentRetrieve(generics.RetrieveAPIView):
     # set the serializer class
     serializer_class = Content_Serializer
@@ -55,13 +53,6 @@ class ContentRetrieve(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
-    # Document the view
-    # @swagger_auto_schema(
-    #     operation_description='for presenting a specific course from a specific company showing only the important data',
-    #     responses={200: unit_retrive_list_response_body}
-    # )
-    # def get(self, request, *args, **kwargs):
-    #     return super().get(request, *args, **kwargs)
     def get_queryset(self):
         content_id = self.kwargs['content_id']
         try:
@@ -70,7 +61,15 @@ class ContentRetrieve(generics.RetrieveAPIView):
             raise ValidationError('No such content for this unit')
         return content
 
-# POST : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/content
+#############################################################
+#                                                           #
+#                                                           #
+#               Create Content (Only Trainer)               #
+#                                                           #
+#                                                           #
+#############################################################
+
+# POST : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/content/create
 class ContentCreate(generics.CreateAPIView):
     # set the serializer class
     serializer_class = Temp_Content_Serializer
@@ -91,7 +90,7 @@ class ContentCreate(generics.CreateAPIView):
         try:
             temp_unit = Temp_Unit.objects.get(unit__id=unit_id, course__id=course_id)
         except Temp_Unit.DoesNotExist:
-            raise ValidationError({'message': 'Unit does not exists'})
+            raise ValidationError({'message': 'Did not find a temp_unit for this unit does not exists'})
         # Check the type of content and save accordingly
         content_type = self.request.data.get('content_type')
         if content_type == 'pdf':
@@ -107,7 +106,7 @@ class ContentCreate(generics.CreateAPIView):
             description = self.request.data.get('description')
             file_path = self.request.data.get('file_path')
             if description is None or file_path is None:
-                raise ValidationError({'message': 'The "description" and "file_path" field is required for video content.'})
+                raise ValidationError({'message': 'The "description" and "file_path" fields are required for video content.'})
             temp_content = serializer.save(temp_unit=temp_unit, state='PR', is_video=True)
             Video.objects.create(
                 temp_content=temp_content, 
@@ -123,31 +122,40 @@ class ContentCreate(generics.CreateAPIView):
                 test.temp_content = temp_content
                 test.save()
         else:
-            raise ValidationError({'message': 'Invalid content type'})
+            raise ValidationError({'message': f'Invalid content type \'{content_type}\''})
         # set the temp_unit as in progress
         temp_unit.state = 'PR'
         temp_unit.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#############################################################
+#                                                           #
+#                                                           #
+#               Update Content (Only Trainer)               #
+#                                                           #
+#                                                           #
+#############################################################
 
 # PUT : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/content/:content_id/update
 class ContentUpdate(generics.UpdateAPIView):
     # set the serializer class
     serializer_class = Temp_Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     @swagger_auto_schema(
         operation_description='for updating a specific content',
-        # responses={200: content_retrive_list_response_body}
+        request_body=Temp_Content_Serializer
+        # responses={200: }
     )
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
     def get_object(self):
-        temp_unit_id = self.kwargs['unit_id']
+        unit_id = self.kwargs['unit_id']
         content_id = self.kwargs['content_id']
         try:
-            Temp_Content.objects.get(id=content_id, temp_unit__id=temp_unit_id)
+            Temp_Content.objects.get(content__id=content_id, temp_unit__unit__id=unit_id)
         except Temp_Content.DoesNotExist:
-            raise ValidationError({'message': 'Unit does not exists'})
+            raise ValidationError({'message': 'Did not find a temp_unit for this unit'})
     def perform_update(self, serializer):
         temp_content = self.get_object()
         # Check the type of content and update accordingly
@@ -163,22 +171,25 @@ class ContentUpdate(generics.UpdateAPIView):
                 # Set state to 'PR' (in progress)
                 temp_content.state = 'PR'  
                 serializer.save()
-            # elif content_type == 'test':
-            #     Test.objects.create(temp_content=temp_content, defaults={'full_mark': self.request.data.get('full_mark')})
-            #     # Set state to 'PR' (in progress)
-            #     temp_content.state = 'PR'  
-            #     serializer.save()
             else:
-                raise ValidationError({'message':'did not provide a valid content type'})
+                raise ValidationError({'message': f'did not provide a valid content type \'{content_type}\''})
         else:
-            raise ValidationError({'message':'did not provide a content type'})
+            raise ValidationError({'message':'Content type is required'})
+
+#############################################################
+#                                                           #
+#                                                           #
+#               Delete Content (Only Trainer)               #
+#                                                           #
+#                                                           #
+#############################################################
 
 # DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/delete
 class ContentDelete(generics.DestroyAPIView):    
     # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
     lookup_field = 'content_id'
@@ -190,21 +201,28 @@ class ContentDelete(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
     def get_queryset(self):
-        unit_id = self.kwargs['unit_id']
         content_id = self.kwargs['content_id']
-        content = get_object_or_404(Content, id=content_id, unit__id=unit_id)
-        temp_content = get_object_or_404(Temp_Content, content=content)
+        temp_content = get_object_or_404(Temp_Content, content__id=content_id)
         return Temp_Content.objects.filter(id=temp_content.id)
     def perform_destroy(self, instance):
         instance.state = 'DE'
         instance.save()
+        return Response({'message': f'Unit {instance.title} set to \'Delete\' state, should be approved to be deleted'}, status=204)
+
+#############################################################
+#                                                           #
+#                                                           #
+#               Restore Content (Only Trainer)               #
+#                                                           #
+#                                                           #
+#############################################################
 
 # PATCH : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/restore
 class ContentRestore(generics.UpdateAPIView):    
     # set the serializer class
     serializer_class = Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
     lookup_field = 'content_id'
@@ -216,10 +234,8 @@ class ContentRestore(generics.UpdateAPIView):
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
     def get_queryset(self):
-        unit_id = self.kwargs['unit_id']
         content_id = self.kwargs['content_id']
-        content = get_object_or_404(Content, id=content_id, unit__id=unit_id)
-        temp_content = get_object_or_404(Temp_Content, content=content)
+        temp_content = get_object_or_404(Temp_Content, content__id=content_id)
         return Temp_Content.objects.filter(id=temp_content.id)
     def perform_update(self, serializer):
         temp_content = serializer.instance
@@ -227,12 +243,20 @@ class ContentRestore(generics.UpdateAPIView):
         temp_content.save()
         return Response({'message': f'restored {temp_content.title} sucessfully'}, status=status.HTTP_200_OK)
 
+#############################################################
+#                                                           #
+#                                                           #
+#               Delete Content (Only Trainer)               #
+#                                                           #
+#                                                           #
+#############################################################
+
 # DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/contents/:content_id/not_published/delete
 class TempContentDelete(generics.DestroyAPIView):    
     # set the serializer class
     serializer_class = Temp_Content_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'content_id'
     lookup_field = 'content_id'
@@ -244,8 +268,7 @@ class TempContentDelete(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
     def get_queryset(self):
-        content_id = self.kwargs['content_id']
-        return get_object_or_404(Temp_Content, id=content_id)
+        return get_object_or_404(Temp_Content, id=self.kwargs['content_id'])
     def perform_destroy(self, instance):
         instance.delete()
-        return Response({'message':'Unit Deleted'}, status=204)
+        return Response({'message':f'Temp_Unit {instance.title} Deleted Successfully'}, status=204)

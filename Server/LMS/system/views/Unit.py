@@ -14,19 +14,26 @@ from ..models.Course import Course
 from ..serializers.Unit import Unit_Serializer
 from ..serializers.Temp_Unit import Temp_Unit_Serializer
 # permissions
-from ..permissions.IsCourseAdminOrTrainer import IsCourseAdminOrTrainer
-from ..permissions.IsCourseTrainer import IsCourseTrainer
+from ..permissions.Admin import IsAdmin, IsCompanyAdmin, IsCourseAdmin
+from ..permissions.Trainer import IsTrainer, IsCompanyTrainer, IsCourseTrainer
 # swagger
 from drf_yasg.utils import swagger_auto_schema
 from ..swagger.Unit import unit_retrive_list_response_body, unit_create_request_body, unit_create_respons_body
 
-# GET : api/admin/company/:company_id/courses/:course_id/unit
-# GET : api/trainer/company/:company_id/courses/:course_id/unit
+#############################################################
+#                                                           #
+#                                                           #
+#              UnAvailabel (just for testing purpose)       #
+#                                                           #
+#                                                           #
+#############################################################
+
+# GET : api/whatever/company/:company_id/courses/:course_id/unit
 class UnitList(generics.ListAPIView):
     # set the serializer class
     serializer_class = Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
+    permission_classes = [IsAuthenticated, ]
     # Document the view
     @swagger_auto_schema(
         operation_description='for presenting the list of courses for a specific company showing only the important data',
@@ -43,13 +50,12 @@ class UnitList(generics.ListAPIView):
             raise ValidationError('No units for this course')
         return units
 
-# GET: api/admin/company/:company_id/courses/:course_id/unit/:unit_id
-# GET: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id
+# GET: api/whatever/company/:company_id/courses/:course_id/unit/:unit_id
 class UnitRetrieve(generics.RetrieveAPIView):
     # set the serializer class
     serializer_class = Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseAdminOrTrainer]
+    permission_classes = [IsAuthenticated, ]
     # set the lookup field to match the URL keyword argument
     lookup_url_kwarg = 'unit_id'
     # Document the view
@@ -69,13 +75,21 @@ class UnitRetrieve(generics.RetrieveAPIView):
             raise ValidationError('No such unit for this course')
         return unit
 
+
+#############################################################
+#                                                           #
+#                                                           #
+#                 Create Uint (Trainer Only)                #
+#                                                           #
+#                                                           #
+#############################################################
+
 # POST : api/trainer/company/:company_id/courses/:course_id/unit
 class UnitCreate(generics.CreateAPIView):
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
-    # save the cours to the temp_unit
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # Document the view
     @swagger_auto_schema(
         operation_description='for creating a new unit to a specific course',
@@ -84,6 +98,7 @@ class UnitCreate(generics.CreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
+    # save the cours to the temp_unit
     def perform_create(self, serializer):
         company_id = self.kwargs['company_id']
         course_id = self.kwargs['course_id']
@@ -93,14 +108,23 @@ class UnitCreate(generics.CreateAPIView):
             raise ValidationError({'message': 'Course does not exists'})
         serializer.save(course=course, state='PR')
 
+#############################################################
+#                                                           #
+#                                                           #
+#                  Update Unit (Trainer Only)               #
+#                                                           #
+#                                                           #
+#############################################################
+
 # PUT : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/update
 class UnitUpdate(generics.UpdateAPIView):
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
     lookup_field = 'unit_id'
+    # Document the view
     @swagger_auto_schema(
         operation_description='for updating a specific unit',
         responses={200: unit_retrive_list_response_body}
@@ -123,7 +147,7 @@ class UnitDelete(generics.DestroyAPIView):
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
     lookup_field = 'unit_id'
     # Document the endpoint
@@ -140,17 +164,18 @@ class UnitDelete(generics.DestroyAPIView):
         if unit.published:
             temp_unit = get_object_or_404(Temp_Unit, unit=unit)
             return Temp_Unit.objects.filter(id=temp_unit.id)
-        raise ValidationError({'message': 'this unit has not been published yet'})
+        raise ValidationError({'message': f'Unit {unit} has not been published yet'})
     def perform_destroy(self, instance):
         instance.state = 'DE'
         instance.save()
+        return Response({'message': f'{instance.title} in state Delete now, waiting for the approve to be deleted'}, status=status.HTTP_200_OK)
 
 # PATCH: api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/restore
 class UnitRestore(generics.UpdateAPIView):    
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
     lookup_field = 'unit_id'
     # Document the endpoint
@@ -171,17 +196,16 @@ class UnitRestore(generics.UpdateAPIView):
         temp_unit.state = 'PR'
         temp_unit.save()
         return Response({'message': f'resored {temp_unit.title} succesfully'}, status=status.HTTP_200_OK)
-    
 
 # DELETE : api/trainer/company/:company_id/courses/:course_id/unit/:unit_id/not_published/delete
 class TempUnitDelete(generics.DestroyAPIView):
     # set the serializer class
     serializer_class = Temp_Unit_Serializer
     # set the permission class
-    permission_classes = [IsAuthenticated, IsCourseTrainer]
+    permission_classes = [IsAuthenticated, IsTrainer, IsCompanyTrainer, IsCourseTrainer]
     # set the lookup field to match the URL keyword argument
-    lookup_field = 'id'
     lookup_url_kwarg = 'unit_id'
+    lookup_field = 'id'
     # Document the endpoint
     @swagger_auto_schema(
         operation_description='obviously for deleteing a specific unit',
@@ -194,7 +218,7 @@ class TempUnitDelete(generics.DestroyAPIView):
         try:
             return Temp_Unit.objects.filter(course__id=course_id)
         except Temp_Unit.DoesNotExist:
-            raise Http404("Temp_Unit not found")
+            raise Http404({'message': "Temp_Unit not found"})
     def perform_destroy(self, instance):
         instance.delete()
-        return Response({'message': 'Unit Deleted'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': f'Unit {instance.title} Deleted'}, status=status.HTTP_204_NO_CONTENT)
