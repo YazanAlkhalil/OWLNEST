@@ -58,7 +58,7 @@ class AddUserToCourse(CreateAPIView):
           data =  {
                "from_user":request.user.id,
                "to_user": user.id,
-               "message": f"Hi, {user.username} you have been enroll in course {course.name} by admin {request.user.username}",
+               "message": f"Hello {user.username}, you have been successfully enrolled in the course '{course.name}' by admin {request.user.username}. Welcome aboard!",
                "company":course.company.id
           }
 
@@ -86,7 +86,7 @@ class AddUserToCourse(CreateAPIView):
                 data =  {
                     "from_user":request.user.id,
                     "to_user": user.id,
-                    "message": f"Hi, {user.username} you have been TRAINER in course {course.name} by admin {request.user.username}",
+                    "message": f"Hello {user.username}, you have been assigned as the Trainer for the course '{course.name}' by admin {request.user.username}. Congratulations and best of luck!",
                     "company":course.company.id
                 }
                 notification  = NotificationSerializer(data = data)

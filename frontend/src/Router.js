@@ -34,6 +34,9 @@ import FoegetPassEmail from "./Components/AuthComponents/FoegetPassEmail";
 import NewPassword from "./Components/AuthComponents/NewPassword";
 import SettingsLayout from "./Components/SettingsLayout";
 import SettingGeneral from "./Pages/SettingGeneral";
+import SettingsAccount from "./Pages/SettingsAccount";
+import SettingsCompany from "./Pages/SettingsCompany";
+import PendingCourseDetails from "./Components/admin/PendingCourseDetails";
 
 export default function Router() {
   return (
@@ -47,9 +50,13 @@ export default function Router() {
       <Route path="/company" element={<CompanyPage />} />
       <Route path="/forgetPassEmail" element={<FoegetPassEmail />} />
       <Route path="/newPassword/api/password_reset/:uuid/:token" element={<NewPassword />} />
+      
+      
       {/* settings */}
       <Route path="/settings" element={<SettingsLayout />} >
         <Route path="/settings/general" element={<SettingGeneral />} />
+        <Route path="/settings/account" element={<SettingsAccount />} />
+        <Route path="/settings/company" element={<SettingsCompany />} />
       </Route>
 
       <Route path="/trainee" element={<TraineeLayout />}>
@@ -79,8 +86,10 @@ export default function Router() {
 
 
       <Route path="/trainer" element={<TrainerLayout />}>
-        <Route path="/trainer/courses/:id" element={<CreateCoursePage />} />
-        <Route path="/trainer/courses" element={<TrainerCoursesPage />} />
+        <Route path="/trainer/courses/:id" element={<CreateCoursePage inprogress={false}/>} />
+        <Route path="/trainer/inprogress/:id" element={<CreateCoursePage inprogress={true}/>} />
+        <Route path="/trainer/inprogress/" element={<TrainerCoursesPage inprogress={true}/>} />
+        <Route path="/trainer/courses" element={<TrainerCoursesPage inprogress={false}/>} />
         <Route
           path="/trainer"
           element={<Navigate to="/trainer/courses" replace />}
@@ -91,8 +100,10 @@ export default function Router() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/buyCourse" element={<Plane />} />
         <Route path="/admin/courses/:id" element={<AdminCourseDetails />} />
-        <Route path="/admin/courses" element={<AdminCoursesPage />} />
+        <Route path="/admin/courses" element={<AdminCoursesPage pending={false}/>} />
         <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/pending" element={<AdminCoursesPage pending={true}/>} />
+        <Route path="/admin/pending/:id" element={<PendingCourseDetails />} />
         {/* <Route path='/admin/users/:id' element={<AdminCoursesPage />} /> */}
         <Route
           path="/admin"

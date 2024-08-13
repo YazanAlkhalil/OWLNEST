@@ -92,7 +92,7 @@ export default function CompanyDetails() {
     console.log(formDataObj);
   
     if (validateForm()) {
-      fetchData({
+      const res = fetchData({
         method: "post",
         url: "http://127.0.0.1:8000/api/create_company/",
         data: formData,
@@ -101,7 +101,9 @@ export default function CompanyDetails() {
           "Content-Type": "multipart/form-data",
         },
       });
+     if(res){
       navigate('/company',{replace: true});
+     }
     }
   };
 

@@ -117,7 +117,6 @@ class DeleteOwnerView(APIView):
         else:
             return Response({'message': 'owner not found'}, status=404)
         
-
 class CompaniesView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:

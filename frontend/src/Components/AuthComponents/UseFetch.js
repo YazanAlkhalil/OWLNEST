@@ -47,7 +47,7 @@ const useFetch = () => {
       setResData(response.data);
       return response.data;
     } catch (error) {
-      if (error.response && error.response.status === 401) {
+      if (error.response && error.response.status === 403) {
         const refreshSuccessful = await refreshToken();
         if (refreshSuccessful) {
           return fetchData({ url, method, data, params, headers });

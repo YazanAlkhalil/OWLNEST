@@ -1,6 +1,9 @@
 from django.urls import path
-from ..views.Content import ContentCreate, ContentList, ContentRetrieve, ContentUpdate, ContentDelete
+from ..views.Content import ContentCreate, ContentRestore, ContentList, ContentRetrieve, ContentUpdate, ContentDelete, TempContentDelete
 
+
+#views  
+from system.views.AddContentToUnit import AddContentToUnit
 urlpatterns = [
     # path(
     #     'admin/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content',
@@ -24,7 +27,7 @@ urlpatterns = [
     # ),
     path(
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/create', 
-        ContentCreate.as_view(), 
+        AddContentToUnit.as_view(), 
         name='content-trainer-create'
     ),
     path(
@@ -36,5 +39,15 @@ urlpatterns = [
         'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>/delete', 
         ContentDelete.as_view(), 
         name='content-trainer-delete'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>/restore', 
+        ContentRestore.as_view(), 
+        name='content-trainer-restore'
+    ),
+    path(
+        'trainer/company/<int:company_id>/courses/<int:course_id>/unit/<int:unit_id>/content/<int:content_id>/not_published/delete', 
+        TempContentDelete.as_view(), 
+        name='content-trainer-not-published-delete'
     ),
 ]

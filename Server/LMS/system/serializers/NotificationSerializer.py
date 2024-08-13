@@ -5,11 +5,10 @@ from system.models.Notification import Notification
 
 class NotificationSerializer(serializers.ModelSerializer):
       time_since_sent = serializers.SerializerMethodField(read_only = True)
-      username = serializers.CharField(source = "from_user.username" , read_only = True)
-      image = serializers.CharField(source = "from_user.image",read_only = True)
+      username = serializers.CharField(source = "from_user.username" , read_only = True) 
       class Meta:
           model = Notification
-          fields = ['id', 'username', 'image','from_user','to_user', 'message', 'is_read', 'time_since_sent',"company"]
+          fields = ['id', 'username','from_user','to_user', 'message', 'is_read', 'time_since_sent',"company"]
           extra_kwargs = {
               "from_user":{
                   "write_only":True
@@ -38,3 +37,10 @@ class NotificationSerializer(serializers.ModelSerializer):
               return f"{minutes} minutes"
           else:
               return f"{seconds} seconds"
+          
+      def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        request = self.context.get('request') 
+        if instance.from_user.image and request:
+            representation['image'] = request.build_absolute_uri(instance.from_user.image.url)
+        return representation

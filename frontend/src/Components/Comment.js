@@ -91,17 +91,13 @@ export default function Comment({ data }) {
           <div className="flex">
             <div
               onClick={() => handleReactionClick(1)}
-              className={`${
-                commentData?.reaction === 1 ? "bg-slate-200" : ""
-              } border-r-2 flex border-r-stone-950 px-10 py-1 cursor-pointer`}>
+              className={`border-r-2 flex border-r-stone-950 px-10 py-1 cursor-pointer`}>
               {commentData?.reaction === 1 ? <BiSolidLike style={{color: "#3F6188"}} size={"30"} /> : <BiLike size={"30"} />}
               <p className="ml-2 text-xl font-semibold">{commentData?.likes}</p>
             </div>
             <div
               onClick={() => handleReactionClick(-1)}
-              className={`${
-                commentData?.reaction === -1 ? "bg-slate-200" : ""
-              } px-10 py-1 flex cursor-pointer`}>
+              className={` px-10 py-1 flex cursor-pointer`}>
               {commentData?.reaction === -1 ? <BiSolidDislike style={{color: "#3F6188"}} size={"30"} /> : <BiDislike size={"30"} />}
               <p className="ml-2 text-xl font-semibold">
                 {commentData?.dislikes}

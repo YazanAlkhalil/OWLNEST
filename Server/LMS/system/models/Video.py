@@ -10,4 +10,4 @@ class Video(models.Model):
     file_path = models.FileField(upload_to=video_file_path)
     description = models.TextField()
     def __str__(self):
-        return self.file_path
+        return f'video_{self.id}'
