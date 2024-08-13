@@ -11,6 +11,10 @@ from system.views.AdminCreateCourseView import AdminCreateCourseView
 from system.views.TrainerInProgressCourseListView import TrainerInProgressCourseListView
 from system.views.TrainerInProgressCourseDetailsView import TrainerInProgressCourseDetailsView
 from system.views.ReorderCourseView import ReorderCourseView
+from system.views.AddSkillToCourse import AddSkillToCourse
+from system.views.AddAdditionalResourcesToCourse import AddAdditionalResourcesToCourse
+
+
 urlpatterns = [
     path(
         'admin/company/<int:company_id>/courses', 
@@ -54,18 +58,23 @@ urlpatterns = [
     # ),
     path(
         'trainer/company/<int:company_id>/progress_courses', 
-        TrainerInProgressCourseListView.as_view(), 
-        name='company-progress-course-trainer-list'
+        TrainerInProgressCourseListView.as_view(),  
     ),
       path(
         'trainer/company/<int:company_id>/progress_courses/<int:course_id>', 
-        TrainerInProgressCourseDetailsView.as_view(), 
-        name='company-progress-course-trainer-retrive'
+        TrainerInProgressCourseDetailsView.as_view(),  
     ),
     path(
         'admin/company/<int:company_id>/courses/create', 
-        AdminCreateCourseView.as_view(), 
-        name='company-course-admin-create'
+        AdminCreateCourseView.as_view(),  
+    ),
+    path(
+        'course/<id>/skills', 
+        AddSkillToCourse.as_view(),  
+    ),
+      path(
+        'course/<id>/additional-resources', 
+        AddAdditionalResourcesToCourse.as_view(),  
     ),
     # path(
     #     'trainer/company/<int:company_id>/courses/<int:course_id>/publish', 

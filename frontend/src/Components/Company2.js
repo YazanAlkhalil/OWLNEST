@@ -4,10 +4,9 @@ import useFetch from "./AuthComponents/UseFetch";
 
 export default function Company({image,id,name}) {
   const {fetchData} = useFetch()
-  const companyId = localStorage.getItem('companyId');
   const navigate = useNavigate();
   async function getRoles() {
-    const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + companyId + '/roles/', method: 'get' });
+    const res = await fetchData({ url: 'http://127.0.0.1:8000/api/company/' + id + '/roles/', method: 'get' });
     if (Array.isArray(res)) {
       const ownerIndex = res.findIndex(item => item === 'owner')
       if (ownerIndex != -1) {
