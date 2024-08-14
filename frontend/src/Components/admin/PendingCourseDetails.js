@@ -42,14 +42,9 @@ function PendingCourseDetails() {
                     id: "unit" + unit.id,
                 })
 
-                unit.temp_contents.forEach(lesson => {
+                unit.contents.forEach(lesson => {
                     let content;
-                    if (lesson.is_pdf)
-                        content = 'pdf'
-                    else if (lesson.is_video)
-                        content = "video"
-                    else
-                        content = 'quiz'
+                    content = lesson.type
                     console.log(content);
                     tempContent.push({
                         type: "lesson",
