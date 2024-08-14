@@ -19,7 +19,7 @@ from system.views.AdminPendingCoursesView import AdminPendingCoursesView
 from system.views.DisapprovmentView import DisapprovmentView
 from system.views.AdminApprovmentView import AdminApprovmentView
 from system.views.TraineeCourseDetailsView import TraineeCourseDetailsView
-
+from system.views.EditDestroyCourseView import EditDestroyCourseView
 
 
 urlpatterns = [
@@ -92,6 +92,11 @@ urlpatterns = [
     path(
         'trainee/courses/<course_id>',
         TrainerInProgressCourseDetailsView.as_view()
+    ),
+    path(
+        'course/<pk>',
+        EditDestroyCourseView.as_view()
+
     )
    
      
