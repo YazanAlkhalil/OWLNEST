@@ -19,6 +19,7 @@ class Course(models.Model):
     publish_date = models.DateField(auto_now_add=True) 
     trainers = models.ManyToManyField(Trainer_Contract, through='system.Trainer_Contract_Course')
     trainees = models.ManyToManyField(Trainee_Contract,through='system.Enrollment')
+    rate = models.DecimalField(max_digits= 4,decimal_places=2,default=0)
     # when call an instance show just its name
     def __str__(self):
         return self.name

@@ -11,12 +11,11 @@ from system.models.Favorite import Favorite
 
 class TraineeCourseListSerializer(serializers.ModelSerializer):
       
-      progress = serializers.SerializerMethodField()
-      leader = serializers.SerializerMethodField()
+      progress = serializers.SerializerMethodField() 
       is_favourite = serializers.SerializerMethodField()
       class Meta:
             model = Course
-            fields = ["id","name","image","leader","progress","is_favourite"]
+            fields = ["id","name","image","progress","is_favourite","rate"]
 
       def get_progress(self, obj): 
           user = self.context['request'].user 
@@ -25,14 +24,7 @@ class TraineeCourseListSerializer(serializers.ModelSerializer):
               course=obj
           ).first()
           return enrollment.progress if enrollment else 0
-      
-      def get_leader(self, obj): 
-        leader_contract = Trainer_Contract_Course.objects.filter(
-            course=obj,
-            is_leader=True
-        ).select_related('trainer_contract__trainer__user').first()
- 
-        return leader_contract.trainer_contract.trainer.user.username if leader_contract else None 
+     
       def get_is_favourite(self, obj):
        
         user = self.context['request'].user
@@ -41,8 +33,7 @@ class TraineeCourseListSerializer(serializers.ModelSerializer):
             trainee__user=user,
             employed=True
         ).first()
-
-        # Retrieve the enrollment object
+ 
         enrollment = Enrollment.objects.filter(
             trainee_contract=trainee_contract,
             course=obj
