@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 #models 
 from system.models.Company  import Company  
-
+from system.models.Admin import Admin
+from system.models.Admin_Contract import Admin_Contract
 
 
 
@@ -27,7 +28,11 @@ class AdminCreateCourseView(generics.CreateAPIView):
         if hasattr(request.user, 'admin'):
             admin_contract = request.user.admin.admin_contract_set.get(company = company_id)
         else:
-            return Response({"error": "User does not have admin privileges in this company."}, status=status.HTTP_403_FORBIDDEN)
+            if company.owner.user == request.user:
+               admin,_ = Admin.objects.get_or_create(user = request.user)
+               admin_contract,_ = Admin_Contract.objects.get_or_create(admin = admin,company = company)
+            else:
+                 return Response({"error": "User does not have admin privileges in this company."}, status=status.HTTP_403_FORBIDDEN)
  
         serializer = CreateCourseSerializer(data=request.data)
         if serializer.is_valid(): 
