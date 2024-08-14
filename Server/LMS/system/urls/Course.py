@@ -21,7 +21,6 @@ from system.views.AdminApprovmentView import AdminApprovmentView
 from system.views.TraineeCourseDetailsView import TraineeCourseDetailsView
 from system.views.EditDestroyCourseView import EditDestroyCourseView
 
-
 urlpatterns = [
     path(
         'admin/company/<int:company_id>/courses', 
@@ -36,6 +35,10 @@ urlpatterns = [
     path(
         'trainee/company/<int:company_id>/courses', 
         TraineeCourseListView.as_view(), 
+        name='company-course-trainer-list'
+    ),  path(
+        'trainee/courses/<id>', 
+        TraineeCourseDetailsView.as_view(), 
         name='company-course-trainer-list'
     ),
       path(
