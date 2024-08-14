@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const AnswerList = ({ answers, updateAnswers }) => {
   const addAnswer = () => {
     if (answers.length < 4) {
-      updateAnswers([...answers, {id:uuidv4(), text: '', isCorrect: false, feedback: '' }]);
+      updateAnswers([...answers, {id:uuidv4(), answer: '', is_correct: false}]);
     }
   };
   const updateAnswer = (index, updatedAnswer) => {

@@ -4,8 +4,9 @@ import { TextField } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import useFetch from './AuthComponents/UseFetch'
 
-function UploadPDF({ submit }) {
+function UploadPDF({ submit,backendContent}) {
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [order, setOrder] = useState(0);
   const [name, setName] = useState('')
   const unitId = localStorage.getItem('unitId').slice(4)
   const companyId = localStorage.getItem('companyId')
@@ -13,10 +14,13 @@ function UploadPDF({ submit }) {
   const {fetchData} = useFetch()
 
   async function sendPdf(){
+    let order = backendContent.find(unit => unit.id.toString() === unitId)?.contents.length
+
     const formData = new FormData()
-    formData.append("content_type","pdf")
+    formData.append("type","pdf")
     formData.append("title",name)
-    formData.append("file_path",uploadedFile)
+    formData.append("file",uploadedFile)
+    formData.append("order", order)
     await fetchData({url:"http://127.0.0.1:8000/api/trainer/company/"+companyId+"/courses/"+id+"/unit/"+unitId+"/content/create",method:"POST",data:formData})
     submit()
   }

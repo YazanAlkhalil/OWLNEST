@@ -6,9 +6,9 @@ import { FaRegFilePdf } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { PiExam } from "react-icons/pi";
 import useFetch from "./AuthComponents/UseFetch";
-function Unit({ item, sortable, uploadVideo, uploadPDF, createQuiz,isDisplayOnly }) {
+function Unit({ getInfo,item, sortable, uploadVideo, uploadPDF, createQuiz, isDisplayOnly }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
-  const {fetchData} = useFetch()
+  const { fetchData } = useFetch()
   const overlayRef = useRef(null);
 
   const toggleOverlay = () => {
@@ -33,7 +33,8 @@ function Unit({ item, sortable, uploadVideo, uploadPDF, createQuiz,isDisplayOnly
   };
 
   const deleteUnit = async () => {
-    const res = await fetchData({url:""})
+    const res = await fetchData({ url: "/unit/"+item.id.slice(4),method: "DELETE" })
+    getInfo()
   }
 
 

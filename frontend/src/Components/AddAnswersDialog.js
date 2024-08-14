@@ -23,18 +23,19 @@ export default function FormDialog({question,addQuestion}) {
     function reset(){
         setQuestionData({
             id:uuidv4(),
-            text:"",
-            grade:"",
+            question:"",
+            mark:"",
+            feedback:"",
             answers:[
                 {
                     id:uuidv4(),
-                    text:"",
-                    isCorrect: false,
+                    answer:"",
+                    is_correct: false,
                 },
                 {
                     id:uuidv4(),
-                    text:"",
-                    isCorrect: false,
+                    answer:"",
+                    is_correct: false,
                 },
             ]
         })
@@ -43,9 +44,9 @@ export default function FormDialog({question,addQuestion}) {
     function handleSubmit(){
         if(questionData.answers.length <= 1)
             return toast.error('there should be at least two answers')
-         if(questionData.text == "" || questionData.grade == '')
+         if(questionData.question == "" || questionData.mark == '')
             return toast.error('please fill in all fields')
-        let isEmptyAnswer = questionData.answers.find(answer => answer.text == '');
+        let isEmptyAnswer = questionData.answers.find(answer => answer.answer == '');
         if(isEmptyAnswer){
            return toast.error('there should not be an empty answers')
         }
@@ -74,13 +75,16 @@ export default function FormDialog({question,addQuestion}) {
                 <DialogContent >
                     <div className='flex'>
 
-                        <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
-                            <input value={questionData.text} onChange={e => setQuestionData({...questionData,text:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Question" aria-label="question" />
+                        <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
+                            <input value={questionData.question} onChange={e => setQuestionData({...questionData,question:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Question" aria-label="question" />
                         </div>
-                        <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
-                            <input value={questionData.grade} onChange={e => setQuestionData({...questionData,grade:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Grade" aria-label="grade" />
+                        <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
+                            <input value={questionData.mark} onChange={e => setQuestionData({...questionData,mark:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Grade" aria-label="grade" />
                         </div>
                     </div>
+                        <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
+                            <input value={questionData.feedback} onChange={e => setQuestionData({...questionData,feedback:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Feedback" aria-label="Feedback" />
+                        </div>
                     <AnswerList answers={questionData.answers} updateAnswers={(updateAnswers) => setQuestionData({...questionData,answers:updateAnswers})}/>
                 </DialogContent>
                 <DialogActions>

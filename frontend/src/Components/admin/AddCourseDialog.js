@@ -48,11 +48,9 @@ export default function FormDialog({getCourses}) {
                     onSubmit: async (event) => {
                         event.preventDefault();
                         let res = await fetchData({ url: 'http://127.0.0.1:8000/api/admin/company/' + companyId + '/courses/create', method: 'POST', data: info })
-                        if (res?.id) {
                             toast.success('Course added successfully')
                             reset()
                             getCourses()
-                        }
                     },
                 }}
             >

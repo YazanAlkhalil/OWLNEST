@@ -3,16 +3,21 @@ import Question from './Question';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 import FormDialog from './AddAnswersDialog';
+import useFetch from './AuthComponents/UseFetch';
+import { useParams } from 'react-router-dom';
 
 
-function CreateQuiz() {
+function CreateQuiz({ backendContent }) {
+    const { fetchData } = useFetch()
+    const { id } = useParams()
+    const companyId = localStorage.getItem('companyId')
+    const unitId = localStorage.getItem('unitId').slice(4)
     const [quizName, setQuizName] = useState('')
-    const [total, setTotal] = useState('')
     const [questions, setQuestions] = useState([])
+
     const addQuestion = (question) => {
         setQuestions([...questions, question]);
     };
-    console.log(questions);
     function updateQuestionData(index, updatedQuestionData) {
         const tempQuestionData = [...questions];
         tempQuestionData[index] = updatedQuestionData;
@@ -29,35 +34,42 @@ function CreateQuiz() {
             toast.error('There should be at least one question')
         }
     }
-
+    async function submit() {
+        let order = backendContent.find(unit => unit.id.toString() == unitId)?.contents.length
+        const res = await fetchData({
+            url: "/trainer/company/" + companyId + "/courses/" + id + "/unit/" + unitId + "/content/create", method: "POST", data: {
+                title: quizName,
+                order,
+                questions,
+                type:"quizz"
+            }
+        })
+    }
     return (
         <div className='flex flex-col'>
             <div className='flex'>
-                <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
+                <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
                     <input value={quizName} onChange={e => setQuizName(e.target.value)} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Quiz name" aria-label="quiz name" />
-                </div>
-                <div className="flex w-min items-center border-b dark:border-DarkGray border-primary-500 py-2">
-                    <input value={total} onChange={e => setTotal(e.target.value)} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Total Grades" aria-label="total grade" />
                 </div>
             </div>
             <FormDialog
                 question={
                     {
+
                         id: uuidv4(),
-                        text: "",
-                        grade: "",
+                        feedback: "",
+                        question: "",
+                        mark: "",
                         answers: [
                             {
                                 id: uuidv4(),
-                                text: "",
-                                isCorrect: false,
-                                feedback: ""
+                                answer: "",
+                                is_correct: false,
                             },
                             {
                                 id: uuidv4(),
-                                text: "",
-                                isCorrect: false,
-                                feedback: ""
+                                answer: "",
+                                is_correct: false,
                             },
                         ]
                     }
@@ -69,7 +81,6 @@ function CreateQuiz() {
                     key={question.id}
                     questionData={question}
                     updateQuestionData={(updatedQuestionData) => {
-                        
                         updateQuestionData(index, updatedQuestionData)
                     }}
                     deleteQuestion={() => deleteQuestion(question.id)}
@@ -77,7 +88,7 @@ function CreateQuiz() {
             ))}
             <div className='flex justify-end mt-10'>
                 <button className='btn-inner mr-2'>Cancel</button>
-                <button className='btn-inner'>Save</button>
+                <button onClick={submit} className='btn-inner'>Save</button>
             </div>
         </div>
     );

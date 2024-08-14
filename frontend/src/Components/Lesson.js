@@ -4,6 +4,7 @@ import { FaPlay } from "react-icons/fa";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { PiExam } from "react-icons/pi";
+import useFetch from "./AuthComponents/UseFetch";
 
 function getIcon(icon) {
   if (icon == 'video')
@@ -14,11 +15,16 @@ function getIcon(icon) {
     return <PiExam />
 }
 
-function Lesson({ item, sortable,isDisplayOnly }) {
+function Lesson({ item, sortable,isDisplayOnly,getInfo }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
   const style = {
     transition,
     transform: CSS.Transform.toString(transform)
+  }
+  const {fetchData} = useFetch()
+  async function handleDelete(){
+    const res = await fetchData({url:"/content/"+item.id.slice(6),method:"DELETE"})
+    getInfo()
   }
   if (!sortable) {
     return <div
@@ -27,13 +33,13 @@ function Lesson({ item, sortable,isDisplayOnly }) {
         {getIcon(item.content)}
         <h4 className='ml-2 text-xl'>{item.title}</h4>
       </div>
-      <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-transparent  group-hover:text-red-500  rounded-full ' />
+      <MdDelete onClick={handleDelete} className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-transparent  group-hover:text-red-500  rounded-full ' />
     </div>
   }
   return <div style={style} ref={setNodeRef} {...attributes} {...listeners}
     className='dark:bg-DarkSecondary dark:hover:bg-DarkGrayHover dark:text-white bg-gray-50 hover:cursor-pointer hover:bg-gray-200 text-black border flex items-center mb-2 p-2 rounded'>
     <div className="flex items-center">
-        {getIcon(item.type)}
+        {getIcon(item.content)}
         <h4 className='ml-2 text-xl'>{item.title}</h4>
       </div>
       <MdDelete className='ml-2 hover:cursor-pointer box-content p-2  size-6 text-transparent  rounded-full ' />
