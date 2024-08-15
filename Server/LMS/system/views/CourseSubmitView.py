@@ -18,6 +18,7 @@ from django.shortcuts import get_object_or_404
 
 
 class CourseSubmitView(CreateAPIView):
+      permission_classes = [IsAuthenticated]
       def post(self, request, *args, **kwargs):
           course = get_object_or_404(Course,id = kwargs["course_id"])
           admin_contract = course.admin_contract  

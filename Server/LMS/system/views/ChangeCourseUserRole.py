@@ -2,6 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 #models 
 from system.models.Course import Course
 from authentication.models.User import User
@@ -12,6 +13,7 @@ from django.shortcuts import get_object_or_404
 
 
 class ChangeCourseUserRole(APIView):
+      permission_classes = [IsAuthenticated]
       def post(self,request,*args,**kwargs):
           if not 'user_id' in request.data.keys():
                raise ValidationError({"message":"user_id missed"})

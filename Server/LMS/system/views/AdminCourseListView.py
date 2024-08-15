@@ -10,8 +10,8 @@ from system.models.Course  import Course
 
 #serializer
 from system.serializers.AdminCourseListSerializer import AdminCourseListSerializer 
-
 from system.permissions.IsAdmin import IsAdminInCompanyOrOwner
+
 class AdminCourseListView(generics.ListAPIView):
       serializer_class = AdminCourseListSerializer
       permission_classes = [IsAuthenticated,IsAdminInCompanyOrOwner]

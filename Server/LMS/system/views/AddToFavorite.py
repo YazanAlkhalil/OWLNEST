@@ -1,7 +1,7 @@
 #DRF 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.permissions import IsAuthenticated
 #models 
 from system.models.Trainee_Contract import Trainee_Contract 
 from system.models.Enrollment import Enrollment
@@ -16,6 +16,7 @@ from django.shortcuts import get_object_or_404
 
 
 class AddToFavoriteView(APIView):
+      permission_classes = [IsAuthenticated]
       
       def post(self,request,*args,**kwargs):
             company = get_object_or_404(Company,id = kwargs['id'])
