@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 #models 
 from system.models.Course import Course
-
+from system.models.DraftAdditionalResources import DraftAdditionalResources
 #serializer
 from system.serializers.DraftAdditionalResourcesSerializer import DraftAdditionalResourcesSerializer
 
@@ -14,9 +14,12 @@ from django.shortcuts import get_object_or_404
 
 class AddAdditionalResourcesToCourse(ListCreateAPIView):
       serializer_class = DraftAdditionalResourcesSerializer
-      permission_classes = [IsAuthenticated]
-      def get_queryset(self): 
-           return get_object_or_404(Course ,id= self.kwargs["id"]).draftadditionalresources_set.all() 
+      permission_classes = [IsAuthenticated] 
+
+      def get(self, request, *args, **kwargs):
+              draft_additonal = DraftAdditionalResources.objects.get(course__id = self.kwargs["id"])
+              serialized_draft_additonal = self.serializer_class(draft_additonal)
+              return Response(serialized_draft_additonal.data,200)
       
       def post(self, request, *args, **kwargs):
           
@@ -38,4 +41,3 @@ class AddAdditionalResourcesToCourse(ListCreateAPIView):
           return Response({"message":"additional resources added to the course"})
       
 
-      

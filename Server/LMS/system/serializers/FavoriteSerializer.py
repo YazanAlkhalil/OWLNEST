@@ -18,7 +18,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             data["course"] = instance.enrollment.course.name
             data["image"] = instance.enrollment.course.image.url if instance.enrollment.course.image else None
             data["progress"]= instance.enrollment.progress
-            data["trainer"] = "mutaz"
+            data["rate"] = instance.enrollment.course.rate
             return data
       
       def to_internal_value(self, data):   
