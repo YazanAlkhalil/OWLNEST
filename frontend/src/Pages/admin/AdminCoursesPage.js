@@ -32,7 +32,7 @@ function AdminCoursesPage({ pending }) {
             getCourses()
         else
             getPendingCourses()
-    }, [courses])
+    }, [])
     return (
         <div className='flex flex-col'>
 

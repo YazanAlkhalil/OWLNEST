@@ -63,6 +63,7 @@ function AdditionalInfo({ close }) {
   async function handleSubmit(){
     fetchData({url:"/course/"+id,method:"PATCH",data:{description}})
     fetchData({url:"/course/"+id+"/additional-resources",method:"POST",data:{text:resources}})
+    close()
   }
 
   return (

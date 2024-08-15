@@ -31,6 +31,7 @@ function Lesson({ item, sortable, isDisplayOnly, getInfo }) {
   }
 
   async function handleClick(){
+    localStorage.setItem("lessonId", item.id)
     if (item.content == 'video')
       navigate("/trainer/courses/" + id + "/video")
     else if (item.content == 'pdf')

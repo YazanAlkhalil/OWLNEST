@@ -1,55 +1,69 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ChartExample from './Chart'
 import Card from './Card'
 import { useSelector } from 'react-redux';
+import useFetch from './AuthComponents/UseFetch';
+import { useParams } from 'react-router-dom';
 
-function CourseReports({admin}) {
+function CourseReports({ admin }) {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+  const [cardsData, setCardsData] = useState({
+    avg_grade: "",
+    number_of_trainees_in_progress: "",
+    trainees_complete: "",
+    trainers_number: ""
+  })
+  const [xp, setXP] = useState([])
+  const [name, setName] = useState("")
+  const { fetchData } = useFetch()
+  const { id } = useParams()
+  useEffect(() => {
+    async function getInfo() {
+      const res = await fetchData({ url: "/course/" + id + "/report" })
+      setName(res.admin_username)
+      setXP(res.graph)
+      setCardsData({
+        avg_grade: res.avg_grade,
+        number_of_trainees_in_progress: res.number_of_trainees_in_progress,
+        trainees_complete: res.trainees_complete,
+        trainers_number: res.trainers_number
+      })
+      console.log(res);
+    }
+    getInfo()
+  }, [])
 
   return (
     <div className='flex flex-col'>
 
-      {admin && <h1 className='text-xl '>Admin : yazona</h1>}
+      {admin && <h1 className='text-xl '>Admin : {name}</h1>}
       <div className='flex justify-between'>
-        <Card title={'learner in progress'} value={'246'}/>
-        <Card title={'completed learners'} value={'234'}/>
-        <Card title={'Average grades'} value={'76%'}/>
-        <Card title={'Instructors'} value={'2'}/>
-        
+        <Card title={'learner in progress'} value={cardsData.number_of_trainees_in_progress} />
+        <Card title={'completed learners'} value={cardsData.trainees_complete} />
+        <Card title={'Average grades'} value={cardsData.avg_grade} />
+        <Card title={'Instructors'} value={cardsData.trainers_number} />
+
       </div>
       <div className='mt-auto'>
 
         <ChartExample options={{
-    height: 380,
-    title: {
-      text: "XP gains for trainees",
-    },
-    theme: !isDarkMode ? 'ag-default-dark' : 'ag-default',
+          height: 380,
+          title: {
+            text: "XP gains for trainees",
+          },
+          theme: !isDarkMode ? 'ag-default-dark' : 'ag-default',
 
-    data: [
-        { month: "Jan", "XP gains": 200 },
-        { month: "Feb", "XP gains": 210 },
-        { month: "Mar", "XP gains": 195 },
-        { month: "Apr", "XP gains": 205 },
-        { month: "May", "XP gains": 215 },
-        { month: "Jun", "XP gains": 200 },
-        { month: "Jul", "XP gains": 225 },
-        { month: "Aug", "XP gains": 210 },
-        { month: "Sep", "XP gains": 250 },
-        { month: "Oct", "XP gains": 205 },
-        { month: "Nov", "XP gains": 215 },
-        { month: "Dec", "XP gains": 220 },
-      ],
-    series: [
-      {
-        type: "area",
-        xKey: "month",
-        yKey: "XP gains",
-        yName: "XP gains",
-      },
-      
-    ],
-  }}/>
+          data: xp,
+          series: [
+            {
+              type: "area",
+              xKey: "month",
+              yKey: "xp",
+              yName: "xp",
+            },
+
+          ],
+        }} />
       </div>
     </div>
   )

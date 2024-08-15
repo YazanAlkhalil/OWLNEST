@@ -6,7 +6,7 @@ function TrainerCourse({name,image,id}) {
     
   return (
     <div onClick={()=> {navigate(`${id}`); localStorage.setItem('courseName',name)}} className='hover:cursor-pointer'>
-      <img className='border border-black shadow-lg w-4/5 rounded' src={image ? image : def}/>
+      <img className='border border-black shadow-lg h-48 w-4/5 rounded' src={image ? image : def}/>
       <div className='text-xl dark:bg-DarkGray bg-primary text-white w-4/5 mt-2 py-1 px-2 rounded'>{name}</div>
     </div>
   )
