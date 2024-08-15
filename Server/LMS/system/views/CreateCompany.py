@@ -105,7 +105,7 @@ class EditCompanyView(APIView):
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({'message': 'user is not an owner'}, status=403)
-        return Response({'message': 'user not found'}, status=401)
+        return Response({'message': 'user not found'}, status=403)
 
 class DeleteOwnerView(APIView):
     def delete(self, request):

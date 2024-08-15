@@ -16,6 +16,7 @@ from system.views.ChangeCourseUserRole import ChangeCourseUserRole
 from system.views.RemoveUserFromCourse import RemoveUserFromCourse
 from system.views.TraineesInCourse import TraineesInCoursView
 from system.views.AdminCourseReportView import AdminCourseReportView
+from system.views.AdminMainDashboard import AdminMainDashboard
 #Django 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -62,8 +63,9 @@ urlpatterns = [
     path('user/company/<id>/notifications',NotificationList.as_view()),
 
     #get users in course for trainer
-    path('trainer/course/<id>/users',TraineesInCoursView.as_view())
+    path('trainer/course/<id>/users',TraineesInCoursView.as_view()),
 
+    path('admin/company/<id>/dashboard',AdminMainDashboard.as_view())
 
 ]
 

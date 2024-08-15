@@ -1,7 +1,7 @@
 #DRF 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 #models 
 from system.models.Course import Course
 from authentication.models.User import User 
@@ -14,7 +14,7 @@ from system.serializers.CourseUserSerializer import UserSerializer
 
 
 class GetCourseUsers(APIView):
-
+      permission_classes = [IsAuthenticated]
       def get(self,request,*args,**kwargs):
             course = get_object_or_404(Course , id = kwargs['id'])
             company = course.company

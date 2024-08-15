@@ -310,4 +310,4 @@ class AddUser(APIView):
                 send_mail(subject, message, from_email, recipient_list, fail_silently=False)
                 return Response({'message': 'An invitation email has been sent to the user'}, status=200)
 
-        return Response({'message': 'You are not authenticated'}, status=401)
+        return Response({'message': 'You are not authenticated'}, status=403)

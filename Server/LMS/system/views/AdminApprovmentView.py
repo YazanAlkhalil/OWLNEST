@@ -1,6 +1,7 @@
 #DRF
 from rest_framework.response import Response
 from rest_framework.views import APIView 
+from rest_framework.permissions import IsAuthenticated
 
 #models 
 from system.models.Company import Company
@@ -25,6 +26,7 @@ from django.shortcuts import get_object_or_404
 
 
 class AdminApprovmentView(APIView):
+      permission_classes = [IsAuthenticated]
       def post(self, request, *args, **kwargs):
           course = get_object_or_404(Course,id = kwargs["course_id"])
           course.unit_set.all().delete()

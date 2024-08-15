@@ -2,6 +2,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 #django 
 from django.shortcuts import get_object_or_404
@@ -13,6 +14,7 @@ from system.serializers.TraineeMainDashboard import TraineeMainDashboard
 from system.models.Company import Company
 from system.models.Trainee_Contract import Trainee_Contract
 class TraineeMainDashboardView(APIView): 
+      permission_classes =  [IsAuthenticated]
       def get(self,request, *args, **kwargs):
             company = get_object_or_404(Company,id = kwargs['id'])
             trainee_contract = get_object_or_404(Trainee_Contract, trainee__user = request.user , company = company)
