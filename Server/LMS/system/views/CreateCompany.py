@@ -120,7 +120,7 @@ class DeleteOwnerView(APIView):
 class CompaniesView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
-            return Response({'message': 'User not authenticated'}, status=401)
+            return Response({'message': 'User not authenticated'}, status=403)
 
         user = request.user
 

@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 #models 
 from system.models.Course import Course
-
+from system.models.DraftSkill import DraftSkill
 #serializer
 from system.serializers.DraftSkillSerializer import DraftSkillSerializer
 
@@ -38,3 +38,8 @@ class AddSkillToCourse(ListCreateAPIView):
 
 
           return Response({"message":"skill added to the course"})
+      
+      def delete(self,request,skill_id):
+           skill = DraftSkill.objects.get(id = skill_id)
+           skill.delete()
+           return Response({"message":"skill deleted successfully"})

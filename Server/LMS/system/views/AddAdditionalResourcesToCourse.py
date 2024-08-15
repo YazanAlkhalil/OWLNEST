@@ -34,4 +34,8 @@ class AddAdditionalResourcesToCourse(ListCreateAPIView):
           serialized_resource.save(course = course)
 
 
+
           return Response({"message":"additional resources added to the course"})
+      
+
+      

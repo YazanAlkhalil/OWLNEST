@@ -74,6 +74,10 @@ urlpatterns = [
         'course/<id>/skills', 
         AddSkillToCourse.as_view(),  
     ),
+        path(
+        'skills/<skill_id>', 
+        AddSkillToCourse.as_view(),  
+    ),
       path(
         'course/<id>/additional-resources', 
         AddAdditionalResourcesToCourse.as_view(),  
