@@ -17,10 +17,13 @@ class AddAdditionalResourcesToCourse(ListCreateAPIView):
       permission_classes = [IsAuthenticated] 
 
       def get(self, request, *args, **kwargs):
-              draft_additonal = DraftAdditionalResources.objects.get(course__id = self.kwargs["id"])
-              serialized_draft_additonal = self.serializer_class(draft_additonal)
-              return Response(serialized_draft_additonal.data,200)
-      
+              try:
+                draft_additonal = DraftAdditionalResources.objects.get(course__id = self.kwargs["id"])
+                serialized_draft_additonal = self.serializer_class(draft_additonal)
+                return Response(serialized_draft_additonal.data,200)
+              except DraftAdditionalResources.DoesNotExist:
+               
+                return Response({"text":""})
       def post(self, request, *args, **kwargs):
           
           if not( "text" in request.data.keys()):

@@ -76,14 +76,14 @@ export default function FormDialog({question,addQuestion}) {
                     <div className='flex'>
 
                         <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
-                            <input value={questionData.question} onChange={e => setQuestionData({...questionData,question:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Question" aria-label="question" />
+                            <input value={questionData.question} onChange={e => setQuestionData({...questionData,question:e.target.value})} className="appearance-none bg-transparent border-none mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Question" aria-label="question" />
                         </div>
                         <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
-                            <input value={questionData.mark} onChange={e => setQuestionData({...questionData,mark:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Grade" aria-label="grade" />
+                            <input value={questionData.mark} onChange={e => setQuestionData({...questionData,mark:e.target.value})} className="appearance-none bg-transparent border-none mr-3 py-1 px-2 leading-tight focus:outline-none" type="number" placeholder="Grade" aria-label="grade" />
                         </div>
                     </div>
                         <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
-                            <input value={questionData.feedback} onChange={e => setQuestionData({...questionData,feedback:e.target.value})} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Feedback" aria-label="Feedback" />
+                            <input value={questionData.feedback} onChange={e => setQuestionData({...questionData,feedback:e.target.value})} className="appearance-none bg-transparent border-none mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Feedback" aria-label="Feedback" />
                         </div>
                     <AnswerList answers={questionData.answers} updateAnswers={(updateAnswers) => setQuestionData({...questionData,answers:updateAnswers})}/>
                 </DialogContent>

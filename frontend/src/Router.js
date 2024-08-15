@@ -37,6 +37,8 @@ import SettingGeneral from "./Pages/SettingGeneral";
 import SettingsAccount from "./Pages/SettingsAccount";
 import SettingsCompany from "./Pages/SettingsCompany";
 import PendingCourseDetails from "./Components/admin/PendingCourseDetails";
+import TrainerVideoView from "./Pages/trainer/TrainerVideoView";
+import TrainerPDFView from "./Pages/trainer/TrainerPDFView";
 
 export default function Router() {
   return (
@@ -85,7 +87,11 @@ export default function Router() {
 
 
 
+
       <Route path="/trainer" element={<TrainerLayout />}>
+        <Route path="/trainer/courses/:id/pdf" element={<TrainerPDFView/>} />
+        <Route path="/trainer/courses/:id/quiz" element={<TrainerVideoView/>} />
+        <Route path="/trainer/courses/:id/video" element={<TrainerVideoView/>} />
         <Route path="/trainer/courses/:id" element={<CreateCoursePage inprogress={false}/>} />
         <Route path="/trainer/inprogress/:id" element={<CreateCoursePage inprogress={true}/>} />
         <Route path="/trainer/inprogress/" element={<TrainerCoursesPage inprogress={true}/>} />

@@ -35,7 +35,7 @@ const AnswerList = ({ answers, updateAnswers }) => {
           deleteAnswer={()=>deleteAnswer(answer.id)}
         />
       ))}
-      {answers.length < 4 && <button className='border p-2 hover:bg-slate-50' onClick={addAnswer}>Add Answer</button>}
+      {answers.length < 4 && <button className='border p-2 hover:bg-slate-200 hover:text-black' onClick={addAnswer}>Add Answer</button>}
     </div>
   );
 };
