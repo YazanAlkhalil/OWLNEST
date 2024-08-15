@@ -16,6 +16,7 @@ from django.shortcuts import get_object_or_404
 class MarkContentView(CreateAPIView):
       serializer_class = MarkContentSerializer
       permission_classes = [IsAuthenticated]
+      
       def post(self, request, *args, **kwargs):
           enrollment =  get_object_or_404(Enrollment,trainee_contract__trainee__user = request.user)
           content = get_object_or_404(Content,id = request.data["content"])

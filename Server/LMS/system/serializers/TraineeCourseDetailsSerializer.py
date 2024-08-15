@@ -11,13 +11,15 @@ from system.models.Course import Course
 from system.serializers.UnitSerializer import UnitSerializer
 class CustomTraineeCourseDetailsSerializer(serializers.ModelSerializer):
         units = UnitSerializer(source = "unit_set",many = True,read_only = True)
+
         class Meta:
             model = Course 
-            fields = ["id","units"]
+            fields = ["id","name","units"]
+
+
         def to_representation(self, instance): 
           data = super().to_representation(instance) 
-          enrollment = self.context.get('enrollment')
-          print(data)
+          enrollment = self.context.get('enrollment') 
           for unit in data.get('units', []):
               unit_id = unit['id'] 
 
@@ -30,8 +32,7 @@ class CustomTraineeCourseDetailsSerializer(serializers.ModelSerializer):
               contents = unit.get('contents', [])
               for content in contents:
                       content_id = content['id']
-                      
-                      # Check if the content is completed in Finished_Content table
+                       
                       is_content_completed = Finished_Content.objects.filter(
                           enrollment=enrollment,
                           content_id=content_id

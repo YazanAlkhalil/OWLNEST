@@ -20,7 +20,7 @@ from system.views.DisapprovmentView import DisapprovmentView
 from system.views.AdminApprovmentView import AdminApprovmentView
 from system.views.TraineeCourseDetailsView import TraineeCourseDetailsView
 from system.views.EditDestroyCourseView import EditDestroyCourseView
-
+from system.views.TraineeContentDetailsView import TraineeContentDetailsView
 urlpatterns = [
     path(
         'admin/company/<int:company_id>/courses', 
@@ -36,7 +36,8 @@ urlpatterns = [
         'trainee/company/<int:company_id>/courses', 
         TraineeCourseListView.as_view(), 
         name='company-course-trainer-list'
-    ),  path(
+    ), 
+      path(
         'trainee/courses/<id>', 
         TraineeCourseDetailsView.as_view(), 
         name='company-course-trainer-list'
@@ -100,11 +101,14 @@ urlpatterns = [
         'course/<pk>',
         EditDestroyCourseView.as_view()
 
-    )
+    ),
+    path(
+        'trainee/content/<id>', 
+        TraineeContentDetailsView.as_view()
+    ),
+    
    
      
    
 ]
-# adding the urls for the static files (course image)
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ 

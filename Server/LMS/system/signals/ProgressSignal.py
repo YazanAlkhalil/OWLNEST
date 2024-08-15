@@ -35,12 +35,7 @@ def calculate_progress(enrollment):
          total = video /pdf + test
          '''
          for unit in enrollment.course.unit_set.all():
-             for content in unit.content_set.all():
-                 if content.is_video or content.is_pdf:
-                     course_full_xp += 10
-                 elif content.is_test : 
-                     course_full_xp += Decimal(content.test_set.all().first().full_xp)
-                 else : continue
+              course_full_xp = 10 * unit.content_set.all().count()
          enrollment.xp_avg = (total_xp)/(course_full_xp) * 100
       enrollment.save()       
 
@@ -54,9 +49,9 @@ def generate_certification(enrollment):
 def update_progress_on_finished_content(sender, instance, created, **kwargs):
     if created:
         enrollment = instance.enrollment
-        calculate_progress(enrollment)
         #update trainee_contract xp 
         enrollment.trainee_contract.total_xp += 10  
+        calculate_progress(enrollment)
         #generate certification if passed
         
         

@@ -94,7 +94,7 @@ class AdminApprovmentView(APIView):
                    
                    if content.is_test:
                       content_obj.is_test = True
-
+                      content_obj.save()
                       drafttest = content.drafttest 
                       serialized_test = TestSerializer(data = {})
                       serialized_test.is_valid(raise_exception=True)
