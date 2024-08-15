@@ -15,12 +15,15 @@ from system.views.GetCourseUsers import GetCourseUsers
 from system.views.ChangeCourseUserRole import ChangeCourseUserRole
 from system.views.RemoveUserFromCourse import RemoveUserFromCourse
 from system.views.TraineesInCourse import TraineesInCoursView
+from system.views.AdminCourseReportView import AdminCourseReportView
 #Django 
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
   #admin
     path('course/<id>/report',CourseReportView.as_view()),
+    
+    path('admin/course/<id>/report',AdminCourseReportView.as_view()),
     path('course/<id>/users',AddUserToCourse.as_view()),
 
     #get course users

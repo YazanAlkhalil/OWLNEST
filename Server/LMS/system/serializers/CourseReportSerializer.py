@@ -84,13 +84,8 @@ class CourseReportSerializer(serializers.Serializer):
             
             for month in months:
                 year, month = month.split('-')
-                
-               
                 start_date = datetime(int(year), int(month), 1)
                 end_date = start_date + relativedelta(months=1) - timedelta(seconds=1)
-                print("start",start_date)
-                print("end",end_date)
-             
                 grade_xp = Grade.objects.filter(
                     enrollment__course=course,
                     taken_at__range=(start_date, end_date)
@@ -99,10 +94,18 @@ class CourseReportSerializer(serializers.Serializer):
                 content_xp = Finished_Content.objects.filter(
                     enrollment__course=course,
                     finished_at__range=(start_date, end_date)
-                ).aggregate(total_xp=Sum('xp'))['total_xp'] or 0
+                ).count() * 10 or 0
                  
                 total_xp = grade_xp + content_xp
                 graph.append({'month': start_date.strftime('%b'), 'xp': total_xp})
 
             dashboard['graph'] = graph
             return dashboard 
+      
+
+class AdminCourseReportSerializer(CourseReportSerializer):
+      course = serializers.CharField(max_length = 255)
+      def to_internal_value(self, data):
+          internal_data = CourseReportSerializer.to_internal_value(CourseReportSerializer,data) 
+          internal_data["course"] = Course.objects.get(id = data.id).name
+          return internal_data
