@@ -29,7 +29,7 @@ class AddAdditionalResourcesToCourse(ListCreateAPIView):
           if not( "text" in request.data.keys()):
               raise ValidationError({"message":"Please Enter the additonal resources as text"})  
           course =get_object_or_404(Course,id =  kwargs["id"])
-          if course.draftadditionalresources : 
+          if hasattr(course,'draftadditionalresources') and course.draftadditionalresources : 
                course.draftadditionalresources.delete()
           resource_data = {
                "text":request.data.get('text')

@@ -26,16 +26,15 @@ function AdditionalInfo({ close }) {
     setOpen(false);
   };
 
+  async function getData(){
+    const res = await fetchData({url:"/course/"+id+"/skills"})
+    setSkills(res)
+    const rse = await fetchData({url:"/course/"+id+"/additional-resources"})
+    setResources(rse.text)
+    const desc = await fetchData({url:"/course/"+id})
+    setDescription(desc.description)
+  }
   useEffect(() => {
-    async function getData(){
-      const res = await fetchData({url:"/course/"+id+"/skills"})
-      setSkills(res)
-      const rse = await fetchData({url:"/course/"+id+"/additional-resources"})
-      setResources(rse.text)
-      const desc = await fetchData({url:"/course/"+id})
-      console.log(desc);
-      // setResources(desc.text)
-    }
     getData()
     const adjustHeight = () => {
       textareaRef.current.style.height = 'auto';
@@ -61,7 +60,10 @@ function AdditionalInfo({ close }) {
     setName("")
     setValue(0)
   } 
-
+  async function handleSubmit(){
+    fetchData({url:"/course/"+id,method:"PATCH",data:{description}})
+    fetchData({url:"/course/"+id+"/additional-resources",method:"POST",data:{text:resources}})
+  }
 
   return (
 
@@ -115,7 +117,7 @@ function AdditionalInfo({ close }) {
         value={description}
         onChange={e=>setDescription(e.target.value)}
       />
-      <button className='self-end border rounded p-2 mt-6 text-xl  hover:bg-white hover:text-black inner-btn'>Save</button>
+      <button onClick={handleSubmit} className='self-end border rounded p-2 mt-6 text-xl  hover:bg-white hover:text-black inner-btn'>Save</button>
     </div>
   )
 }
