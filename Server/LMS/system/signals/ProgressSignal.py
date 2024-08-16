@@ -118,10 +118,21 @@ def update_progress_on_grade(sender, instance, created, **kwargs):
     if created:
         enrollment = instance.enrollment
         calculate_progress(enrollment)
-        #update tarinee_contract xp
+        
         enrollment.trainee_contract.total_xp += Decimal(instance.xp)
         enrollment.trainee_contract.save() 
         calculate_progress(enrollment)
+
+
+@receiver(pre_delete,sender = Grade)
+def update_progress_on_deleted_grade(sender, instance, **kwargs):
+      instance.enrollment.trainee_contract.total_xp -= Decimal(instance.xp)
+      instance.enrollment.trainee_contract.save() 
+      calculate_progress(instance.enrollment)
+
+
+
+
 
 
 

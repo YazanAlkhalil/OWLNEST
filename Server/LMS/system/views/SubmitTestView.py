@@ -23,21 +23,19 @@ class SubmitTestView(APIView):
           response = []
           enrollment = Enrollment.objects.get(course = course_id, trainee_contract__trainee__user = request.user)
           gained_xp = 0
-
+          test.full_mark = 0
+          test.save()
           if test.id in [grade.test.id for grade in enrollment.grade_set.all()]:
               enrollment.grade_set.get(test = test).delete()
 
+          total = 0
           for question in trainee_questions:
+               
                q = Question.objects.get(id = question["id"])
                passed = True
                answers = []
                
-               total = 0
-               for answer in question["answers"]:
-                   a = Answer.objects.get(id = answer)
-                   if not a.is_correct:
-                       passed = False
-                       break
+               
                    
                for answer in q.answer_set.all():
                    a = Answer.objects.get(id = answer.id)
@@ -50,10 +48,16 @@ class SubmitTestView(APIView):
                         "text":a.answer,
                         "is_correct":a.is_correct
                    })
+
+               for answer in question["answers"]:
+                   a = Answer.objects.get(id = answer)
+                   if not a.is_correct:
+                       passed = False
+                       break
               
                if passed: 
                   total += q.mark
-                   
+                  print(total)
                response.append({
                          "id":q.id,
                          "question":q.question,
@@ -65,10 +69,7 @@ class SubmitTestView(APIView):
                answer = []
                
                test.full_mark += q.mark 
-                
-
-          test.save() 
-          print(total,test.full_mark)
+               test.save()  
           score  = total/test.full_mark *100
           gained_xp =  score
           grade = Grade.objects.create(test = test,enrollment = enrollment , score = score , xp = gained_xp)
