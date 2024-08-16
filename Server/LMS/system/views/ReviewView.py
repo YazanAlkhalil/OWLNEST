@@ -8,7 +8,6 @@ from system.serializers.ReviewSerializer import ReviewSerializer
 #models
 from system.models.Review import Review
 from system.models.Course import Course
-from authentication.models.User import User
 from system.models.Enrollment import Enrollment
 #django 
 from django.shortcuts import get_object_or_404
