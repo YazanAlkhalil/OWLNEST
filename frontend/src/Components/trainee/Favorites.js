@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import ProgressBar from "@ramonak/react-progress-bar";
-import { FaStar } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { FaHeart } from "react-icons/fa";
 
 import useFetch from '../AuthComponents/UseFetch';
+import ReactStars from 'react-stars';
 
 
 export default function Favorites({data,id,getFavorits}) {
@@ -40,7 +40,15 @@ export default function Favorites({data,id,getFavorits}) {
       {data?.course}
     </div>
     <div className="px-2 py-1 text-xl flex justify-between"> 
-    <h1 className="font-semibold">By {data?.trainer}</h1>
+    <h1 className="font-semibold">
+      <ReactStars
+            value={data?.rate}
+            count={5}
+            size={24}
+            color2={"#ffd700"}
+            half={true}
+          />
+    </h1>
     <FaHeart className={`${"text-red-600"} hover:cursor-pointer`} onClick={handleIconClick} />
     </div>
 
