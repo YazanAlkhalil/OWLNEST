@@ -33,6 +33,7 @@ class ListCreateReviewView(ListCreateAPIView):
             serialized_review = ReviewSerializer(data = data)
             serialized_review.is_valid(raise_exception=True)
             serialized_review.save(course=course, enrollment=enrollment)
-        except Exception:
+        except Exception as e:
+            print(e)
             return Response({'message': f'Trainee {request.user} Couldn\'t make more than one review'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serialized_review.data, status=status.HTTP_201_CREATED)
