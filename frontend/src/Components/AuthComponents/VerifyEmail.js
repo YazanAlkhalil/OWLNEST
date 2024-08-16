@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./VerifyEmail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
 import OtpInput from "react-otp-input";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,7 +83,7 @@ export default function VerifyEmail() {
     <>
       <div className="verifyEmail">
         <div className="flex flex-wrap ">
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2 ">
             {
               isFetching ?  <div className='container w-[100%] h-[100%] flex justify-center items-center sm:px-4'>
               <Loader />
@@ -120,7 +120,7 @@ export default function VerifyEmail() {
             </div>
             }
           </div>
-          <div className="w-1/2 loginBackGround">
+          <div className="w-full lg:w-1/2 loginBackGround hidden md:block">
             <div>
               <img
                 src={backGround}

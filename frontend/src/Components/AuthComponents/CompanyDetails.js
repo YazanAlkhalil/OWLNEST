@@ -3,8 +3,6 @@ import "./CompanyDetails.css";
 import uploadImg from "../../images/add_photo_alternate_outlined.png";
 import backGround from "../../images/—Pngtree—e-learning education online illustration_6548963.png";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { newCompany } from "../../features/Auth/CompanySlice";
 import UseFetch from "./UseFetch";
 
 const countries = [
@@ -75,7 +73,7 @@ export default function CompanyDetails() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCreateNestClick = (e) => {
+  const handleCreateNestClick = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -92,7 +90,7 @@ export default function CompanyDetails() {
     console.log(formDataObj);
   
     if (validateForm()) {
-      const res = fetchData({
+      const res = await fetchData({
         method: "post",
         url: "http://127.0.0.1:8000/api/create_company/",
         data: formData,
@@ -114,7 +112,7 @@ export default function CompanyDetails() {
     <>
       <div className="companyDetails">
         <div className="flex flex-wrap ">
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2 ">
             <div className="container mx-auto sm:px-4">
               <div className="login-form text-center">
                 <h4 className="font-semibold text-xl mb-4">
@@ -232,7 +230,7 @@ export default function CompanyDetails() {
               </div>
             </div>
           </div>
-          <div className="w-1/2 min-h-screen loginBackGround">
+          <div className="min-h-screen w-full lg:w-1/2 loginBackGround hidden md:block">
             <div>
               <img
                 src={backGround}

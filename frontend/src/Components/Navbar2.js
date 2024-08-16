@@ -8,7 +8,7 @@ import { logout } from '../features/Auth/LoginSlice';
 import { useNavigate } from 'react-router-dom';
 import { FaHouseMedicalCircleExclamation } from 'react-icons/fa6';
 
-function Navbar2({name}) {
+function Navbar2({name,image}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [dropdown,setDropdown] = useState(false)
@@ -40,7 +40,7 @@ function Navbar2({name}) {
   <div className='flex items-center justify-end w-full sm:w-auto'>
     <div className='relative flex items-center'>
       <h3 className='pr-4 text-white'>{name}</h3>
-      <img src={image} onClick={toggleOverlay} className='h-10 sm:h-12 hover:cursor-pointer rounded-full' alt="User" />
+      <img src={`http://127.0.0.1:8000/api${image}`} alt='error' onClick={toggleOverlay} className='h-12 hover:cursor-pointer rounded-full'></img>
       <div ref={overlayRef} className={`${dropdown ? "block" : "hidden"} dark:bg-DarkGray bg-white shadow-lg border-solid border border-slate-100 rounded w-48 absolute top-12 right-0 z-10`}>
         <div className='hover:bg-slate-200 dark:hover:bg-Gray dark:text-white px-4 py-2 hover:cursor-pointer rounded'>
           <CiSettings className='inline size-5 mr-2' />settings

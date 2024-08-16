@@ -17,14 +17,12 @@ export default function CompanyPage() {
         params: {},
         headers: {}
       })
-      console.log(res);
-      localStorage.setItem('username', res.username)
     }
     getCompany();
   }, [])
   return (
     <>
-      <Navbar2 name={resData?.username} />
+    <Navbar2 name={resData?.username} image={resData?.userImg}/>
       <div className="mx-auto bg-Gray min-h-screen dark:text-white p-4 md:p-8">
         <h1 className=' text-2xl md:text-4xl mb-6 md:mb-8'>Companies:</h1>
         {resData ? (

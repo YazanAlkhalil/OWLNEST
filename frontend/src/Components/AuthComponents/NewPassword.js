@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import backGround from '../../images/—Pngtree—e-learning education online illustration_6548963.png';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { forgetPass } from '../../features/Auth/ForgetPasswordSlice';
 
@@ -42,7 +42,7 @@ export default function NewPassword() {
     <>
       <div className='login'>
         <div className="flex flex-wrap ">
-          <div className="w-1/2 pad text-center">
+          <div className="pad text-center w-full lg:w-1/2 ">
             <div className='container pt-5 rounded bg-slate-300 w-[80%] min-h-64 mx-auto sm:px-4'>
             <div>
                 <h1 className='font-semibold mb-5 text-2xl text-white'>Please Enter Your New Passowrd</h1>
@@ -79,7 +79,7 @@ export default function NewPassword() {
             </div>
             </div>
           </div>
-          <div className="w-1/2 loginBackGround ">
+          <div className="w-full lg:w-1/2 loginBackGround hidden md:block">
             <div>
               <img src={backGround} className='mx-auto' alt="error" width={'500px'} height={'500px'} />
             </div>

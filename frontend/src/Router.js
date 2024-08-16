@@ -40,6 +40,7 @@ import PendingCourseDetails from "./Components/admin/PendingCourseDetails";
 import TrainerVideoView from "./Pages/trainer/TrainerVideoView";
 import TrainerPDFView from "./Pages/trainer/TrainerPDFView";
 import TrainerQuizView from "./Pages/trainer/TrainerQuizView";
+import CourseCompletion from "./Components/trainee/Congratulations";
 
 export default function Router() {
   return (
@@ -78,9 +79,11 @@ export default function Router() {
         <Route path="content" element={<TraineeCourseDisplay />} />
         <Route path="/trainee/courses/:id/content/video" element={<TraineeVideoLesson />} />
         <Route path="progress" element={<TraineeProgress />} />
+        <Route path="content/Text" element={<TraineePdf />} />
         <Route path="discussion" element={<TraineeDiscussion />} />
         <Route path="Info" element={<TraineeInfor />} />
         <Route path="/trainee/courses/:id/content/pdf" element={<TraineePdf />} />
+        <Route path="/trainee/courses/:id/content/Congratulations" element={<CourseCompletion />} />
       </Route>
 
         <Route path="/trainee/courses/:id/content/quiz" element={<TraineeQuiz />} />

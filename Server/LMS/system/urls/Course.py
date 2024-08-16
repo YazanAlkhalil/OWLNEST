@@ -22,6 +22,7 @@ from system.views.TraineeCourseDetailsView import TraineeCourseDetailsView
 from system.views.EditDestroyCourseView import EditDestroyCourseView
 from system.views.TraineeContentDetailsView import TraineeContentDetailsView
 from system.views.CourseInfoView import CourseInfoView
+from system.views.ReviewView import ListCreateReviewView
 urlpatterns = [
     path(
         'admin/company/<int:company_id>/courses', 
@@ -117,7 +118,11 @@ urlpatterns = [
         name='company-course-trainee-info'
     ),
     
-   
+    path(
+        'trainee/company/<int:company_id>/courses/<int:course_id>/review',
+        ListCreateReviewView.as_view(),
+        name='company-course-trainee-review'
+    ),
      
    
 ]

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import image from "../../images/multimedia-courses-scope-and-career 1.png";
-import image2 from "../../images/BA-Courses 1.png";
 import TraineeCourse from "../TraineeCourse";
 import useFetch from "../AuthComponents/UseFetch";
-import CourseCompletion from "./Congratulations";
+// import CourseCompletion from "./Congratulations";
 
 export default function TraineeCourses() {
   const { fetchData , resData } = useFetch();

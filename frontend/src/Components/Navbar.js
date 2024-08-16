@@ -22,7 +22,8 @@ function NavBar({ highlight }) {
   const [notificationsList, setNotificationsList] = useState([]);
   const overlayRef = useRef(null);
   const companyId = localStorage.getItem('companyId');
-  const username = localStorage.getItem('username');
+  const [username,setUserName] = useState('');
+  const [image,setImage] = useState('');
   const [notifications, setNotifications] = useState(0)
   const audioRef = useRef(null);
   const lastNotificationRef = localStorage.getItem('lastNotificationRef');
@@ -84,6 +85,18 @@ function NavBar({ highlight }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  useEffect(()=>{
+    async function getUserData() {
+      const res = await fetchData({
+        url: "http://127.0.0.1:8000/api/user/",
+        method: "get",
+      });
+      console.log(res);
+      setUserName(res?.username || "")
+      setImage(res?.image || "")
+    }
+      getUserData();
+  },[])
 
 
   useEffect(() => {
@@ -163,7 +176,7 @@ function NavBar({ highlight }) {
         <div className="relative flex items-center px-8">
           <h3 className="pr-4">{username}</h3>
           <img
-            src={image}
+            src={`http://127.0.0.1:8000/api${image}`}
             alt="error"
             onClick={toggleOverlay}
             className="h-10 w-10 hover:cursor-pointer rounded-full"></img>

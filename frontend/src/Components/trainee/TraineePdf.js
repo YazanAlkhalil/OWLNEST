@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PdfViewer from '../PdfViewer '
 import TrainerPDFView from '../../Pages/trainer/TrainerPDFView'
 import useFetch from '../AuthComponents/UseFetch'
