@@ -4,6 +4,8 @@ from django.db import models
 from system.models.Course import Course 
 from system.models.Trainee_Contract import Trainee_Contract 
 import datetime
+
+
 class Enrollment(models.Model):
       course = models.ForeignKey(Course, on_delete=models.CASCADE)
       trainee_contract = models.ForeignKey(Trainee_Contract, on_delete= models.CASCADE)

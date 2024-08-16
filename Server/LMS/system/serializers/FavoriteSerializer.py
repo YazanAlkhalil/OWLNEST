@@ -21,6 +21,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             else:
                  data['image'] = None
             data["course"] = instance.enrollment.course.name
+            data["course_id"] = instance.enrollment.course.id
             data["progress"]= instance.enrollment.progress
             data["rate"] = instance.enrollment.course.rate
             return data
