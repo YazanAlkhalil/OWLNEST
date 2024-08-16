@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 export default function TraineeQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const { state } = useLocation();
-  const LessonId = localStorage.getItem("lessonId")
+  const [LessonId,setLessonId] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [score,setScore] = useState(0)
   const [review,setReview] = useState([])
@@ -15,6 +15,7 @@ export default function TraineeQuiz() {
   const [userAnswers, setUserAnswers] = useState([]);
   const {id} = useParams()
   const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [quizResults, setQuizResults] = useState(null);
 
   const handleAnswerToggle = (answerId) => {
     setSelectedAnswers(prev => {
@@ -27,7 +28,7 @@ export default function TraineeQuiz() {
   };
 
   const handleNextQuestion = async () => {
-    if(selectedAnswers.length >0 ){
+    if (selectedAnswers.length > 0) {
       setUserAnswers(prevAnswers => [
         ...prevAnswers,
         {
@@ -35,27 +36,28 @@ export default function TraineeQuiz() {
           answers: selectedAnswers,
         },
       ]);
-  
+
       setSelectedAnswers([]);
       
       const nextQuestion = currentQuestion + 1;
-
       if (nextQuestion < questions.length) {
         setCurrentQuestion(nextQuestion);
       } else {
-        const temp = userAnswers
-        temp.push({
-          id: questions[currentQuestion].id,
-          answers: selectedAnswers,
-        })
-        console.log("this");
-        console.log(temp);
-        await fetchData({url:"/course/"+id+"/test/"+LessonId,method:"POST",data:temp});
+        const finalAnswers = [
+          ...userAnswers,
+          {
+            id: questions[currentQuestion].id,
+            answers: selectedAnswers,
+          }
+        ];
+        
+        //here i get the response after answer submission
+        const response = await fetchData({url:"/course/"+id+"/test/"+LessonId,method:"POST",data:{questions: finalAnswers}});
+        setQuizResults(response);
         setShowScore(true);
       }
-    }
-    else{
-      toast.error("please select an answer")
+    } else {
+      toast.error("Please select an answer");
     }
   };
 
@@ -65,7 +67,7 @@ export default function TraineeQuiz() {
         url: "http://127.0.0.1:8000/api/trainee/content/" + state,
         method: "get",
       });
-
+      setLessonId(res.id)
       if (res && res.questions) {
         const parsedQuestions = res?.questions.map((q) => ({
           id: q.id,
@@ -91,10 +93,21 @@ export default function TraineeQuiz() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-xl p-8 bg-white rounded shadow-md">
         {showScore ? (
-          <div className="text-center flex align-center justify-center h-[70px]">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Quiz Results</h2>
+            <p className="text-xl mb-4">Your Score: {quizResults?.score.toFixed(2)}%</p>
+            <div className="mb-6">
+              {quizResults?.questions.map((q, index) => (
+                <div key={q.id} className={`mb-4 p-4 rounded ${q.passed ? 'bg-green-100' : 'bg-red-100'}`}>
+                  <p className="font-semibold">{index + 1}. {q.question}</p>
+                  <p>Mark: {q.mark}</p>
+                  {!q.passed && <p className="text-red-600">Feedback: {q.feedback}</p>}
+                </div>
+              ))}
+            </div>
             <NavLink
               to={`/trainee/courses/${id}/content`}
-              className="px-8 py-4 bg-primary dark:bg-DarkGray dark:hover:bg-DarkGrayHover text-xl font-semibold text-white hover:bg-secondary cursor-pointer">
+              className="px-8 py-4 bg-primary dark:bg-DarkGray rounded dark:hover:bg-DarkSecondary text-xl font-semibold text-white hover:bg-secondary cursor-pointer">
               Back to Course
             </NavLink>
           </div>
