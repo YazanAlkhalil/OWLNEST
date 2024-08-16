@@ -28,11 +28,8 @@ class MarkContentView(APIView):
                return Response({"message":"you already mark it as completed"})
           
           marked_content = Finished_Content.objects.create(enrollment= enrollment , content = content)
-
-          
-            
-          if  enrollment.progress == 100 and not (enrollment.completed):
-               sum = 0.0
+  
+          if  enrollment.progress == 100 and not (enrollment.completed): 
                passed = True
                for grade in enrollment.grade_set.all():
                    if grade.score < 60  :
@@ -40,10 +37,8 @@ class MarkContentView(APIView):
                if passed:   
                   enrollment.completed = True
                   enrollment.completed_at = timezone.now()
-                  enrollment.save() 
-
-
-                  return Response({"message":"passed"}, 200)
+                  enrollment.save()  
+                  return Response({"status":"passed"}, 200)
            
           
-          return Response({"message":"next"},status.HTTP_200_OK)
+          return Response({"message":"completed"},status.HTTP_200_OK)
