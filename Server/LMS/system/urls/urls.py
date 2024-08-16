@@ -17,6 +17,7 @@ from system.views.RemoveUserFromCourse import RemoveUserFromCourse
 from system.views.TraineesInCourse import TraineesInCoursView
 from system.views.AdminCourseReportView import AdminCourseReportView
 from system.views.AdminMainDashboard import AdminMainDashboard
+from system.views.SubmitTestView import SubmitTestView
 #Django 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -65,7 +66,9 @@ urlpatterns = [
     #get users in course for trainer
     path('trainer/course/<id>/users',TraineesInCoursView.as_view()),
 
-    path('admin/company/<id>/dashboard',AdminMainDashboard.as_view())
+    path('admin/company/<id>/dashboard',AdminMainDashboard.as_view()),
+    
+    path('course/<course_id>/test/<test_id>',SubmitTestView.as_view())
 
 ]
 if settings.DEBUG:

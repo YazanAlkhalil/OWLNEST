@@ -112,14 +112,14 @@ def adjust_xp_on_delete(sender, instance, **kwargs):
 
 
 
-
+from decimal import Decimal
 @receiver(post_save, sender=Grade)
 def update_progress_on_grade(sender, instance, created, **kwargs):
     if created:
         enrollment = instance.enrollment
         calculate_progress(enrollment)
         #update tarinee_contract xp
-        enrollment.trainee_contract.total_xp += instance.xp
+        enrollment.trainee_contract.total_xp += Decimal(instance.xp)
         enrollment.trainee_contract.save() 
         calculate_progress(enrollment)
 
