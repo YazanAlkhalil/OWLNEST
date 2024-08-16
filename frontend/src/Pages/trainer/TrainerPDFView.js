@@ -16,7 +16,11 @@ function TrainerPDFView({trainee}) {
   const [numPages, setNumPages] = useState();
   const [url,setUrl]= useState("")
   const {fetchData} = useFetch()
-  const lessonId = localStorage.getItem("lessonId")
+  let lessonId
+  if(trainee)
+    lessonId = localStorage.getItem("lessonId")
+  else
+  lessonId = localStorage.getItem("lessonId").slice(6)
   const location = useLocation();
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1);
