@@ -10,6 +10,7 @@ export default function TraineeVideoLesson() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const[loading, setLoading] = useState(true);
+  const lessonId = localStorage.getItem('lessonId');
   const { fetchData, resData } = useFetch();
   const {id} = useParams()
   const onGoBackClick = () => {
@@ -43,7 +44,13 @@ export default function TraineeVideoLesson() {
     }
     getVideo()
   },[])
+  console.log(lessonId);
+  async function mark(){
+    
 
+    const res = await fetchData({url:`/course/${id}/mark-content/${lessonId}`,method:"POST"})
+    onGoBackClick()
+  }
 
   return (
     <div>
@@ -68,22 +75,7 @@ export default function TraineeVideoLesson() {
         </p>
       </div>
       <div className="w-[70%] mx-auto flex justify-end">
-        <Button
-          variant="outlined"
-          sx={{
-            backgroundColor: "#001F34",
-            color: "white",
-            borderColor: "#001F34",
-            fontWeight: "bold",
-            "&:hover": {
-              color: "black",
-              backgroundColor: "#3F6188",
-            },
-          }}
-          endIcon={<IoCheckmarkDoneSharp />}
-        >
-          Mark as Completed
-        </Button>
+        <button onClick={mark} className="btn-inner">Mark as completed</button>
       </div>
     </div>
   );

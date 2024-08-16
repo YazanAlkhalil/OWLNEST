@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { sendMessage, toggleChat, addUserMessage } from '../../features/chatSlice.js';
+import { sendMessage, toggleChat, addUserMessage } from '../RTK/slices/chatSlice';
 
 const ChatComponent = () => {
   const [input, setInput] = useState('');
@@ -23,7 +23,7 @@ const ChatComponent = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-10 right-10 w-96 h-[70vh] dark:bg-Gray bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col">
+    <div className="fixed bottom-10 right-10 w-96 h-[70vh] bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col">
       <div className="flex justify-between items-center p-4 border-b">
         <h2 className="font-semibold">Strix Assistant</h2>
         <button onClick={() => dispatch(toggleChat())} className="text-gray-500 hover:text-gray-700">
@@ -35,7 +35,7 @@ const ChatComponent = () => {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg, index) => (
           <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-3/4 p-2 rounded-lg ${msg.type === 'user' ? 'bg-blue-500 text-white' : 'dark:bg-DarkGray bg-gray-200'}`}>
+            <div className={`max-w-3/4 p-2 rounded-lg ${msg.type === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
               {msg.content}
             </div>
           </div>
@@ -50,7 +50,7 @@ const ChatComponent = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-          className="flex-1 dark:bg-DarkSecondary border rounded-l-lg rounded-r-none p-2"
+          className="flex-1 border rounded-l-lg p-2"
           placeholder="Type a message..."
         />
         <button onClick={handleSend} className="bg-blue-500 text-white p-2 rounded-r-lg" disabled={isLoading}>
