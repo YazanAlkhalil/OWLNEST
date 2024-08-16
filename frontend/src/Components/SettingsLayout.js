@@ -25,7 +25,7 @@ function SettingsLayout() {
       {isOwner ? (
         <Sidebar
           links={[
-            { name: "General", url: "/settings/general" },
+            { name: "Theme", url: "/settings/general" },
             { name: "Account", url: "/settings/account" },
             { name: "Company", url: "/settings/company" },
           ]}
@@ -33,7 +33,7 @@ function SettingsLayout() {
       ) : (
         <Sidebar
           links={[
-            { name: "General", url: "/settings/general" },
+            { name: "Theme", url: "/settings/general" },
             { name: "Account", url: "/settings/account" },
           ]}
         />

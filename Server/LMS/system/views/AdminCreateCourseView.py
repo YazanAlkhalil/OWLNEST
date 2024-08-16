@@ -26,7 +26,7 @@ class AdminCreateCourseView(generics.CreateAPIView):
         company = get_object_or_404(Company, id=company_id)
  
         if hasattr(request.user, 'admin'):
-            admin_contract = request.user.admin.admin_contract_set.get(company = company_id)
+            admin_contract,_ = request.user.admin.admin_contract_set.get_or_create(company = company)
         else:
             if company.owner.user == request.user:
                admin,_ = Admin.objects.get_or_create(user = request.user)
