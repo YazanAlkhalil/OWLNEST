@@ -10,12 +10,22 @@ from system.models.Grade import Grade
 from system.models.Test import Test
 from system.models.Question import Question
 from system.models.Answer import Answer
-
+from system.models.Finished_Content import Finished_Content
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
 
 class SubmitTestView(APIView):
       permission_classes = [IsAuthenticated]
+      def get_progress(self,enrollment):
+            total_contents = Content.objects.filter(unit__course=enrollment.course).count()
+            finished_contents = Finished_Content.objects.filter(enrollment=enrollment).count()
+            submitted_tests = Grade.objects.filter(enrollment=enrollment).count()
+            
+            #progress
+            if total_contents > 0:
+              total_finished = finished_contents + submitted_tests
+              return (total_finished / total_contents) * 100
+            return 0
 
       def post(self,request,test_id,course_id):
           test = get_object_or_404(Test,id = test_id)
@@ -56,8 +66,7 @@ class SubmitTestView(APIView):
                        break
               
                if passed: 
-                  total += q.mark
-                  print(total)
+                  total += q.mark 
                response.append({
                          "id":q.id,
                          "question":q.question,
@@ -71,6 +80,11 @@ class SubmitTestView(APIView):
           score  = total/test.full_mark *100
           gained_xp =  score
           grade = Grade.objects.create(test = test,enrollment = enrollment , score = score , xp = gained_xp)
+          enrollment.progress = self.get_progress(enrollment)
+          enrollment.save()
+          if enrollment.progress == 100 : 
+              pass
+
           data = {
               "questions":response,
               "score":grade.score
