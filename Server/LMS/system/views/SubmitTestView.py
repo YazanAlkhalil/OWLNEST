@@ -72,7 +72,7 @@ class SubmitTestView(APIView):
           score  = total/test.full_mark *100
           gained_xp =  score
           grade = Grade.objects.create(test = test,enrollment = enrollment , score = score , xp = gained_xp)
-          return Response({"grade":grade.score},200)    
+          return Response(response,200)    
                 
              
 
