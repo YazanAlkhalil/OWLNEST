@@ -1,14 +1,16 @@
-import { TextField } from '@mui/material';
-import React, { useState } from 'react';
-import ReactStars from 'react-stars';
+import { TextField } from "@mui/material";
+import React, { useState } from "react";
+import ReactStars from "react-stars";
+import useFetch from "../AuthComponents/UseFetch";
+import { useParams } from "react-router-dom";
 
 const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
-  const [review, setReview] = useState('');
-  const [rating, setRating] = useState(0);
+  const [description, setDescription] = useState("");
+  const [rate, setRating] = useState(0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmitReview({ review, rating });
+    onSubmitReview({ description, rate });
   };
 
   return (
@@ -20,12 +22,12 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
         You've successfully completed the course:
         <span className="font-semibold block mt-2">{courseName}</span>
       </p>
-      
+
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-3">Your Certificate</h2>
-        <img 
-          src={certificateUrl} 
-          alt="Course Certificate" 
+        <img
+          src={certificateUrl}
+          alt="Course Certificate"
           className="w-full h-[400px] border-2 border-gray-300 rounded-lg"
         />
       </div>
@@ -35,7 +37,9 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
           <label htmlFor="review" className="block text-lg font-medium mb-2">
             Leave a Review
           </label>
-          <TextField id="outlined-basic" label="Review" variant="outlined" />
+          <TextField id="outlined-basic"
+          onChange={(e) => setDescription(e.target.value)}
+          label="Review" variant="outlined" />
         </div>
 
         <div>
@@ -46,15 +50,14 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
             count={5}
             onChange={setRating}
             size={24}
-            color2={'#ffd700'}
+            color2={"#ffd700"}
             half={false}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
-        >
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
           Submit Review
         </button>
       </form>
@@ -62,10 +65,20 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
   );
 };
 
-
 function CourseCompletion() {
-  const handleReviewSubmit = (reviewData) => {
+  const { fetchData, resData } = useFetch();
+  const {id} = useParams();
+  const companyId = localStorage.getItem('companyId')
+
+  const handleReviewSubmit = async (reviewData) => {
     console.log(reviewData);
+    const res = await fetchData({url:`http://127.0.0.1:8000/api/trainee/company/${companyId}/courses/${id}/review`,
+      method:"POST",
+      data: reviewData
+    })
+    console.log(res);
+    
+   
   };
 
   return (

@@ -11,7 +11,11 @@ export default function TraineePdf() {
   const navigate = useNavigate()
   async function mark(){
     const res = await fetchData({url:`/course/${id}/mark-content/${lessonId}`,method:"POST"})
-    navigate('/trainee/courses/'+id+"/content")
+    if(res.status === "passed"){
+      navigate(`/trainee/courses/${id}/content/Congratulations`)
+    }else{
+      navigate(`/trainee/courses/${id}/content`)
+    }
   }
   return (
     <div className='flex flex-col'>

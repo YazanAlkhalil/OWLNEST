@@ -37,6 +37,16 @@ class AdminApprovmentView(APIView):
               course.resource.delete()
           course.published = True
           
+
+          for enrollment in course.enrollment_set.all():
+              if enrollment.progress < 100 :
+                 enrollment.progress = 0
+                 enrollment.save()
+
+
+
+
+
           #skills
           for skill in course.draftskill_set.all():
               skill_data = {
