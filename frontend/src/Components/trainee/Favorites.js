@@ -23,7 +23,7 @@ export default function Favorites({data,id}) {
   return (
     <div className="">
     <img className="w-[330px] hover:cursor-pointer border  rounded" alt="error" 
-    src={`http://127.0.0.1:8000/api${data?.image}`}  onClick={() => {navigate("/trainee/courses/id");}} />
+    src={`${data?.image}`}  onClick={() => {navigate("/trainee/courses/id");}} />
     <ProgressBar
     completed={data?.progress}
     labelColor="#FFFFFF"
