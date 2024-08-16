@@ -63,17 +63,19 @@ class SubmitTestView(APIView):
                          "question":q.question,
                          "mark":q.mark,
                          "feedback": "" if passed else q.feedback,
-                         "passed":passed,
-                         "answers":answers
-                    })
-               answer = []
+                         "passed":passed, 
+                    }) 
                
                test.full_mark += q.mark 
                test.save()  
           score  = total/test.full_mark *100
           gained_xp =  score
           grade = Grade.objects.create(test = test,enrollment = enrollment , score = score , xp = gained_xp)
-          return Response(response,200)    
+          data = {
+              "questions":response,
+              "score":grade.score
+          }
+          return Response(data,200)    
                 
              
 
