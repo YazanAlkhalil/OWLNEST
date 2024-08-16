@@ -44,7 +44,10 @@ class AddToFavoriteView(APIView):
       def delete(self,request,*args,**kwargs):
             company_id = kwargs.get('id')
             if not company_id:
-                  return Response({"detail": "Company ID is required."}, status=400) 
-            favourite = get_object_or_404(Favorite,id = request.data.get('course'))
+                  return Response({"detail": "Company ID is required."}, status=400)
+            company = get_object_or_404(Company, id=company_id)
+            trainee_contracts = Trainee_Contract.objects.filter(trainee__user=request.user, company=company, employed =True)
+            enrollment = get_object_or_404(Enrollment, course__id = request.data.get('course'),trainee_contract__trainee__user = request.user)
+            favourite = get_object_or_404(Favorite,trainee_contract__in=trainee_contracts , enrollment = enrollment)
             favourite.delete()
             return Response({"message":"the course deleted from favorite list"})
