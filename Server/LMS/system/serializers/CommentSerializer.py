@@ -29,9 +29,13 @@ class CommentSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data["likes"] = instance.likes.count()
         data["dislikes"] = instance.dislikes.count()
-        data["username"] = instance.user.username
-        data["image"] = instance.user.image.url if instance.user.image else None
-        user = self.context['request'].user
+        data["username"] = instance.user.username 
+        request = self.context.get('request') 
+        if instance.user.image.url and request:
+                data['image'] = request.build_absolute_uri(instance.user.image.url)
+        else:
+                 data['image'] = None
+        user = request.user
 
         if user in instance.likes.all():
             data["reaction"] = 1
