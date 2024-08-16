@@ -47,7 +47,7 @@ urlpatterns = [
     path('course/<id>/comments/reply/react',ReactReplyView.as_view()),
    
     #mark as completed  
-    path('mark-content-completed' , MarkContentView.as_view()),
+    path('course/<id>/mark-content/<content_id>' , MarkContentView.as_view()),
 
     #course dashboard
     path('trainee/course/<id>/dashboard',TraineeCourseDashboard.as_view()),
@@ -68,6 +68,3 @@ urlpatterns = [
     path('admin/company/<id>/dashboard',AdminMainDashboard.as_view())
 
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

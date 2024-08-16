@@ -29,8 +29,6 @@ class CourseReportSerializer(serializers.Serializer):
       trainers_number = serializers.IntegerField()
       graph = serializers.ListField()
 
-      
-
       def to_internal_value(self, data): 
             '''
             dashboard dictionary containes admin/owner dashboard information

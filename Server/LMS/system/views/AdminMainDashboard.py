@@ -9,16 +9,22 @@ from django.shortcuts import get_object_or_404
 
 #serializers 
 from system.serializers.CompanyMainDashboardSerializer import AdminMainDashboardSerializer
-
+from system.serializers.CompanyMainDashboardSerializer import OwnerDashboardSerializer
 #models 
 from system.models.Company import Company
 
 class AdminMainDashboard(APIView): 
       permission_classes = [IsAuthenticated]
+
+      
+
       def get(self,request,*args,**kwargs):
           company = get_object_or_404(Company,id = self.kwargs['id'])
-          serialized_data = AdminMainDashboardSerializer(data = company)
+          if company.owner.user == request.user :
+               serialized_data = OwnerDashboardSerializer(data = company)
+          else:
+              serialized_data = AdminMainDashboardSerializer(data = company)
           serialized_data.is_valid(raise_exception=True)
           return Response(serialized_data.data , status= status.HTTP_200_OK)
-          
-            
+              
+                

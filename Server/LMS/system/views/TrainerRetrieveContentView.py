@@ -26,7 +26,7 @@ class TrainerRetrieveContentView(APIView):
           elif content.is_video:
               data = {
                   "title":content.title,
-                  "description":content.video.description,
+                  "description":content.draftvideo.description,
                   "file":request.build_absolute_uri(content.draftvideo.file.url)
               }
               return Response(data,200)
