@@ -35,13 +35,15 @@ class MarkContentView(APIView):
                sum = 0.0
                passed = True
                for grade in enrollment.grade_set.all():
-                   if grade.score  :pass     
-               enrollment.completed = True
-               enrollment.completed_at = timezone.now()
-               enrollment.save() 
-                   #generate pdf
+                   if grade.score < 60  :
+                        passed = False  
+               if passed:   
+                  enrollment.completed = True
+                  enrollment.completed_at = timezone.now()
+                  enrollment.save() 
 
-               return Response({"message":"passed"}, 200)
+
+                  return Response({"message":"passed"}, 200)
            
           
           return Response({"message":"next"},status.HTTP_200_OK)
