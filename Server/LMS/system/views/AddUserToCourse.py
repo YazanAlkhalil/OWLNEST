@@ -2,6 +2,7 @@
 from rest_framework.generics import CreateAPIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 #system models 
 from system.models.Course import Course
 from system.models.Trainee_Contract import Trainee_Contract
@@ -41,7 +42,7 @@ to create a trainer :
 
 '''
 class AddUserToCourse(CreateAPIView):
-      permission_classes = [IsAdminCourse]
+      permission_classes = [IsAuthenticated,IsAdminCourse]
       serializer_class = AddTraineeToCourseSerializer
       
       def post(self, request, *args, **kwargs):

@@ -15,12 +15,17 @@ from system.views.GetCourseUsers import GetCourseUsers
 from system.views.ChangeCourseUserRole import ChangeCourseUserRole
 from system.views.RemoveUserFromCourse import RemoveUserFromCourse
 from system.views.TraineesInCourse import TraineesInCoursView
+from system.views.AdminCourseReportView import AdminCourseReportView
+from system.views.AdminMainDashboard import AdminMainDashboard
+from system.views.SubmitTestView import SubmitTestView
 #Django 
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
   #admin
     path('course/<id>/report',CourseReportView.as_view()),
+    
+    path('admin/course/<id>/report',AdminCourseReportView.as_view()),
     path('course/<id>/users',AddUserToCourse.as_view()),
 
     #get course users
@@ -43,7 +48,7 @@ urlpatterns = [
     path('course/<id>/comments/reply/react',ReactReplyView.as_view()),
    
     #mark as completed  
-    path('mark-content-completed' , MarkContentView.as_view()),
+    path('course/<id>/mark-content/<content_id>' , MarkContentView.as_view()),
 
     #course dashboard
     path('trainee/course/<id>/dashboard',TraineeCourseDashboard.as_view()),
@@ -59,10 +64,13 @@ urlpatterns = [
     path('user/company/<id>/notifications',NotificationList.as_view()),
 
     #get users in course for trainer
-    path('trainer/course/<id>/users',TraineesInCoursView.as_view())
+    path('trainer/course/<id>/users',TraineesInCoursView.as_view()),
 
+    path('admin/company/<id>/dashboard',AdminMainDashboard.as_view()),
+    
+    path('course/<course_id>/test/<test_id>',SubmitTestView.as_view())
 
 ]
-
 if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,9 +1,7 @@
 #DRF
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.views import APIView 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import ValidationError
-
 
 #models 
 from system.models.Company import Company
@@ -28,9 +26,13 @@ from django.shortcuts import get_object_or_404
 
 
 class AdminApprovmentView(APIView):
+      permission_classes = [IsAuthenticated]
       def post(self, request, *args, **kwargs):
           course = get_object_or_404(Course,id = kwargs["course_id"])
-          course.unit_set.all().delete()
+          for unit in  course.unit_set.all():
+              for content in unit.content_set.all():
+                  content.delete()
+              unit.delete()
           course.skill_set.all().delete()
           if hasattr(course , "resource"):
               course.resource.delete()
@@ -47,8 +49,8 @@ class AdminApprovmentView(APIView):
               serialized_skill.save(course = course)
           
           #additional resources 
-          if hasattr(course, 'additional_resources'):
-             serialized_resource = AdditionalResourceSerializer(data = {"text":course})
+          if hasattr(course, 'draftadditionalresources'):
+             serialized_resource = AdditionalResourceSerializer(data = {"text":course.draftadditionalresources.text})
              serialized_resource.is_valid(raise_exception=True)
              serialized_resource.save(course = course)
           #units and contents 

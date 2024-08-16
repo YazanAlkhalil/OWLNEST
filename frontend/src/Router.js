@@ -37,6 +37,9 @@ import SettingGeneral from "./Pages/SettingGeneral";
 import SettingsAccount from "./Pages/SettingsAccount";
 import SettingsCompany from "./Pages/SettingsCompany";
 import PendingCourseDetails from "./Components/admin/PendingCourseDetails";
+import TrainerVideoView from "./Pages/trainer/TrainerVideoView";
+import TrainerPDFView from "./Pages/trainer/TrainerPDFView";
+import TrainerQuizView from "./Pages/trainer/TrainerQuizView";
 
 export default function Router() {
   return (
@@ -73,23 +76,28 @@ export default function Router() {
 
       <Route path="/trainee/courses/:id" element={<CourseLayout />}>
         <Route path="content" element={<TraineeCourseDisplay />} />
-        <Route path="content/video" element={<TraineeVideoLesson />} />
+        <Route path="/trainee/courses/:id/content/video" element={<TraineeVideoLesson />} />
         <Route path="progress" element={<TraineeProgress />} />
         <Route path="content/Text" element={<TraineePdf />} />
         <Route path="discussion" element={<TraineeDiscussion />} />
         <Route path="Info" element={<TraineeInfor />} />
+        <Route path="/trainee/courses/:id/content/pdf" element={<TraineePdf />} />
       </Route>
 
-        <Route path="/trainee/quiz" element={<TraineeQuiz />} />
+        <Route path="/trainee/courses/:id/content/quiz" element={<TraineeQuiz />} />
+
 
 
 
 
       <Route path="/trainer" element={<TrainerLayout />}>
+        <Route path="/trainer/courses/:id/pdf" element={<TrainerPDFView/>} />
+        <Route path="/trainer/courses/:id/quiz" element={<TrainerQuizView/>} />
+        <Route path="/trainer/courses/:id/video" element={<TrainerVideoView/>} />
         <Route path="/trainer/courses/:id" element={<CreateCoursePage inprogress={false}/>} />
         <Route path="/trainer/inprogress/:id" element={<CreateCoursePage inprogress={true}/>} />
-        <Route path="/trainer/inprogress/" element={<TrainerCoursesPage inprogress={true}/>} />
-        <Route path="/trainer/courses" element={<TrainerCoursesPage inprogress={false}/>} />
+        <Route path="/trainer/inprogress/" element={<TrainerCoursesPage key="inprogress-courses" inprogress={true}/>} />
+        <Route path="/trainer/courses" element={<TrainerCoursesPage key="courses" inprogress={false}/>} />
         <Route
           path="/trainer"
           element={<Navigate to="/trainer/courses" replace />}
@@ -100,9 +108,9 @@ export default function Router() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/buyCourse" element={<Plane />} />
         <Route path="/admin/courses/:id" element={<AdminCourseDetails />} />
-        <Route path="/admin/courses" element={<AdminCoursesPage pending={false}/>} />
+        <Route path="/admin/courses" element={<AdminCoursesPage key="courses" pending={false}/>} />
         <Route path="/admin/users" element={<AdminUsers />} />
-        <Route path="/admin/pending" element={<AdminCoursesPage pending={true}/>} />
+        <Route path="/admin/pending" element={<AdminCoursesPage key="pending-courses" pending={true}/>} />
         <Route path="/admin/pending/:id" element={<PendingCourseDetails />} />
         {/* <Route path='/admin/users/:id' element={<AdminCoursesPage />} /> */}
         <Route

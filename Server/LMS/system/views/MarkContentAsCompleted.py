@@ -1,39 +1,44 @@
 #DRF 
-from rest_framework.generics import CreateAPIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-#models 
-from system.models.Finished_Content import Finished_Content
-from system.models.Finished_Unit import Finished_Unit
+#models  
 from system.models.Enrollment import Enrollment
 from system.models.Content import Content
+from system.models.Finished_Content import Finished_Content
 #serializers 
 from system.serializers.MarkContentSerializer import MarkContentSerializer
 from rest_framework.permissions import IsAuthenticated
 #django
 from django.shortcuts import get_object_or_404
- 
-class MarkContentView(CreateAPIView):
+from django.utils import timezone
+
+
+class MarkContentView(APIView):
       serializer_class = MarkContentSerializer
       permission_classes = [IsAuthenticated]
       
-      def post(self, request, *args, **kwargs):
-          enrollment =  get_object_or_404(Enrollment,trainee_contract__trainee__user = request.user)
-          content = get_object_or_404(Content,id = request.data["content"])
+      def post(self, request, *args, **kwargs): 
+          enrollment =  get_object_or_404(Enrollment,trainee_contract__trainee__user = request.user , course__id = kwargs["id"])
+          content = get_object_or_404(Content,id =kwargs["content_id"])
           if enrollment.course != content.unit.course :
                return Response({"message":"you can't mark content if you are not enroll in this course"},status.HTTP_400_BAD_REQUEST)
-          data = {
-               'enrollment':enrollment,
-               'content':content.id,
-               'xp': 100
-          }
-          serialized_data = MarkContentSerializer(data = data)
-          serialized_data.is_valid(raise_exception= True)
-          serialized_data.save()
-          #return appropriate response if the enrollment passed 
-          if  enrollment.progress == 100 :
-               return Response({"message":"course completed"}, 200)
+           
+          if content.id in [content.content.id for content in enrollment.finished_content_set.all()]:
+               return Response({"message":"you already mark it as completed"})
           
-
+          marked_content = Finished_Content.objects.create(enrollment= enrollment , content = content)
+  
+          if  enrollment.progress == 100 and not (enrollment.completed): 
+               passed = True
+               for grade in enrollment.grade_set.all():
+                   if grade.score < 60  :
+                        passed = False  
+               if passed:   
+                  enrollment.completed = True
+                  enrollment.completed_at = timezone.now()
+                  enrollment.save()  
+                  return Response({"status":"passed"}, 200)
+           
           
-          return Response({"message":"the content marked as complete"},status.HTTP_200_OK)
+          return Response({"message":"completed"},status.HTTP_200_OK)

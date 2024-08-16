@@ -15,6 +15,6 @@ urlpatterns = [
         'content/<int:id>', 
         TrainerRetrieveContentView.as_view(),  
     ), 
-    
+  
    
 ]

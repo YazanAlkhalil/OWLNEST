@@ -3,6 +3,7 @@ import image from "../../images/multimedia-courses-scope-and-career 1.png";
 import image2 from "../../images/BA-Courses 1.png";
 import TraineeCourse from "../TraineeCourse";
 import useFetch from "../AuthComponents/UseFetch";
+import CourseCompletion from "./Congratulations";
 
 export default function TraineeCourses() {
   const { fetchData , resData } = useFetch();
@@ -18,14 +19,14 @@ export default function TraineeCourses() {
         getCourses();
   },[])
 
-
+  
   return (
     <>
       <div className='flex flex-wrap gap-3 '>
         {
           courses?.map((item)=>{
             return (
-              <TraineeCourse key={item.id} data={item} />
+              <TraineeCourse key={item.id} id={item.id} data={item} />
             )
           })
         }

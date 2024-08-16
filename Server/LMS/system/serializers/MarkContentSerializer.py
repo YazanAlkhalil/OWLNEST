@@ -8,14 +8,5 @@ from system.models.Finished_Unit import Finished_Unit
 class MarkContentSerializer(serializers.ModelSerializer):
       class Meta:
             model = Finished_Content
-            fields = ['content']
+            fields = ['content','enrollment']
  
-      def to_internal_value(self, data):
-            enrollment = data["enrollment"]
-            xp = data["xp"]
-            data =  super().to_internal_value(data)
-            data["enrollment"] = enrollment
-            data["xp"] = xp
-            return data
-  
-  

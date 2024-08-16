@@ -21,6 +21,7 @@ from system.views.AdminApprovmentView import AdminApprovmentView
 from system.views.TraineeCourseDetailsView import TraineeCourseDetailsView
 from system.views.EditDestroyCourseView import EditDestroyCourseView
 from system.views.TraineeContentDetailsView import TraineeContentDetailsView
+from system.views.CourseInfoView import CourseInfoView
 urlpatterns = [
     path(
         'admin/company/<int:company_id>/courses', 
@@ -74,6 +75,10 @@ urlpatterns = [
         'course/<id>/skills', 
         AddSkillToCourse.as_view(),  
     ),
+        path(
+        'skills/<skill_id>', 
+        AddSkillToCourse.as_view(),  
+    ),
       path(
         'course/<id>/additional-resources', 
         AddAdditionalResourcesToCourse.as_view(),  
@@ -105,6 +110,11 @@ urlpatterns = [
     path(
         'trainee/content/<id>', 
         TraineeContentDetailsView.as_view()
+    ),
+     path(
+        'courses/<int:id>/info',
+        CourseInfoView.as_view(),
+        name='company-course-trainee-info'
     ),
     
    

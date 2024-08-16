@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import ProgressBar from "@ramonak/react-progress-bar";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import useFetch from '../AuthComponents/UseFetch';
 import { FaHeart } from "react-icons/fa";
 
-export default function Favorites({data,id}) {
+import useFetch from '../AuthComponents/UseFetch';
+
+
+export default function Favorites({data,id,getFavorits}) {
     const navigate = useNavigate();
     const [fav,setFav] = useState(true);
     const { fetchData , resData } = useFetch();
@@ -18,12 +20,13 @@ export default function Favorites({data,id}) {
       }
     setFav(false);
     const res = await fetchData({url: 'http://127.0.0.1:8000/api/trainee/company/'+companyID+'/favorites',method : 'delete',data: data } )
+    getFavorits()
     console.log(res);
   }
   return (
     <div className="">
-    <img className="w-[330px] hover:cursor-pointer border  rounded" alt="error" 
-    src={`http://127.0.0.1:8000/api${data?.image}`}  onClick={() => {navigate("/trainee/courses/id");}} />
+    <img className="w-[330px] h-44 hover:cursor-pointer border  rounded" alt="error" 
+    src={`${data?.image}`}  onClick={() => {navigate("/trainee/courses/id");}} />
     <ProgressBar
     completed={data?.progress}
     labelColor="#FFFFFF"
@@ -38,7 +41,7 @@ export default function Favorites({data,id}) {
     </div>
     <div className="px-2 py-1 text-xl flex justify-between"> 
     <h1 className="font-semibold">By {data?.trainer}</h1>
-    <FaHeart className={`${fav ? "text-red-700"  : "text-slate-500"} hover:cursor-pointer`} onClick={handleIconClick} />
+    <FaHeart className={`${"text-red-600"} hover:cursor-pointer`} onClick={handleIconClick} />
     </div>
 
   </div>

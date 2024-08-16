@@ -27,9 +27,9 @@ export default function Company({image,id,name}) {
     }
     
   return (
-      <div className="border-accent flex justify-center items-center border-4 rounded-md p-4 dark:bg-DarkGray dark:hover:bg-DarkGrayHover bg-primary hover:bg-hover cursor-pointer" onClick={handleCompanyClick}>
+      <div className="border-accent flex justify-center items-center border-4 rounded-md dark:bg-DarkGray dark:hover:bg-DarkGrayHover bg-primary hover:bg-hover cursor-pointer" onClick={handleCompanyClick}>
         <img
-          className="w-1/2"
+          className=""
           src={`http://127.0.0.1:8000/api${image}`}
           alt="error"
         />   

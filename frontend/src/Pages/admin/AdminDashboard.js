@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '../../Components/Card'
 import ChartExample from '../../Components/Chart'
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import useFetch from '../../Components/AuthComponents/UseFetch';
 
 
 
@@ -10,10 +11,35 @@ import { useSelector } from 'react-redux';
 function AdminDashboard() {
   const isOwner = localStorage.getItem('isOwner')
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+  const [owner,setOwner] = useState("")
+  const [trainers,setTrainers] = useState("")
+  const [trainees,setTrainees] = useState("")
+  const [completions,setCompletions] = useState([])
+  const [admins,setAdmins] = useState("")
+  const [totalCompletions,setTotalCompletions] = useState("")
+  const companyId = localStorage.getItem('companyId');
+  const {fetchData} = useFetch()
+
+  useEffect(()=>{
+    const getData = async ()=>{
+
+      const res = await fetchData({url:"/admin/company/"+companyId+"/dashboard"})
+      console.log(res);
+      setOwner(res.owner)
+      setTrainees(res.trainees)
+      setTrainers(res.trainers)
+      setAdmins(res.admins)
+      setTotalCompletions(res.total_completions)
+      setCompletions(res.graph)
+    }
+    getData()
+  },[])
+
+
   return (
     <div className='flex flex-col h-full'>
         <div className='flex justify-between items-center'>
-            <span className='text-xl '>Owner: yazan Alkhalil</span>
+            <span className='text-xl '>Owner: {owner}</span>
             {isOwner === 'true' && <div>
                 <span className='text-lg mr-5'>Balance: 2345$</span>
                 <NavLink to={'/admin/buyCourse'} className='bg-accent text-white p-2 rounded hover:bg-[#dea01edd]'>Buy Courses</NavLink>
@@ -28,19 +54,19 @@ function AdminDashboard() {
         <div className='flex text-lg bg-secondary dark:bg-DarkSecondary text-white  justify-around w-full py-4 rounded'>
             <div className='flex flex-col items-center'>
                 <div>Trainees</div>
-                <div>234</div>
+                <div>{trainees}</div>
             </div>
             <div className='flex flex-col items-center'>
                 <div>Trainers</div>
-                <div>234</div>
+                <div>{trainers}</div>
             </div>
             <div className='flex flex-col items-center'>
                 <div>Admins</div>
-                <div>234</div>
+                <div>{admins}</div>
             </div>
             <div className='flex flex-col items-center'>
                 <div>Total Course Completions</div>
-                <div>1002</div>
+                <div>{totalCompletions}</div>
             </div>
             
         </div>
@@ -51,26 +77,13 @@ function AdminDashboard() {
     title: {
       text: "Courses Completions",
     },
-    data: [
-        { month: "Jan", "Courses": 200 },
-        { month: "Feb", "Courses": 210 },
-        { month: "Mar", "Courses": 195 },
-        { month: "Apr", "Courses": 205 },
-        { month: "May", "Courses": 215 },
-        { month: "Jun", "Courses": 200 },
-        { month: "Jul", "Courses": 225 },
-        { month: "Aug", "Courses": 210 },
-        { month: "Sep", "Courses": 250 },
-        { month: "Oct", "Courses": 205 },
-        { month: "Nov", "Courses": 215 },
-        { month: "Dec", "Courses": 220 },
-      ],
+    data: completions,
     series: [
       {
         type: "area",
         xKey: "month",
-        yKey: "Courses",
-        yName: "Courses",
+        yKey: "completions",
+        yName: "completions",
       },
       
     ],

@@ -7,13 +7,18 @@ import reportWebVitals from './reportWebVitals';
 // import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Provider } from 'react-redux';
 import store from './features/Store';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-   <Provider store={store}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Provider store={store}>
         <App />
-   </Provider>
+      </Provider>
+    </LocalizationProvider >
   </React.StrictMode>
 );
 

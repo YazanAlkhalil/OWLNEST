@@ -7,19 +7,19 @@ import Loader from '../Components/Loader'
 
 
 export default function CompanyPage() {
-  const { fetchData , resData , loading , error } = UseFetch();
-  useEffect(()=>{
-    const getCompany = async ()=>{
+  const { fetchData, resData, loading, error } = UseFetch();
+  useEffect(() => {
+    const getCompany = async () => {
       const res = await fetchData({
         method: "get",
         url: "http://127.0.0.1:8000/api/get_companies/",
         data: {},
         params: {},
-        headers:{}
+        headers: {}
       })
     }
     getCompany();
-  },[])
+  }, [])
   return (
     <>
     <Navbar2 name={resData?.username} image={resData?.userImg}/>
@@ -37,9 +37,9 @@ export default function CompanyPage() {
           : 
           <div className='container w-[100%] h-[100%] flex justify-center items-center sm:px-4'>
             <Loader />
-          </div> 
-        }
-    </div>
+          </div>
+        )}
+      </div>
     </>
   )
 }

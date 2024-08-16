@@ -19,6 +19,7 @@ const useFetch = () => {
       const refreshResponse = await axiosInstance.post('/refresh/');
       return refreshResponse.status === 200;
     } catch (error) {
+      navigate('/login')
       console.log('Error refreshing token:', error);
       return false;
     }

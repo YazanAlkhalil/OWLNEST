@@ -7,7 +7,7 @@ import useFetch from './AuthComponents/UseFetch';
 import { useParams } from 'react-router-dom';
 
 
-function CreateQuiz({ backendContent }) {
+function CreateQuiz({ backendContent, submit }) {
     const { fetchData } = useFetch()
     const { id } = useParams()
     const companyId = localStorage.getItem('companyId')
@@ -34,22 +34,31 @@ function CreateQuiz({ backendContent }) {
             toast.error('There should be at least one question')
         }
     }
-    async function submit() {
+    async function submitQuiz() {
         let order = backendContent.find(unit => unit.id.toString() == unitId)?.contents.length
-        const res = await fetchData({
-            url: "/trainer/company/" + companyId + "/courses/" + id + "/unit/" + unitId + "/content/create", method: "POST", data: {
-                title: quizName,
-                order,
-                questions,
-                type:"quizz"
-            }
-        })
+        console.log(quizName);
+        console.log(questions.length);
+        if(quizName && questions.length >= 1){
+
+            const res = await fetchData({
+                url: "/trainer/company/" + companyId + "/courses/" + id + "/unit/" + unitId + "/content/create", method: "POST", data: {
+                    title: quizName,
+                    order,
+                    questions,
+                    type:"quizz"
+                }
+            })
+            submit()
+        }
+        else{
+            toast.error("please fill in all fields")
+        }
     }
     return (
         <div className='flex flex-col'>
             <div className='flex'>
                 <div className="flex items-center border-b dark:border-DarkGray border-primary-500 py-2">
-                    <input value={quizName} onChange={e => setQuizName(e.target.value)} className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Quiz name" aria-label="quiz name" />
+                    <input value={quizName} onChange={e => setQuizName(e.target.value)} className="appearance-none bg-transparent border-none mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Quiz name" aria-label="quiz name" />
                 </div>
             </div>
             <FormDialog
@@ -88,7 +97,7 @@ function CreateQuiz({ backendContent }) {
             ))}
             <div className='flex justify-end mt-10'>
                 <button className='btn-inner mr-2'>Cancel</button>
-                <button onClick={submit} className='btn-inner'>Save</button>
+                <button onClick={submitQuiz} className='btn-inner'>Save</button>
             </div>
         </div>
     );

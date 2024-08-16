@@ -63,34 +63,34 @@ class TraineeMainDashboard(serializers.Serializer):
 
 
       def get_daily_xp(self, trainee_contract):
-        today = datetime.today()
-        daily_xp = []
+          today = datetime.today()
+          daily_xp = []
 
-        for i in range(7):
-            day = today - timedelta(days=i)
-            start_of_day = datetime.combine(day, datetime.min.time())
-            end_of_day = datetime.combine(day, datetime.max.time())
-           
-            finished_content_xp = Finished_Content.objects.filter(
-                enrollment__trainee_contract=trainee_contract,
-                finished_at__range=(start_of_day, end_of_day)
-            ).count() * 10 
+          for i in range(7):
+              day = today - timedelta(days=i)
+              start_of_day = datetime.combine(day, datetime.min.time())
+              end_of_day = datetime.combine(day, datetime.max.time())
             
-       
-            grade_xp = Grade.objects.filter(
-                enrollment__trainee_contract=trainee_contract,
-                taken_at__range=(start_of_day, end_of_day)
-            ).aggregate(total_xp=Sum('xp'))['total_xp'] or 0
+              finished_content_xp = Finished_Content.objects.filter(
+                  enrollment__trainee_contract=trainee_contract,
+                  finished_at__range=(start_of_day, end_of_day)
+              ).count() * 10 
+              
+        
+              grade_xp = Grade.objects.filter(
+                  enrollment__trainee_contract=trainee_contract,
+                  taken_at__range=(start_of_day, end_of_day)
+              ).aggregate(total_xp=Sum('xp'))['total_xp'] or 0
 
-           
-            day_xp = finished_content_xp + grade_xp
             
-            daily_xp.append({
-                "day": day.strftime("%a").upper(),
-                "xp": day_xp
-            })
+              day_xp = finished_content_xp + grade_xp
+              
+              daily_xp.append({
+                  "day": day.strftime("%a").upper(),
+                  "xp": day_xp
+              })
 
-        return daily_xp
+          return daily_xp
       
       def get_training_time(self, trainee_contract):
         total_time = timedelta()
