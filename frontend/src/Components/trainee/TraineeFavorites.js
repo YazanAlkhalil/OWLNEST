@@ -19,7 +19,7 @@ export default function TraineeFavorites() {
   return (
     <div className="flex flex-wrap gap-3">
         {resData?.map((item,index)=>{
-          return <Favorites key={index} id={index+1} data={item} />
+          return <Favorites key={index} id={item.id} data={item} />
         })}
     </div>
   );

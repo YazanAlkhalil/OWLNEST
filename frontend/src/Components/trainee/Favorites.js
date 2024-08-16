@@ -3,7 +3,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../AuthComponents/UseFetch';
-import { FaHeart } from "react-icons/fa";
+
 
 export default function Favorites({data,id}) {
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function Favorites({data,id}) {
   return (
     <div className="">
     <img className="w-[330px] hover:cursor-pointer border  rounded" alt="error" 
-    src={`http://127.0.0.1:8000/api${data?.image}`}  onClick={() => {navigate("/trainee/courses/id");}} />
+    src={`${data?.image}`}  onClick={() => {navigate("/trainee/courses/id");}} />
     <ProgressBar
     completed={data?.progress}
     labelColor="#FFFFFF"
@@ -38,7 +38,7 @@ export default function Favorites({data,id}) {
     </div>
     <div className="px-2 py-1 text-xl flex justify-between"> 
     <h1 className="font-semibold">By {data?.trainer}</h1>
-    <FaHeart className={`${fav ? "text-red-700"  : "text-slate-500"} hover:cursor-pointer`} onClick={handleIconClick} />
+    <FaStar className={`${fav ? "text-accent"  : "text-slate-500"} hover:cursor-pointer`} onClick={handleIconClick} />
     </div>
 
   </div>

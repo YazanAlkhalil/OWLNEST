@@ -72,7 +72,7 @@ export default function Comment({ data }) {
       <div className="flex justify-between px-6 py-5">
         <div className="flex">
           <img
-            src={`http://127.0.0.1:8000/api${commentData?.image}`}
+            src={`${commentData?.image}`}
             alt="error"
             className="w-[90px] h-[90px]"
           />
