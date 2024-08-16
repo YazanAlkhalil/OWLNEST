@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@mui/material";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useFetch from "../AuthComponents/UseFetch";
 
 export default function TraineeVideoLesson() {
@@ -11,7 +11,7 @@ export default function TraineeVideoLesson() {
   const { state } = useLocation();
   const[loading, setLoading] = useState(true);
   const { fetchData, resData } = useFetch();
-  const id = localStorage.getItem("courseID");
+  const {id} = useParams()
   const onGoBackClick = () => {
     navigate(`/trainee/courses/${id}/content`);
   };

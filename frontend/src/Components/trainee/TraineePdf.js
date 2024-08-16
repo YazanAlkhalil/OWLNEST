@@ -4,6 +4,6 @@ import TrainerPDFView from '../../Pages/trainer/TrainerPDFView'
 
 export default function TraineePdf() {
   return (
-    <TrainerPDFView/>
+    <TrainerPDFView trainee={true}/>
   )
 }

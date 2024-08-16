@@ -39,7 +39,7 @@ export default function TraineeCourseDisplay() {
      </div>
      <div className='px-7'>
       {data?.units.map((content)=>{
-        return <Content key={content.id} data={content} />
+        return <Content key={content.id} id={id} data={content} />
        })} 
      </div>
     </div>

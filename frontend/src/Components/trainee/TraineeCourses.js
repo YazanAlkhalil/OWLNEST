@@ -18,14 +18,14 @@ export default function TraineeCourses() {
         getCourses();
   },[])
 
-
+  
   return (
     <>
       <div className='flex flex-wrap gap-3 '>
         {
           courses?.map((item)=>{
             return (
-              <TraineeCourse key={item.id} data={item} />
+              <TraineeCourse key={item.id} id={item.id} data={item} />
             )
           })
         }

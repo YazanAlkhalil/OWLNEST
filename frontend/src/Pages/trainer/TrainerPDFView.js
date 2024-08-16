@@ -12,11 +12,11 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url,
 ).toString();
 
-function TrainerPDFView() {
+function TrainerPDFView({trainee}) {
   const [numPages, setNumPages] = useState();
   const [url,setUrl]= useState("")
   const {fetchData} = useFetch()
-  const lessonId = localStorage.getItem("lessonId").slice(6)
+  const lessonId = localStorage.getItem("lessonId")
   const location = useLocation();
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1);
@@ -32,9 +32,18 @@ function TrainerPDFView() {
     const container = containerRef.current;
     if (!container) return;
     const getUrl = async ()=>{
-      const res= await fetchData({
-        url: "/content/"+ lessonId
-      })
+      let res
+      if(trainee){
+        res= await fetchData({
+          url: "/trainee/content/"+ lessonId
+        })
+      }
+      else{
+
+        res= await fetchData({
+          url: "/content/"+ lessonId
+        })
+      }
       setUrl(res.file)
       console.log(res);
     }

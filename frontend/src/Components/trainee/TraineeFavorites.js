@@ -8,18 +8,18 @@ export default function TraineeFavorites() {
   const { fetchData , resData } = useFetch();
   const companyID = localStorage.getItem('companyId');
 
+  const getFavorits = async () => {
+    const res = await fetchData({url: 'http://127.0.0.1:8000/api/trainee/company/'+companyID+'/favorites', method: 'get'}) 
+    console.log(res);
+  }
   useEffect(()=>{
-      const getFavorits = async () => {
-        const res = await fetchData({url: 'http://127.0.0.1:8000/api/trainee/company/'+companyID+'/favorites', method: 'get'}) 
-        console.log(res);
-      }
         getFavorits();
   },[])
 
   return (
     <div className="flex flex-wrap gap-3">
         {resData?.map((item,index)=>{
-          return <Favorites key={index} id={item.id} data={item} />
+          return <Favorites getFavorits={getFavorits} key={index} id={item.course_id} data={item} />
         })}
     </div>
   );
