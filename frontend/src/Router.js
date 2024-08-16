@@ -73,14 +73,14 @@ export default function Router() {
 
       <Route path="/trainee/courses/:id" element={<CourseLayout />}>
         <Route path="content" element={<TraineeCourseDisplay />} />
-        <Route path="content/lesson" element={<TraineeVideoLesson />} />
+        <Route path="content/video" element={<TraineeVideoLesson />} />
         <Route path="progress" element={<TraineeProgress />} />
+        <Route path="content/Text" element={<TraineePdf />} />
         <Route path="discussion" element={<TraineeDiscussion />} />
         <Route path="Info" element={<TraineeInfor />} />
       </Route>
 
-        <Route path="/trainee/courses/:id/content/quiz" element={<TraineeQuiz />} />
-        <Route path="/trainee/courses/:id/content/Text" element={<TraineePdf />} />
+        <Route path="/trainee/quiz" element={<TraineeQuiz />} />
 
 
 

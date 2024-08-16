@@ -1,14 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@mui/material";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useFetch from "../AuthComponents/UseFetch";
 
 export default function TraineeVideoLesson() {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const[loading, setLoading] = useState(true);
+  const { fetchData, resData } = useFetch();
+  const id = localStorage.getItem("courseID");
   const onGoBackClick = () => {
-    navigate("/trainee/courses/:id/content");
+    navigate(`/trainee/courses/${id}/content`);
   };
 
   useEffect(() => {
@@ -23,6 +28,21 @@ export default function TraineeVideoLesson() {
       socket.close();
     };
   }, []);
+  useEffect(()=>{
+    console.log(state);
+    const getVideo = async ()=>{
+      const res = await fetchData({
+        url:
+          "http://127.0.0.1:8000/api/trainee/content/"+state,
+        method: "get",
+      });
+      console.log(res);
+      if(res){
+        setLoading(false);
+      }
+    }
+    getVideo()
+  },[])
 
 
   return (
@@ -33,27 +53,18 @@ export default function TraineeVideoLesson() {
         onClick={onGoBackClick}
       />
       <div className="mt-10">
-        <video className="h-[70%] mx-auto w-[70%] rounded-lg" controls>
+        {!loading && <video className="h-[70%] mx-auto w-[70%] rounded-lg" controls  autoPlay>
           <source
-            src="https://docs.material-tailwind.com/demo.mp4"
+            src={resData?.file}
             type="video/mp4"
           />
           Your browser does not support the video tag.
-        </video>
+        </video>}
       </div>
       <div className="w-[70%] mt-10 mx-auto">
         <h1 className="text-2xl font-semibold">Description : </h1>
         <p className="text-md px-5 py-10">
-          lorem lorem lorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem loremlorem loremlorem
-          loremlorem loremlorem loremlorem loremlorem lorem{" "}
+          {resData?.description}
         </p>
       </div>
       <div className="w-[70%] mx-auto flex justify-end">

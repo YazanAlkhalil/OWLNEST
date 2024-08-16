@@ -3,15 +3,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import useFetch from "./AuthComponents/UseFetch";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function TraineeCourse({ data }) {
   const navigate = useNavigate();
   const { fetchData } = useFetch();
   const [fav, setFav] = useState(false);
   const companyID = localStorage.getItem("companyId");
-
+  
   console.log("course ID",data?.id);
-
+  
   const handleIconClick = async () => {
     const data1 = {
       course: data?.id,
@@ -23,6 +26,9 @@ export default function TraineeCourse({ data }) {
       method: "post",
       data: data1,
     });
+    if(res){
+      toast.success('Success')
+    }
   };
   return (
     <div className="">
@@ -31,6 +37,7 @@ export default function TraineeCourse({ data }) {
         src={data?.image}
         alt="error"
         onClick={() => {
+          localStorage.setItem('courseID', data?.id);
           navigate(`/trainee/courses/${data?.id}/content`);
         }}
       />
@@ -47,13 +54,15 @@ export default function TraineeCourse({ data }) {
         {data?.name}
       </div>
       <div className="px-2 py-1 text-xl flex justify-between">
-        <h1 className="font-semibold">By {data?.leader}</h1>
-        <FaStar
-          className={`${
-            data?.is_favourite || fav ? "text-accent" : "text-slate-500"
-          } hover:cursor-pointer`}
-          onClick={handleIconClick}
-        />
+        <h1 className="font-semibold flex">{data?.rate} <FaStar className="text-accent mx-2 mt-1"  /> </h1>
+        {data?.is_favourite || fav ?
+        <FaHeart className="text-red-700 hover:cursor-pointer" onClick={handleIconClick}/>
+        :
+        <FaRegHeart 
+        className={ "text-slate-500 hover:cursor-pointer"}
+        onClick={handleIconClick}
+      /> 
+        }
       </div>
     </div>
   );

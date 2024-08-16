@@ -1,61 +1,46 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import Content from '../Content';
 import { useNavigate, useParams } from 'react-router-dom';
+import useFetch from '../AuthComponents/UseFetch';
+import Content from '../Content';
 
-const lessons = [
-  {
-    id: 1,
-    title: "Lesson 1",
-    type: "video"
-  },
-  {
-    id: 2,
-    title: "Lesson 2",
-    type: "exam"
-  },
-  {
-    id: 3,
-    title: "Lesson 3",
-    type: "pdf"
-  }
-]
-const lessons2 = [
-  {
-    id: 1,
-    title: "Lesson 1",
-    type: "pdf"
-  },
-  {
-    id: 2,
-    title: "Lesson 2",
-    type: "video"
-  },
-  {
-    id: 3,
-    title: "Lesson 3",
-    type: "pdf"
-  }
-]
 
 export default function TraineeCourseDisplay() {
+  const { fetchData ,resData } = useFetch();
   const navigate = useNavigate();
+  const [data,setData]  = useState({units:[]});
   const {id} = useParams();
   console.log(id);
   const onGoBackClick = ()=>{
     navigate('/trainee/courses');
   }
+  useEffect(()=>{
+    const getContent = async () =>{
+      const res = await fetchData({
+        url:
+          "http://127.0.0.1:8000/api/trainee/courses/"+ id,
+        method: "get",
+      });
+      console.log(res,"res");
+      setData(res);
+      
+      
+    }
+    getContent();
+  },[])
+  console.log(data,"data");
+  
   return (
     <div>
      <FontAwesomeIcon className="cursor-pointer text-2xl" icon={faArrowLeft} onClick={onGoBackClick} />
      <div className='p-5 font-black text-2xl'>
-      Course Name : Complete React Course
+      Course Name : {data?.name}
      </div>
      <div className='px-7'>
-      <Content unit={'Introduction'} lessons={lessons} />
-      <Content unit={'Unit 1'} lessons={lessons} />
-      <Content unit={'Unit 2'} lessons={lessons2} />
+      {data?.units.map((content)=>{
+        return <Content key={content.id} data={content} />
+       })} 
      </div>
     </div>
   )

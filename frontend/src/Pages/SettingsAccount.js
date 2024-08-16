@@ -13,6 +13,7 @@ import {
   Button,
 } from "@mui/material";
 import ChangePasswordDialoge from "../Components/ChangePasswordDialoge";
+import { useNavigate } from "react-router-dom";
 
 const countries = [
   ["DZ", "Algeria"],
@@ -39,6 +40,7 @@ const countries = [
 const BASE_URL = "http://127.0.0.1:8000";
 
 export default function SettingsAccount() {
+  const navigate = useNavigate();
   const [photo, setPhoto] = useState({
     send: null, // initialize as null
     current: logo,
@@ -144,6 +146,10 @@ export default function SettingsAccount() {
       },
     });
     console.log(res);
+    if(res){
+      alert("Profile updated successfully");
+      navigate('/trainee',{replace:true})
+    }
   };
 
   return (

@@ -10,7 +10,7 @@ function NotFoundPage() {
         The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
       </p>
       <a
-        href="/company"
+        href="/"
         className="bg-hover dark:bg-DarkGray dark:hover:bg-DarkGrayHover hover:bg-primary text-white font-bold py-4 px-6 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105"
       >
         Go Home

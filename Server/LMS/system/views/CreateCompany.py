@@ -123,6 +123,11 @@ class CompaniesView(APIView):
             return Response({'message': 'User not authenticated'}, status=401)
 
         user = request.user
+        image = user.image
+        if image is None or image == '':
+            image_url = ''  
+        else:
+            image_url = image.url
 
        
         company_ids = set()
@@ -169,6 +174,7 @@ class CompaniesView(APIView):
 
         return Response({
             'username': user.username,
+            'userImg': image_url,
             'companies': companies
         })
 
