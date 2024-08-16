@@ -49,7 +49,9 @@ export default function TraineeVideoLesson() {
     
 
     const res = await fetchData({url:`/course/${id}/mark-content/${lessonId}`,method:"POST"})
-    if(res.status){
+    console.log(res.status);
+    
+    if(res.status === "passed"){
       navigate(`/trainee/courses/${id}/content/Congratulations`)
     }else{
       onGoBackClick()
