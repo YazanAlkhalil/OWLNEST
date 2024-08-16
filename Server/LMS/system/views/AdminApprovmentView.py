@@ -2,11 +2,12 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView 
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.exceptions import ValidationError
 #models 
 from system.models.Company import Company
 from system.models.Course import Course
-
+from system.models.Company_Planes import Company_Planes
+from system.models.Courses_In_Plane import Courses_In_Plane
 #serializers 
 from system.serializers.SkillSerializer import SkillSerializer
 from system.serializers.UnitSerializer import UnitSerializer 
@@ -19,15 +20,13 @@ from system.serializers.VideoSerializer import VideoSerializer
 from system.serializers.AdditionalResourceSerializer import AdditionalResourceSerializer
 #django 
 from django.shortcuts import get_object_or_404
-
-
-
-
-
+# permissions 
+from ..permissions.Plane import DoesHaveAPlane
 
 class AdminApprovmentView(APIView):
-      permission_classes = [IsAuthenticated]
+      permission_classes = [IsAuthenticated, DoesHaveAPlane]
       def post(self, request, *args, **kwargs):
+          company_id = self.kwargs['company_id']
           course = get_object_or_404(Course,id = kwargs["course_id"])
           for unit in  course.unit_set.all():
               for content in unit.content_set.all():
@@ -38,6 +37,16 @@ class AdminApprovmentView(APIView):
               course.resource.delete()
           course.published = True
           
+
+          for enrollment in course.enrollment_set.all():
+              if enrollment.progress < 100 :
+                 enrollment.progress = 0
+                 enrollment.save()
+
+
+
+
+
           #skills
           for skill in course.draftskill_set.all():
               skill_data = {
@@ -121,5 +130,31 @@ class AdminApprovmentView(APIView):
                               serialized_answer.is_valid(raise_exception=True)
                               serialized_answer.save(question = question_obj)
           course.save() 
+          course_added_to_a_plane = False
+          # get the company planes
+          company_planes = Company_Planes.objects.filter(company__id=company_id, is_active=True, is_full=False)
+          if company_planes.__len__() > 0:
+            for company_plane in company_planes:
+                if not course_added_to_a_plane:
+                    if company_plane.current_courses_number < company_plane.plane.courses_number:
+                        courses_in_plane = Courses_In_Plane.objects.filter(company_plane=company_plane)
+                        if courses_in_plane.__len__() > 0:
+                            # if the course is in the courses in the plane then escape
+                            if courses_in_plane.filter(course=course).exists():
+                                break
+                        # if the courses in plan is emplty or if the course does not exists in it then create the course in it
+                        print('6')
+                        course_in_plane = Courses_In_Plane.objects.create(company_plane=company_plane, course=course)
+                        course_in_plane.save()
+                        company_plane.current_courses_number += 1
+                        if company_plane.current_courses_number == company_plane.plane.courses_number:
+                            company_plane.is_full = True
+                        company_plane.save()
+                        course_added_to_a_plane = True
+                    # when thid company does not have the capacity for another course
+                    else:
+                        continue
+          else:
+                raise ValidationError({'message': f'This Company Doesn\'t have an active plane, Purchase a new one'})
           print(request.user.admin.admin_contract_set.get(company = get_object_or_404(Company, id = kwargs["company_id"])).adminapprovment_set.get(course = course).delete())
           return Response({"message":"The course has been published successfully"})

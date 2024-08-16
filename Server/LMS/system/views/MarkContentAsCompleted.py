@@ -6,6 +6,7 @@ from rest_framework import status
 from system.models.Enrollment import Enrollment
 from system.models.Content import Content
 from system.models.Finished_Content import Finished_Content
+from system.models.Grade import Grade
 #serializers 
 from system.serializers.MarkContentSerializer import MarkContentSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +18,18 @@ from django.utils import timezone
 class MarkContentView(APIView):
       serializer_class = MarkContentSerializer
       permission_classes = [IsAuthenticated]
-      
+      def get_progress(self,enrollment):
+            total_contents = Content.objects.filter(unit__course=enrollment.course).count()
+            finished_contents = Finished_Content.objects.filter(enrollment=enrollment).count()
+            submitted_tests = Grade.objects.filter(enrollment=enrollment).count()
+            
+            #progress
+            if total_contents > 0:
+              total_finished = finished_contents + submitted_tests
+              return (total_finished / total_contents) * 100
+            return 0
+
+
       def post(self, request, *args, **kwargs): 
           enrollment =  get_object_or_404(Enrollment,trainee_contract__trainee__user = request.user , course__id = kwargs["id"])
           content = get_object_or_404(Content,id =kwargs["content_id"])
@@ -28,7 +40,8 @@ class MarkContentView(APIView):
                return Response({"message":"you already mark it as completed"})
           
           marked_content = Finished_Content.objects.create(enrollment= enrollment , content = content)
-  
+          enrollment.progress = self.get_progress(enrollment)
+          enrollment.save()
           if  enrollment.progress == 100 and not (enrollment.completed): 
                passed = True
                for grade in enrollment.grade_set.all():
@@ -37,7 +50,7 @@ class MarkContentView(APIView):
                if passed:   
                   enrollment.completed = True
                   enrollment.completed_at = timezone.now()
-                  enrollment.save()  
+                  enrollment.save()   
                   return Response({"status":"passed"}, 200)
            
           

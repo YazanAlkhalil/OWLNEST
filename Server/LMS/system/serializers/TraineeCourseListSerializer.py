@@ -19,11 +19,11 @@ class TraineeCourseListSerializer(serializers.ModelSerializer):
 
       def get_progress(self, obj): 
           user = self.context['request'].user 
-          enrollment = Enrollment.objects.filter(
+          enrollment = Enrollment.objects.get(
               trainee_contract__trainee__user=user,
               course=obj
-          ).first()
-          return enrollment.progress if enrollment else 0
+          ) 
+          return enrollment.progress 
      
       def get_is_favourite(self, obj):
        
