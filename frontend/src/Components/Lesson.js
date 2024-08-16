@@ -25,11 +25,11 @@ function Lesson({ item, sortable, isDisplayOnly, getInfo }) {
     transform: CSS.Transform.toString(transform)
   }
   const { fetchData } = useFetch()
-  async function handleDelete() {
+  async function handleDelete(e) {
+    e.stopPropagation(); // Stop the event from bubbling up
     const res = await fetchData({ url: "/content/" + item.id.slice(6), method: "DELETE" })
     getInfo()
   }
-
   async function handleClick(){
     localStorage.setItem("lessonId", item.id)
     if (item.content == 'video')

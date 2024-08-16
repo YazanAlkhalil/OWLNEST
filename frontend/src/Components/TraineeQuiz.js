@@ -79,7 +79,7 @@ export default function TraineeQuiz() {
             </NavLink>
           </div>
         ) : (
-          <>
+          <div className='flex flex-col'>
             <div className="mb-4">
               <h2 className="text-xl font-semibold">
                 Question {currentQuestion + 1}/{questions.length}
@@ -102,8 +102,8 @@ export default function TraineeQuiz() {
                   onClick={() => handleAnswerToggle(option.id)}
                   className={`px-4 py-2 text-white rounded ${
                     selectedAnswers.includes(option.id)
-                      ? 'bg-secondary dark:bg-DarkGrayHover'
-                      : 'bg-primary dark:bg-DarkGray hover:bg-secondary dark:hover:bg-DarkGrayHover'
+                      ? 'bg-secondary dark:bg-DarkSecondary'
+                      : 'bg-primary dark:bg-Gray hover:bg-secondary dark:hover:bg-DarkGrayHover'
                   }`}>
                   {option.answerText}
                 </button>
@@ -111,10 +111,10 @@ export default function TraineeQuiz() {
             </div>
             <button
               onClick={handleNextQuestion}
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+              className="mt-4 self-end px-4 py-2 bg-secondary text-white rounded hover:bg-hover">
               {currentQuestion === questions.length - 1 ? 'Finish' : 'Next Question'}
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
