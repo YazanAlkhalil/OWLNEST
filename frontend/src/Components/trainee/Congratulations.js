@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import React, { useState } from 'react';
 import ReactStars from 'react-stars';
 
@@ -11,7 +12,7 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
+    <div className="max-w-2xl mx-auto mt-10 p-6  rounded-lg shadow-xl">
       <h1 className="text-3xl font-bold text-center text-green-600 mb-6">
         Congratulations!
       </h1>
@@ -25,7 +26,7 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
         <img 
           src={certificateUrl} 
           alt="Course Certificate" 
-          className="w-full border-2 border-gray-300 rounded-lg"
+          className="w-full h-[400px] border-2 border-gray-300 rounded-lg"
         />
       </div>
 
@@ -34,14 +35,7 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
           <label htmlFor="review" className="block text-lg font-medium mb-2">
             Leave a Review
           </label>
-          <textarea
-            id="review"
-            rows="4"
-            className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
-            placeholder="Share your thoughts about the course..."
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-          ></textarea>
+          <TextField id="outlined-basic" label="Review" variant="outlined" />
         </div>
 
         <div>
@@ -71,7 +65,6 @@ const Congratulations = ({ courseName, certificateUrl, onSubmitReview }) => {
 
 function CourseCompletion() {
   const handleReviewSubmit = (reviewData) => {
-    // Handle the review submission, e.g., send to server
     console.log(reviewData);
   };
 

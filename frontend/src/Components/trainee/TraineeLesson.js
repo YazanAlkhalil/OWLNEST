@@ -49,7 +49,12 @@ export default function TraineeVideoLesson() {
     
 
     const res = await fetchData({url:`/course/${id}/mark-content/${lessonId}`,method:"POST"})
-    onGoBackClick()
+    if(res.status){
+      navigate(`/trainee/courses/${id}/content/Congratulations`)
+    }else{
+      onGoBackClick()
+    }
+
   }
 
   return (

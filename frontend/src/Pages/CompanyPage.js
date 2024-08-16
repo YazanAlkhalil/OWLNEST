@@ -23,19 +23,16 @@ export default function CompanyPage() {
   return (
     <>
     <Navbar2 name={resData?.username} image={resData?.userImg}/>
-    <div className="container mx-auto bg-Gray h-screen dark:text-white">
-        <h1 className='font-black text-4xl p-8'>Companies:</h1>
-        {
-          resData ? 
-          <div className='grid grid-cols-3 gap-10 px-10'>
-                {
-                  resData?.companies?.map((company)=>{
-                    return <Company2 key={company.id} image={company.logo} id={company.id} name={company.name} />
-                    })
-                }
-        </div>
-          : 
-          <div className='container w-[100%] h-[100%] flex justify-center items-center sm:px-4'>
+      <div className="mx-auto bg-Gray min-h-screen dark:text-white p-4 md:p-8">
+        <h1 className=' text-2xl md:text-4xl mb-6 md:mb-8'>Companies:</h1>
+        {resData ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-10'>
+            {resData?.companies?.map((company) => (
+              <Company2 key={company.id} image={company.logo} id={company.id} name={company.name} />
+            ))}
+          </div>
+        ) : (
+          <div className='container w-full h-[calc(100vh-200px)] flex justify-center items-center'>
             <Loader />
           </div>
         )}

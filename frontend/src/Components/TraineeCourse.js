@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { FaHeart, FaStar } from "react-icons/fa";
 import useFetch from "./AuthComponents/UseFetch";
 import { FaRegHeart } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 export default function TraineeCourse({ data, id }) {
