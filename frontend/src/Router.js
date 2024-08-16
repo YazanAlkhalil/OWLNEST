@@ -80,10 +80,10 @@ export default function Router() {
         <Route path="progress" element={<TraineeProgress />} />
         <Route path="discussion" element={<TraineeDiscussion />} />
         <Route path="Info" element={<TraineeInfor />} />
+        <Route path="/trainee/courses/:id/content/pdf" element={<TraineePdf />} />
       </Route>
 
         <Route path="/trainee/courses/:id/content/quiz" element={<TraineeQuiz />} />
-        <Route path="/trainee/courses/:id/content/Text" element={<TraineePdf />} />
 
 
 

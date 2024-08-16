@@ -157,7 +157,7 @@ export default function CompanyDetails() {
                       </div>
                       :
                       <div>
-                        <img src={logoToAppear} alt="upload" className="w-[50%] h-[50%] rounded-full mx-auto" />
+                        <img src={logoToAppear} alt="upload" className="w-44 h-44 mx-auto" />
                       <input
                         type="file"
                         multiple

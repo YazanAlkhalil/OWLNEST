@@ -9,20 +9,23 @@ function getIcon(icon) {
   else return <PiExam />;
 }
 
-export default function Content({ unit, lessons }) {
+export default function Content({data}) {
     const navigate = useNavigate();
   return (
     <div className="m-3 ">
-      <h1 className="mb-4 font-semibold text-xl">{unit} :</h1>
-      {lessons.map((les) => {
+      <div className="flex justify-between px-2">
+      <h1 className={`mb-4 font-semibold text-xl`}>{data.title} : </h1>
+      {data?.is_completed ? <h1 className="text-green-500 text-semibold text-2xl">✔</h1> : '' }
+      </div>
+      {data.contents.map((les) => {
         return (
           <div
             key={les.id}
             className="flex dark:bg-DarkSecondary justify-between bg-gray-300 px-6 py-3 mb-4 hover:cursor-pointer"
             onClick={les.type === 'video'
-               ? ()=>  navigate('/trainee/courses/:id/content/lesson') 
-               : les.type === 'pdf' ?  ()=> navigate('/trainee/courses/:id/content/Text') 
-               : () => navigate('/trainee/courses/:id/content/quiz') }
+               ? ()=>  navigate('/trainee/courses/:id/content/video',{state: les.id}) 
+               : les.type === 'pdf' ?  ()=> navigate('/trainee/courses/:id/content/Text',{state: les.id}) 
+               : () => navigate('/trainee/quiz',{state : les.id}) }
             >
             <h1 className="text-md font-bold">{les.title}</h1>
             <div className="text-xl pt-1">{getIcon(les.type)}</div>

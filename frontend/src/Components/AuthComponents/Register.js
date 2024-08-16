@@ -7,6 +7,7 @@ import backGround from "../../images/—Pngtree—e-learning education online il
 import toast from "react-hot-toast";
 import Loader from "../Loader";
 import { IoArrowBack } from "react-icons/io5";
+import { TextField } from "@mui/material";
 
 const countries = [
   ["DZ", "Algeria"],
@@ -145,23 +146,25 @@ export default function Register() {
               isFetching ? <div className='container w-[100%] h-[100%] flex justify-center items-center sm:px-4'>
                 <Loader />
               </div> : <div className="container mx-auto sm:px-4">
-                <div className="login-form text-center">
-                  <h2 className="font-semibold text-3xl mb-4">Register</h2>
+                <div className="login-form flex flex-col justify-evenly h-screen text-center">
+                  <h2 className="font-semibold text-3xl mb-10">Register</h2>
                   <form onSubmit={handleSubmittedClick}>
                     {!firstPart && (
                       <>
                         <div className="mb-4 mb-3">
-                          <input
-                            type="text"
-                            id="username"
-                            placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className={`w-full px-3 py-2 border ${errors1.username
-                              ? "border-red-500"
-                              : "border-gray-300"
-                              } rounded focus:outline-none`}
-                          />
+                          <div class="my-6 relative w-full min-w-[200px] h-12">
+                            <input
+                              class={"peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"}
+                              type="text"
+                              id="username"
+                              placeholder=""
+                              value={username}
+                              onChange={(e) => setUsername(e.target.value)} />
+                            <label
+                              class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Username
+                            </label>
+                            
+                          </div>
                           {errors1.username && (
                             <div className="text-red-500 text-sm   font-semibold">
                               {errors1.username}
@@ -169,15 +172,20 @@ export default function Register() {
                           )}
                         </div>
                         <div className="mb-4 mb-3">
-                          <input
-                            type="email"
+                          
+                          <div class="my-6 relative w-full min-w-[200px] h-12">
+                            <input
+                              class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                              type="email"
                             id="email"
-                            placeholder="Email"
+                            placeholder=""
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className={`w-full px-3 py-2 border ${errors1.email ? "border-red-500" : "border-gray-300"
-                              } rounded focus:outline-none`}
-                          />
+                            onChange={(e) => setEmail(e.target.value)} />
+                            <label
+                              class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                                Email
+                            </label>
+                          </div>
                           {errors1.email && (
                             <div className="text-red-500 text-sm  font-semibold">
                               {errors1.email}
@@ -185,17 +193,20 @@ export default function Register() {
                           )}
                         </div>
                         <div className="mb-4 mb-3">
-                          <input
-                            type="password"
-                            id="password"
-                            placeholder="Password"
+                          
+                          <div class="my-6 relative w-full min-w-[200px] h-12">
+                            <input
+                              class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                              type="password"
+                              id="password"
+                            placeholder=""
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className={`w-full px-3 py-2 border ${errors1.password
-                              ? "border-red-500"
-                              : "border-gray-300"
-                              } rounded focus:outline-none`}
-                          />
+                            onChange={(e) => setPassword(e.target.value)} />
+                            <label
+                              class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                                Password
+                            </label>
+                          </div>
                           {errors1.password && (
                             <div className="text-red-500 text-sm  font-semibold">
                               {errors1.password}
@@ -203,17 +214,20 @@ export default function Register() {
                           )}
                         </div>
                         <div className="mb-4 mb-3">
-                          <input
-                            type="password"
+                          
+                          <div class="my-6 relative w-full min-w-[200px] h-12">
+                            <input
+                              class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                              type="password"
                             id="confirmPassword"
-                            placeholder="Confirm Password"
+                            placeholder=""
                             value={confPass}
-                            onChange={(e) => setConfPass(e.target.value)}
-                            className={`w-full px-3 py-2 border ${errors1.confPass
-                              ? "border-red-500"
-                              : "border-gray-300"
-                              } rounded focus:outline-none`}
-                          />
+                            onChange={(e) => setConfPass(e.target.value)} />
+                            <label
+                              class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                                Confirm Password
+                            </label>
+                          </div>
                           {errors1.confPass && (
                             <div className="text-red-500 text-sm  font-semibold">
                               {errors1.confPass}
@@ -230,31 +244,33 @@ export default function Register() {
                     )}
                     {firstPart && (
                       <>
-                        <div className="mb-4 mb-3">
-                          <input
-                            type="number"
+                        <div classNamy-6 me="mb-4 mb-3">
+                          <div class="relative mb-4  w-full min-w-[200px] h-10">
+                            <input
+                              class="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                              type="number"
                             id="phone"
-                            placeholder="Phone Number"
+                            placeholder=""
                             value={phone}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            className={`w-full px-3 py-2 border ${errors2.phoneNumber
-                              ? "border-red-500"
-                              : "border-gray-300"
-                              } rounded focus:outline-none`}
-                          />
+                            onChange={(e) => setPhoneNumber(e.target.value)} />
+                            <label
+                              class="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                                Phone number
+                            </label>
+                          </div>
                           {errors2.phoneNumber && (
                             <div className="text-red-500 text-sm  font-semibold">
                               {errors2.phoneNumber}
                             </div>
                           )}
                         </div>
-                        <div className="mb-4 mb-3">
+                        <div classNamy-6 me="mb-4 mb-3">
                           <input
                             type="date"
                             id="date"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
-                            className={`w-full px-3 py-2 border ${errors2.date ? "border-red-500" : "border-gray-300"
+                            className={`w-full mb-4  bg-white px-3 py-2 border ${errors2.date ? "border-red-500" : "border-gray-300"
                               } rounded focus:outline-none`}
                           />
                           {errors2.date && (
@@ -263,7 +279,7 @@ export default function Register() {
                             </div>
                           )}
                         </div>
-                        <div className="mb-4 mb-3">
+                        <div className="mb-4">
                           <select
                             name="gender"
                             value={gender}
