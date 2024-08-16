@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, NavLink } from 'react-router-dom';
+import { useLocation, NavLink, useParams } from 'react-router-dom';
 import useFetch from './AuthComponents/UseFetch';
+import toast from 'react-hot-toast';
 
 export default function TraineeQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const { state } = useLocation();
+  const LessonId = localStorage.getItem("lessonId")
   const [showScore, setShowScore] = useState(false);
+  const [score,setScore] = useState(0)
+  const [review,setReview] = useState([])
   const { fetchData } = useFetch();
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
-  const id = localStorage.getItem("courseID");
+  const {id} = useParams()
   const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   const handleAnswerToggle = (answerId) => {
@@ -22,22 +26,36 @@ export default function TraineeQuiz() {
     });
   };
 
-  const handleNextQuestion = () => {
-    setUserAnswers(prevAnswers => [
-      ...prevAnswers,
-      {
-        questionId: questions[currentQuestion].id,
-        answerIds: selectedAnswers,
-      },
-    ]);
+  const handleNextQuestion = async () => {
+    if(selectedAnswers.length >0 ){
+      setUserAnswers(prevAnswers => [
+        ...prevAnswers,
+        {
+          id: questions[currentQuestion].id,
+          answers: selectedAnswers,
+        },
+      ]);
+  
+      setSelectedAnswers([]);
+      
+      const nextQuestion = currentQuestion + 1;
 
-    setSelectedAnswers([]);
-
-    const nextQuestion = currentQuestion + 1;
-    if (nextQuestion < questions.length) {
-      setCurrentQuestion(nextQuestion);
-    } else {
-      setShowScore(true);
+      if (nextQuestion < questions.length) {
+        setCurrentQuestion(nextQuestion);
+      } else {
+        const temp = userAnswers
+        temp.push({
+          id: questions[currentQuestion].id,
+          answers: selectedAnswers,
+        })
+        console.log("this");
+        console.log(temp);
+        await fetchData({url:"/course/"+id+"/test/"+LessonId,method:"POST",data:temp});
+        setShowScore(true);
+      }
+    }
+    else{
+      toast.error("please select an answer")
     }
   };
 
@@ -64,7 +82,9 @@ export default function TraineeQuiz() {
   }, [state, fetchData]);
 
   useEffect(() => {
-    console.log("Updated answers:", userAnswers);
+    if(currentQuestion === questions.length)
+      console.log(currentQuestion);
+
   }, [userAnswers]);
 
   return (
@@ -75,7 +95,7 @@ export default function TraineeQuiz() {
             <NavLink
               to={`/trainee/courses/${id}/content`}
               className="px-8 py-4 bg-primary dark:bg-DarkGray dark:hover:bg-DarkGrayHover text-xl font-semibold text-white hover:bg-secondary cursor-pointer">
-              Submit Test
+              Back to Course
             </NavLink>
           </div>
         ) : (
@@ -102,8 +122,8 @@ export default function TraineeQuiz() {
                   onClick={() => handleAnswerToggle(option.id)}
                   className={`px-4 py-2 text-white rounded ${
                     selectedAnswers.includes(option.id)
-                      ? 'bg-secondary dark:bg-DarkSecondary'
-                      : 'bg-primary dark:bg-Gray hover:bg-secondary dark:hover:bg-DarkGrayHover'
+                      ? 'bg-secondary dark:bg-slate-800'
+                      : 'bg-primary dark:bg-Gray hover:bg-secondary dark:hover:bg-slate-700'
                   }`}>
                   {option.answerText}
                 </button>
