@@ -106,6 +106,10 @@ function CourseEdit({ inprogress }) {
   }
 
   async function handleReorder(){
+    if(content[0].type === 'lesson'){
+      toast.error("Can't start with a lesson")
+      return
+    }
     console.log(content);
     let units = []
     let counterLesson = 0
