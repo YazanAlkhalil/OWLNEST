@@ -5,6 +5,7 @@ import { FaHeart, FaStar } from "react-icons/fa";
 import useFetch from "./AuthComponents/UseFetch";
 import { FaRegHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
+import ReactStars from "react-stars";
 
 export default function TraineeCourse({ data, id }) {
   const navigate = useNavigate();
@@ -41,14 +42,14 @@ export default function TraineeCourse({ data, id }) {
     }
   };
   return (
-    <div onClick={() => {
-      navigate(`/trainee/courses/${id}/content`);
-    }} className="">
+    <div className="">
       <img
         className="w-[330px] h-48 hover:cursor-pointer border rounded"
         src={data?.image}
         alt="error"
-
+        onClick={() => {
+          navigate(`/trainee/courses/${id}/content`);
+        }} 
       />
       <ProgressBar
         completed={data?.progress}
@@ -63,7 +64,15 @@ export default function TraineeCourse({ data, id }) {
         {data?.name}
       </div>
       <div className="px-2 py-1 text-xl flex justify-between">
-        <h1 className="font-semibold">By {data?.leader}</h1>
+        <h1 className="font-semibold">
+        <ReactStars
+            value={data?.rate}
+            count={5}
+            size={24}
+            color2={"#ffd700"}
+            half={true}
+          />
+        </h1>
         <FaHeart
           className={`${fav ? "text-red-600" : "text-slate-500"
             } hover:cursor-pointer`}

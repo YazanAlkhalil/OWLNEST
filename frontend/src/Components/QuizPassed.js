@@ -2,12 +2,12 @@ import React from "react";
 import { FaCheck } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 
-export default function QuizPassed({ title, score, type, time }) {
+export default function QuizPassed({ title, score, passed, time }) {
   return (
     <div className="flex justify-evenly mt-10">
       <div className="flex">
         <div className="rounded-full p-2 bg-gray-300">
-          {type === "PASSED" ? (
+          {passed ? (
             <FaCheck
               size={40}
               color='green'
@@ -23,9 +23,9 @@ export default function QuizPassed({ title, score, type, time }) {
       </div>
       <div
         className={`${
-          type === "PASSED" ? "bg-primary dark:bg-DarkGray" : "bg-red-600"
+          passed  ? "bg-primary dark:bg-DarkGray" : "bg-red-600"
         } text-white px-7 py-4`}>
-        <h1 className="font-semibold text-xl">{type}</h1>
+        <h1 className="font-semibold text-xl">{passed ? "Passed" : "Fail"}</h1>
       </div>
       <div className="py-2">
         <h1 className="text-xl font-semibold">{time}</h1>

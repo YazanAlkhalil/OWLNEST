@@ -13,13 +13,14 @@ from system.models.Answer import Answer
 from system.models.Finished_Content import Finished_Content
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 class SubmitTestView(APIView):
       permission_classes = [IsAuthenticated]
       def get_progress(self,enrollment):
             total_contents = Content.objects.filter(unit__course=enrollment.course).count()
             finished_contents = Finished_Content.objects.filter(enrollment=enrollment).count()
-            submitted_tests = Grade.objects.filter(enrollment=enrollment).count()
+            submitted_tests = Grade.objects.filter(enrollment=enrollment,score__gte = 60).count()
             
             #progress
             if total_contents > 0:
@@ -82,8 +83,16 @@ class SubmitTestView(APIView):
           grade = Grade.objects.create(test = test,enrollment = enrollment , score = score , xp = gained_xp)
           enrollment.progress = self.get_progress(enrollment)
           enrollment.save()
-          if enrollment.progress == 100 : 
-              pass
+          if enrollment.progress == 100 and not enrollment.completed : 
+               passed = True
+               for grade in enrollment.grade_set.all():
+                   if grade.score < 60  :
+                        passed = False  
+               if passed:   
+                  enrollment.completed = True
+                  enrollment.completed_at = timezone.now()
+                  enrollment.save()   
+                  return Response({"status":"passed"}, 200)
 
           data = {
               "questions":response,
