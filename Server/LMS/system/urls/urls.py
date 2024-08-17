@@ -18,11 +18,13 @@ from system.views.TraineesInCourse import TraineesInCoursView
 from system.views.AdminCourseReportView import AdminCourseReportView
 from system.views.AdminMainDashboard import AdminMainDashboard
 from system.views.SubmitTestView import SubmitTestView
+from system.views.GetCertificateView import GetCertificationsView
 #Django 
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
   #admin
+    path('company/<id>/certifications',GetCertificationsView.as_view()),
     path('course/<id>/report',CourseReportView.as_view()),
     
     path('admin/course/<id>/report',AdminCourseReportView.as_view()),
