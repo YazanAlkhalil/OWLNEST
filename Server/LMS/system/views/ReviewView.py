@@ -44,6 +44,7 @@ class ListCreateReviewView(ListCreateAPIView):
             for review in reviews:
                 total_review_rate += review.rate
             total_review_rate /= reviews.count()
+            total_review_rate = total_review_rate.__float__()
             course.rate = total_review_rate
             course.save()
         except Review.DoesNotExist:

@@ -41,7 +41,8 @@ class MarkContentView(APIView):
       def post(self, request, *args, **kwargs):
         enrollment = get_object_or_404(Enrollment, trainee_contract__trainee__user=request.user, course__id=kwargs["id"])
         content = get_object_or_404(Content, id=kwargs["content_id"])
-        
+        print(enrollment)
+        print(content)
         if enrollment.course != content.unit.course:
             return Response({"message": "You can't mark content if you are not enrolled in this course"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -70,12 +71,6 @@ class MarkContentView(APIView):
                 return Response({"status": "passed"}, status=status.HTTP_200_OK)
         
         return Response({"message": "Completed"}, status=status.HTTP_200_OK)
-              # Function to generate certificate image
-      from PIL import Image, ImageDraw, ImageFont
-      from datetime import datetime
-      import os
- 
-      from django.conf import settings    
  
       def generate_certificate_image(self, enrollment):
           # Set up image dimensions and colors
