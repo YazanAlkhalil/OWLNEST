@@ -11,7 +11,7 @@ class ReviewCourseSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     course = ReviewCourseSerializer(read_only=True)
-    trainee = serializers.CharField(source='enrollment.trainee_contract.trainee.user.username',read_only = True)
+    trainee = serializers.CharField(source='enrollment.trainee_contract.trainee.user.username', read_only=True)
     class Meta:
         model = Review
         fields = ['id', 'description', 'rate', 'course', 'trainee']

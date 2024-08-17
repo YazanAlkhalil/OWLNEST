@@ -143,7 +143,6 @@ class AdminApprovmentView(APIView):
                             if courses_in_plane.filter(course=course).exists():
                                 break
                         # if the courses in plan is emplty or if the course does not exists in it then create the course in it
-                        print('6')
                         course_in_plane = Courses_In_Plane.objects.create(company_plane=company_plane, course=course)
                         course_in_plane.save()
                         company_plane.current_courses_number += 1
