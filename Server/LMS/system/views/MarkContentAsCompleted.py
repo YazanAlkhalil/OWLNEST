@@ -65,8 +65,7 @@ class MarkContentView(APIView):
                 enrollment.save(update_fields=['completed', 'completed_at'])  
                  
                 certificate_image = self.generate_certificate_image(enrollment)
-
-                 
+                certificate_image = certificate_image.split(sep='static\\')[1]
                 certificate = Certificate.objects.create(trainee_contract= enrollment.trainee_contract, certificate=certificate_image)
                 return Response({"status": "passed"}, status=status.HTTP_200_OK)
         
