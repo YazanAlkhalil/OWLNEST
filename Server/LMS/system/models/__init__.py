@@ -10,3 +10,5 @@ from .DraftAnswer import DraftAnswer
 
 from .DraftSkill import DraftSkill
 from .DraftAdditionalResources import DraftAdditionalResources
+
+from .Test import Test

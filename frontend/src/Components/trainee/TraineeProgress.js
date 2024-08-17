@@ -30,10 +30,11 @@ export default function TraineeProgress() {
         </div>
       </div>
       <div>
-        <QuizPassed title={'Quiz 1'} score={'15/16'} type={'PASSED'} time={'12/2/2022'} />
-        <QuizPassed title={'Quiz 1'} score={'15/16'} type={'FAILED'} time={'12/2/2022'} />
-        <QuizPassed title={'Quiz 1'} score={'15/16'} type={'PASSED'} time={'12/2/2022'} />
-        <QuizPassed title={'Quiz 1'} score={'15/16'} type={'FAILED'} time={'12/2/2022'} />
+        {
+          resData?.quizzes.map((quizz)=>{
+            return <QuizPassed  title={quizz.title} score={quizz.score} passed={quizz.passed} time={quizz.taken_at} />
+          })
+        }
       </div>
     </div>
   );

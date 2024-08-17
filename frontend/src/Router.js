@@ -41,6 +41,7 @@ import TrainerVideoView from "./Pages/trainer/TrainerVideoView";
 import TrainerPDFView from "./Pages/trainer/TrainerPDFView";
 import TrainerQuizView from "./Pages/trainer/TrainerQuizView";
 import CourseCompletion from "./Components/trainee/Congratulations";
+import TraineeReview from "./Components/trainee/TraineeReview";
 
 export default function Router() {
   return (
@@ -112,6 +113,7 @@ export default function Router() {
         <Route path="/admin/courses/:id" element={<AdminCourseDetails />} />
         <Route path="/admin/courses" element={<AdminCoursesPage key="courses" pending={false}/>} />
         <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/review/:id" element={<TraineeReview />} />
         <Route path="/admin/pending" element={<AdminCoursesPage key="pending-courses" pending={true}/>} />
         <Route path="/admin/pending/:id" element={<PendingCourseDetails />} />
         {/* <Route path='/admin/users/:id' element={<AdminCoursesPage />} /> */}
