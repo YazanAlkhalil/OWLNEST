@@ -30,7 +30,7 @@ export default function Company({image,id,name}) {
       <div className="border-accent flex justify-center items-center border-4 rounded-md dark:bg-DarkGray dark:hover:bg-DarkGrayHover bg-primary hover:bg-hover cursor-pointer" onClick={handleCompanyClick}>
         <img
           className=""
-          src={`http://127.0.0.1:8000/api${image}`}
+          src={`${image}`}
           alt="error"
         />   
       </div>
