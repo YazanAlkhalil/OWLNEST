@@ -6,6 +6,8 @@ from system.views.Planes import GetPlanes,BuyPlane
 from django.conf import settings
 from django.conf.urls.static import static
 
+#views
+from system.views.GetUserCompanies import GetUserCompaniesView
 urlpatterns = [
     path('create_company/', 
         CreateCompanyView.as_view(), 
@@ -28,7 +30,7 @@ urlpatterns = [
         name='add_user'),
 
     path('get_companies/',
-        CompaniesView.as_view(),
+        GetUserCompaniesView.as_view(),
         name='get_companies'),
 
     path('company/<int:company_id>/roles/',

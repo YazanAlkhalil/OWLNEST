@@ -6,6 +6,7 @@ from rest_framework import serializers
 from system.models.Finished_Content import Finished_Content
 from system.models.Finished_Unit import Finished_Unit 
 from system.models.Course import Course
+from system.models.Unit import Unit
  
 #serializers 
 from system.serializers.UnitSerializer import UnitSerializer
@@ -22,12 +23,11 @@ class CustomTraineeCourseDetailsSerializer(serializers.ModelSerializer):
           enrollment = self.context.get('enrollment') 
           for unit in data.get('units', []):
               unit_id = unit['id'] 
-
-              is_unit_completed = Finished_Unit.objects.filter(
-                  enrollment=enrollment,
-                  unit_id=unit_id
-              ).exists()
-              
+              u = Unit.objects.get(id = unit["id"])
+              if u.content_set.all().count() == enrollment.finished_content_set.filter(content__unit = u).count() :
+                  is_unit_completed = True
+              else :
+                   is_unit_completed = False 
               unit['is_completed'] = is_unit_completed
               contents = unit.get('contents', [])
               for content in contents:

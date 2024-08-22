@@ -22,6 +22,7 @@ class Course(models.Model):
     rate = models.DecimalField(max_digits= 4,decimal_places=4,default=0)
     # when call an instance show just its name
     def __str__(self):
-        return self.name
+        return self.namez
+    
     class Meta:
         ordering = ['name']
