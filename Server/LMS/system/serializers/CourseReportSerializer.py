@@ -5,6 +5,8 @@ from system.models.Course import Course
 from system.models.Enrollment import Enrollment 
 from system.models.Finished_Content import Finished_Content
 from system.models.Grade import Grade
+from system.models.Admin_Contract import Admin_Contract
+from system.models.Owner import Owner
 #django 
 from django.db.models import Avg, Count, Sum
 from django.utils.timezone import now
@@ -30,22 +32,31 @@ class CourseReportSerializer(serializers.Serializer):
       graph = serializers.ListField()
 
       def to_internal_value(self, data): 
-            '''
-            dashboard dictionary containes admin/owner dashboard information
-            '''
+            """
+            dashboard dictionary contains admin/owner dashboard information.
+            """
             dashboard = dict()
-            #get the course object by params
+             
             course = Course.objects.select_related(
-                      'admin_contract__admin__user',
-                      'company'
-                  ).prefetch_related(
-                      'company__admin_contract_set',
-                      'enrollment_set__finished_content_set',
-                      'enrollment_set__trainee_contract__trainee__user'
-                  ).get(id=data.id)
-            #get admin name      
-            admin = course.admin_contract.admin.user.username
-            dashboard["admin_username"] = admin
+                'creator_content_type',  
+                'company'
+            ).prefetch_related(
+                'company__admin_contract_set',
+                'enrollment_set__finished_content_set',
+                'enrollment_set__trainee_contract__trainee__user',
+                'trainers',   
+            ).get(id=data.id)
+
+             
+            creator = course.creator
+            if isinstance(creator, Admin_Contract):
+                admin_username = creator.admin.user.username
+            elif isinstance(creator, Owner):
+                admin_username = creator.user.username
+            else:
+                admin_username = "Unknown"
+
+            dashboard["admin_username"] = admin_username
             # number of trainees in progress
             finished_contents = Finished_Content.objects.filter(enrollment__course=course) 
             trainees_in_progress = finished_contents.values(

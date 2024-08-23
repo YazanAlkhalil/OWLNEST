@@ -22,6 +22,7 @@ class GetCourseUsers(APIView):
 
             # Fetch all users associated with the company
             users = User.objects.filter(
+                 Q(is_owner = True, owner__company = company) |
                 Q(is_trainer = True,trainer__trainer_contract__employed = True,trainer__trainer_contract__company=company) | 
                 Q(is_trainee =True,trainee__trainee_contract__employed = True,trainee__trainee_contract__company=company) | 
                 Q(is_admin = True,admin__admin_contract__employed = True,admin__admin_contract__company=company)
@@ -56,5 +57,5 @@ class GetCourseUsers(APIView):
                     'is_participant': is_participant,
                     'completion_date': completion_date
                 })
-
+        
             return Response(user_data)

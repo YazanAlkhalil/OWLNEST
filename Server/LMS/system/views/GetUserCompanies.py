@@ -30,6 +30,6 @@ class GetUserCompaniesView(APIView):
           serialized_companies =  CompanySerializer(all_companies,many =True,context = {"request":request})
           return Response({
               'username': user.username,
-              'userImg': user.image.url,
+              'userImg': user.image.url if user.image else None,
               'companies': serialized_companies.data
           }, 200)

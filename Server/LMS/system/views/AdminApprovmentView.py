@@ -154,6 +154,12 @@ class AdminApprovmentView(APIView):
                     else:
                         continue
           else:
-                raise ValidationError({'message': f'This Company Doesn\'t have an active plane, Purchase a new one'})
-          print(request.user.admin.admin_contract_set.get(company = get_object_or_404(Company, id = kwargs["company_id"])).adminapprovment_set.get(course = course).delete())
+                raise ValidationError({'message': f'This Company Doesn\'t have an active plane, Purchase a new one'}) 
+          
+
+          if hasattr(course.creator , "ownerapprovment_set"):
+              course.creator.ownerapprovment_set.get(course = course).delete()
+          
+          if hasattr(course.creator , "adminapprovment_set"):
+              course.creator.adminapprovment_set.get(course = course).delete()
           return Response({"message":"The course has been published successfully"})

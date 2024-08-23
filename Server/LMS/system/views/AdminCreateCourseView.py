@@ -6,7 +6,9 @@ from django.shortcuts import get_object_or_404
 #models 
 from system.models.Company  import Company  
 from system.models.Admin import Admin
+from system.models.Owner import Owner
 from system.models.Admin_Contract import Admin_Contract
+from django.contrib.contenttypes.models import ContentType
 
 
 
@@ -24,20 +26,27 @@ class AdminCreateCourseView(generics.CreateAPIView):
 
     def post(self, request, company_id): 
         company = get_object_or_404(Company, id=company_id)
- 
-        if hasattr(request.user, 'admin'):
-            admin_contract,_ = request.user.admin.admin_contract_set.get_or_create(company = company)
-        else:
-            if company.owner.user == request.user:
-               admin,_ = Admin.objects.get_or_create(user = request.user)
-               admin_contract,_ = Admin_Contract.objects.get_or_create(admin = admin,company = company)
-            else:
-                 return Response({"error": "User does not have admin privileges in this company."}, status=status.HTTP_403_FORBIDDEN)
- 
-        serializer = CreateCourseSerializer(data=request.data)
-        if serializer.is_valid(): 
-            serializer.save(company=company, admin_contract=admin_contract)
+        user = request.user
+        #user is owner of the company 
+        if company.owner.user == user:
+            creator_model = Owner 
+            creator_content_type = ContentType.objects.get_for_model(creator_model)
+            creator_instance = get_object_or_404(creator_model, user =request.user)
+          
+            serializer = CreateCourseSerializer(data=request.data)
+            serializer.is_valid(raise_exception= True) 
+            serializer.save(company=company, creator_content_type=creator_content_type,creator_object_id=creator_instance.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+           
+        if hasattr(request.user, 'admin'):
+            creator_model = Admin_Contract 
+            creator_content_type = ContentType.objects.get_for_model(creator_model)
+            creator_instance ,_= creator_model.objects.get_or_create(admin__user=request.user)
 
- 
+
+            serializer = CreateCourseSerializer(data=request.data)
+            serializer.is_valid(raise_exception= True) 
+            serializer.save(company=company, creator_content_type=creator_content_type,creator_object_id=creator_instance.id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
