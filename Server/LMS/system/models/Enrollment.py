@@ -14,6 +14,7 @@ class Enrollment(models.Model):
       completed = models.BooleanField(default=False)
       completed_at = models.DateField(null = True,blank = True)
       xp_avg = models.DecimalField(max_digits=5,decimal_places=2 , default=0.0)
+      xp = models.DecimalField(max_digits=5,decimal_places=2 , default=0.0)
       training_time = models.DurationField(default=datetime.timedelta())
       def __str__(self) -> str:
             return f"{self.trainee_contract.trainee.user.username}  || {self.course.name}"

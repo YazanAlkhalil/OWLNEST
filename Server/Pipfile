@@ -16,6 +16,7 @@ pillow = "*"
 python-dateutil = "*"
 drf-yasg = "*"
 channels = {extras = ["daphne"], version = "*"}
+celery = "*"
 
 [dev-packages]
 
